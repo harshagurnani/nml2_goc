@@ -36,13 +36,13 @@
         <gate id="m" type="gateHHrates" instances="3">
             <forwardRate type="HHExpLinearRate" rate="0.3per_ms" scale="10mV" midpoint="-25mV"/>
             <reverseRate type="HHExpRate" rate="12per_ms" scale="-18.182mV" midpoint="-50mV"/>
-			<q10ExpTemp experimentalTemp="20" q10Factor="3">
+			<q10Settings type="q10ExpTemp" experimentalTemp="20 degC" q10Factor="3"/>
         </gate>
 
         <gate id="h" type="gateHHrates" instances="1">
             <forwardRate type="HHExpRate" rate="0.21per_ms" scale="-3.33mV" midpoint="-50mV"/>
             <reverseRate type="HHSigmoidRate" rate="3per_ms" scale="-5mV" midpoint="-17mV"/>
-			<q10ExpTemp experimentalTemp="20" q10Factor="3">
+			<q10Settings type="q10ExpTemp" experimentalTemp="20 degC" q10Factor="3"/>
         </gate>
                             
     </ionChannel>
