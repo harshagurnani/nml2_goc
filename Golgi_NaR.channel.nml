@@ -35,8 +35,8 @@
 		
 		<gate id="s" type="gateHHrates" instances="1">
             <q10Settings type="q10ExpTemp" q10Factor="3" experimentalTemp="20 degC"/>
-            <forwardRate type="Golgi_NaR_gate_rate" rate="-0.00493per_ms" midpoint="-4.48754mV" scale="-6.81881mV" shift="0.00008per_ms"/>
-            <reverseRate type="Golgi_NaR_gate_rate" rate="0.01558per_ms" midpoint="43.97494mV" scale="0.10818mV" shift="0.04752per_ms"/>
+            <forwardRate type="Golgi_NaR_gate_rate" rate="0.00493per_ms" midpoint="4.48754mV" scale="6.81881mV" shift="0.00008per_ms"/>
+            <reverseRate type="Golgi_NaR_gate_rate" rate="0.00168544per_ms" midpoint="-43.97494mV" scale="-0.10818mV" shift="0.04752per_ms"/>
         </gate>
 
         <gate id="f" type="gateHHrates" instances="1">
