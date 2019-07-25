@@ -37,23 +37,9 @@
             <q10Settings type="q10ExpTemp" q10Factor="3" experimentalTemp="22 degC"/>
             <forwardRate type="HHExpRate" rate="0.0033per_ms" scale="40mV" midpoint="-30mV"/>		
             <reverseRate type="HHExpRate" rate="0.0033per_ms" scale="-20mV" midpoint="-30mV"/>
-            <steadyState type="Golgi_KM_n_inf" midpoint="-35mV" scale="6mV"/>
+            <steadyState type="HHSigmoidVariable" rate="1" midpoint="-35mV" scale="6mV"/>
         </gate>
                             
     </ionChannel>
-
-	<ComponentType name="Golgi_KM_n_inf" extends="baseVoltageDepVariable">
-        <Constant name="TIME_SCALE" dimension="time" value="1 ms"/>
-        <Constant name="VOLT_SCALE" dimension="voltage" value="1 mV"/>
-
-		<Parameter name="midpoint" dimension="voltage"/>
-        <Parameter name="scale" dimension="voltage"/>
-		
-        <Dynamics>
-            <DerivedVariable name="V" dimension="none" value="v / VOLT_SCALE"/>
-            <DerivedVariable name="x" exposure="x" dimension="none" value="1/(1+(exp (-(V-midpoint)/scale)))"/>
-        </Dynamics>
-
-    </ComponentType>
 
 </neuroml>

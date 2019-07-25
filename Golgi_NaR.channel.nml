@@ -48,8 +48,6 @@
     </ionChannel>
 
 	<ComponentType name="Golgi_NaR_gate_rate" extends="baseVoltageDepRate">
-        <Constant name="TIME_SCALE" dimension="time" value="1 ms"/>
-        <Constant name="VOLT_SCALE" dimension="voltage" value="1 mV"/>
 		
 		<Parameter name="rate" dimension="per_time"/>
         <Parameter name="midpoint" dimension="voltage"/>
@@ -57,8 +55,7 @@
 		<Parameter name="shift" dimension="per_time"/>
 		
         <Dynamics>
-            <DerivedVariable name="V" dimension="none" value="v / VOLT_SCALE"/>
-            <DerivedVariable name="r" exposure="r" dimension="per_time" value="( shift + rate * ((V-midpoint)/scale)  / (1 - (exp (-(V-midpoint)/scale)))) / TIME_SCALE"/>
+            <DerivedVariable name="r" exposure="r" dimension="per_time" value="( shift + rate * ((v-midpoint)/scale)  / (1 - (exp (-(v-midpoint)/scale))))"/>
         </Dynamics>
 
     </ComponentType>

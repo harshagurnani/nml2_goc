@@ -39,24 +39,10 @@
 			<!--mod file has scaling factor of 5 with tau because linoid function is scaling alpha and beta by scale/y = 5 mV. HG, 2019-->
             <forwardRate type="HHExpLinearRate" rate="0.91per_ms" scale="5mV" midpoint="-40mV"/>		
             <reverseRate type="HHExpLinearRate" rate="0.62per_ms" scale="-5mV" midpoint="-40mV"/>
-            <steadyState type="Golgi_NaP_m_inf" midpoint="-43mV" scale="5mV"/>
+            <steadyState type="HHSigmoidVariable" rate="1" midpoint="-43mV" scale="5mV"/>
         </gate>
                             
     </ionChannel>
-
-	<ComponentType name="Golgi_NaP_m_inf" extends="baseVoltageDepVariable">
-        <Constant name="TIME_SCALE" dimension="time" value="1 ms"/>
-        <Constant name="VOLT_SCALE" dimension="voltage" value="1 mV"/>
-
-		<Parameter name="midpoint" dimension="voltage"/>
-        <Parameter name="scale" dimension="voltage"/>
-		
-        <Dynamics>
-            <DerivedVariable name="V" dimension="none" value="v / VOLT_SCALE"/>
-            <DerivedVariable name="x" exposure="x" dimension="none" value="1/(1+(exp (-(V-midpoint)/scale)))"/>
-        </Dynamics>
-
-    </ComponentType>
 	
 
 </neuroml>
