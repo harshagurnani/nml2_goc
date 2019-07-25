@@ -6,13 +6,13 @@
 
     <notes>Channel file containing a single Channel description</notes>
 
-    <ionChannel id="GolgiNa" conductance="10pS" type="ionChannelHH" species="na">
+    <ionChannel id="GolgiKV" conductance="10pS" type="ionChannelHH" species="na">
 
         <notes>Delayed rectifier K+ channel, based on mod file by A. Fontana. </notes>
                 
         <annotation>
             <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-                <rdf:Description rdf:about="GolgiNa">
+                <rdf:Description rdf:about="GolgiKV">
                     
                     <bqmodel:isDescribedBy xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
                         <rdf:Bag>
