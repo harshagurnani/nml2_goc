@@ -16,7 +16,7 @@
                     
                     <bqmodel:isDescribedBy xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
                         <rdf:Bag>
-                            <rdf:li>olinas S, Forti L, Cesana E, Mapelli J, De Schutter E, D'Angelo E. (2007) Computational reconstruction of pacemaking and intrinsic electroresponsiveness in cerebellar Golgi cells.  Front Cell Neurosci. 2007;1:2. </rdf:li>
+                            <rdf:li>Solinas S, Forti L, Cesana E, Mapelli J, De Schutter E, D'Angelo E. (2007) Computational reconstruction of pacemaking and intrinsic electroresponsiveness in cerebellar Golgi cells.  Front Cell Neurosci. 2007;1:2. </rdf:li>
                             <rdf:li rdf:resource="http://www.ncbi.nlm.nih.gov/pubmed/18946520"/>
                         </rdf:Bag>
                     </bqmodel:isDescribedBy>
@@ -34,9 +34,9 @@
         </annotation>
 
         <gate id="n" type="gateHHrates" instances="4">
-            <forwardRate type="HHExpLinearRate" rate="0.1per_ms" scale="10mV" midpoint="-26mV"/>
+            <q10Settings type="q10ExpTemp" experimentalTemp="6.3 degC" q10Factor="3"/>
+			<forwardRate type="HHExpLinearRate" rate="0.1per_ms" scale="10mV" midpoint="-26mV"/>
             <reverseRate type="HHExpRate" rate="0.125per_ms" scale="-80mV" midpoint="-36mV"/>
-			<q10Settings type="q10ExpTemp" experimentalTemp="6.3 degC" q10Factor="3"/>
         </gate>
 
          
