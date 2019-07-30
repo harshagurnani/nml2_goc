@@ -1,0 +1,55 @@
+<Lems>
+
+
+<!-- Specify which component to run -->
+    <Target component="siml"/>
+
+<!-- Include core NeuroML2 ComponentType definitions -->
+    <Include file="Cells.xml"/>
+    <Include file="Networks.xml"/>
+    <Include file="Simulation.xml"/>
+
+    <!-- Main NeuroML2 content. -->
+	    <!--   Channel/synapse files-->
+    <Include file="Golgi_Na.channel.nml"/>
+    <Include file="Golgi_NaR.channel.nml"/>
+    <Include file="Golgi_NaP.channel.nml"/>
+    
+    <Include file="Golgi_KA.channel.nml"/>
+    <Include file="Golgi_SK2.channel.nml"/>
+    <Include file="Golgi_KM.channel.nml"/>
+    <Include file="Golgi_KV.channel.nml"/>
+    <Include file="Golgi_KBK.channel.nml"/>
+    
+    <Include file="Golgi_CaHVA.channel.nml"/>
+    <Include file="Golgi_CaLVA.channel.nml"/>
+    
+    <Include file="Golgi_HCN1f.channel.nml"/>
+    <Include file="Golgi_HCN1s.channel.nml"/>
+    <Include file="Golgi_HCN2f.channel.nml"/>
+    <Include file="Golgi_HCN2s.channel.nml"/>
+
+    <Include file="Golgi_lkg.channel.nml"/>
+    
+    <Include file="Golgi_CALC.nml"/>
+    <Include file="Golgi_CALC2.nml"/>-->
+
+    <!--   Cell files-->
+    <Include file="Cell_Golgi.cell.nml"/>
+
+    
+    <!-- End of NeuroML2 content -->
+
+
+    <Simulation id="sim1" length="50ms" step="0.025ms" target="Cell_Golgi">
+
+        <Display id="d1" title="GoC1 soma voltage" timeScale="1ms" xmin="0" xmax="140" ymin="-75" ymax="52">
+            <Line id ="v0" quantity="GoC1/v" scale="1mV"  color="#ee0555" timeScale="1ms"/>
+            <!--<Line id ="cell 0: dend1" quantity="pop0/0/MultiCompCell/1/v" scale="1mV"  color="#ee5555" timeScale="1ms"/>
+            <Line id ="cell 0: dend2" quantity="pop0/0/MultiCompCell/2/v" scale="1mV"  color="#efff55" timeScale="1ms"/>-->
+        </Display>
+
+
+    </Simulation>
+
+</Lems>
