@@ -48,6 +48,10 @@
             <!--<Line id ="cell 0: dend1" quantity="pop0/0/MultiCompCell/1/v" scale="1mV"  color="#ee5555" timeScale="1ms"/>
             <Line id ="cell 0: dend2" quantity="pop0/0/MultiCompCell/2/v" scale="1mV"  color="#efff55" timeScale="1ms"/>-->
         </Display>
+		
+		<OutputFile id="v" fileName="Soma.v.dat">
+            <OutputColumn id="v" quantity="GoC1/v"/>
+        </OutputFile>
 
 
     </Simulation>

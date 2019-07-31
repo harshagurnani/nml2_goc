@@ -1,5 +1,5 @@
 import neuroml as nml
-import pyneuroml as pynml
+from pyneuroml import pynml
 from pyneuroml.lems import LEMSSimulation
 import lems.api as lems
 
@@ -25,9 +25,10 @@ def create_test_goc1():
 
 	#Create Lems file to run
 	lems_simfile = ls.save_to_file()
-	
+
 	res = pynml.run_lems_with_jneuroml( lems_simfile, max_memory="1G", nogui=True, plot=False)
 
+	return res
 
 if __name__ =='__main__':
 	res = create_test_goc1()
