@@ -85,10 +85,10 @@
 		
 		<Parameter name="scale" dimension="per_time"/>	
 		<Parameter name="diff" dimension="none"/>	<!--diffusion factor-->
-		<Constant name="CONC_SCALE" dimension="per_concentration" value="1 per_mM"/>
+		<Constant name="CONC_SCALE" dimension="concentration" value="1 mM"/>
 		<Requirement name="rateScale" dimension="none"/>
 		<Dynamics>
-            <DerivedVariable name="r" exposure="r" dimension="per_time" value="rateScale * (scale * CONC_SCALE * (caConc/diff))"/>
+            <DerivedVariable name="r" exposure="r" dimension="per_time" value="rateScale * (scale/ CONC_SCALE * (caConc/diff))"/>
         </Dynamics>
 	</ComponentType>
 

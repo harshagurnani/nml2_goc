@@ -1,0 +1,52 @@
+<Lems>
+    
+    <!-- 
+
+        This LEMS file has been automatically generated using PyNeuroML v0.3.15 (libNeuroML v0.2.47)
+
+     -->
+    
+    <!-- Specify which component to run -->
+    <Target component="sim_goc1"/>
+
+    <!-- Include core NeuroML2 ComponentType definitions -->
+    <Include file="Cells.xml"/>
+    <Include file="Networks.xml"/>
+    <Include file="Simulation.xml"/>
+    
+    <Include file="simple_cell.cell.nml"/>
+    <Include file="Golgi_Na.channel.nml"/>
+    <Include file="Golgi_NaR.channel.nml"/>
+    <Include file="Golgi_NaP.channel.nml"/>
+    <Include file="Golgi_KA.channel.nml"/>
+    <Include file="Golgi_SK2.channel.nml"/>
+    <Include file="Golgi_KM.channel.nml"/>
+    <Include file="Golgi_KV.channel.nml"/>
+    <Include file="Golgi_BK.channel.nml"/>
+    <Include file="Golgi_CaHVA.channel.nml"/>
+    <Include file="Golgi_CaLVA.channel.nml"/>
+    <Include file="Golgi_HCN1f.channel.nml"/>
+    <Include file="Golgi_HCN1s.channel.nml"/>
+    <Include file="Golgi_HCN2f.channel.nml"/>
+    <Include file="Golgi_HCN2s.channel.nml"/>
+    <Include file="Golgi_lkg.channel.nml"/>
+    <Include file="Golgi_CALC.nml"/>
+    <Include file="Golgi_CALC2.nml"/>
+   
+    <Simulation id="sim_goc1" length="1500ms" step="0.0025ms" target="net1" seed="12345">  <!-- Note seed: ensures same random numbers used every run -->
+        
+        <Display id="dispaly0" title="Voltage" timeScale="1ms" xmin="-150.0" xmax="1650.0000000000002" ymin="-90" ymax="50">
+            <Line id="v" quantity="gocpop[0]/v" scale="1mV" color="#ffffff" timeScale="1ms"/>
+        </Display>
+        
+        <OutputFile id="Volts_file" fileName="sim_goc1.v.dat">
+            <OutputColumn id="v" quantity="gocpop[0]/v"/> 
+        </OutputFile>
+        
+        <EventOutputFile id="Events_file" fileName="sim_goc1.v.spikes" format="ID_TIME">
+            <EventSelection id="0" select="gocpop[0]" eventPort="spike"/> 
+        </EventOutputFile>
+        
+    </Simulation>
+
+</Lems>

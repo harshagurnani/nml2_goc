@@ -3,6 +3,6 @@
 
     <notes>Internal calcium concentration due to calcium currents and pump from Solinas et al 2007. Based on CML/NeuroML file by P. Gleeson https://github.com/OpenSourceBrain/SolinasEtAl-GolgiCell </notes>
 
-    <decayingPoolConcentrationModel id="Golgi_CALC" restingConc="5e-5mM"  decayConstant="0.769231ms" ion="ca" shellThickness="2.0378e-7m"/>
+    <decayingPoolConcentrationModel id="Golgi_CALC2" restingConc="5e-5mM"  decayConstant="0.769231ms" ion="ca" shellThickness="2.0378e-7m"/>
 
 </neuroml>
