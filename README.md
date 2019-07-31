@@ -15,7 +15,7 @@ Using jneuroml for simulation (via pyneuroml)
 python run_simple_goc.py   #
 ```
 
-- If .xml is created successfully, but run fails due to python packages, try the following after starting python:
+- If .xml is already created/ edited externally, start python kernel and run:
 ```python
 import neuroml as nml
 from pyneuroml import pynml
