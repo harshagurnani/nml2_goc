@@ -12,7 +12,7 @@ Using jneuroml for simulation (via pyneuroml)
 
 - Creates LEMS simulation file (LEMS_sim1_goc.xml) and runs it:
 ```python
-python run_simple_goc   #
+python run_simple_goc.py   #
 ```
 
 - If .xml is created successfully, but run fails due to python packages, try the following after starting python:
