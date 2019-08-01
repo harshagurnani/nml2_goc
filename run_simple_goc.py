@@ -5,10 +5,10 @@ import lems.api as lems
 
 def create_test_goc1():
 	simid = 'sim_goc1'
-	ls = LEMSSimulation( simid, duration=1500, dt=0.0025, target='net1' )
+	ls = LEMSSimulation( simid, duration=150, dt=0.025, target='net1' )
 	
 	#Load NeuroML components
-	GoC_file_name = 'simple_cell.cell.nml'	#Cell_Golgi.cell.nml
+	GoC_file_name = 'simple_cell.cell.nml' #'simple_cell.cell.nml'	#Cell_Golgi.cell.nml
 	ls.include_neuroml2_file( GoC_file_name )
 	
 	disp0 = 'dispaly0'
@@ -26,8 +26,9 @@ def create_test_goc1():
 	#Create Lems file to run
 	lems_simfile = ls.save_to_file()
 
-	res = pynml.run_lems_with_jneuroml( lems_simfile, max_memory="1G", nogui=True, plot=False)
-
+	#res = pynml.run_lems_with_jneuroml_neuron( lems_simfile, max_memory="1G", compile_mods =False, nogui=True, plot=False)
+	res = pynml.run_lems_with_jneuroml_neuron( lems_simfile, max_memory="1G", nogui=True, plot=False)
+	#res=True
 	return res
 
 if __name__ =='__main__':

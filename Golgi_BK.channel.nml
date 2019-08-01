@@ -61,7 +61,7 @@
         <Parameter name="scale" dimension="voltage"/>
 		
         <Dynamics>
-            <DerivedVariable name="r" exposure="r" dimension="per_time" value="rate*1/( 1 + caConc/caScale * exp(v/scale))"/>
+            <DerivedVariable name="r" exposure="r" dimension="per_time" value="rate*1/( 1 + caConc/caScale * 1/exp(v/scale))"/>
         </Dynamics>
 
     </ComponentType>
