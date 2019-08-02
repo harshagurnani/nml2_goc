@@ -14,11 +14,12 @@
     <Include file="Networks.xml"/>
     <Include file="Simulation.xml"/>
     
-    <Include file="simple_cell.cell.nml"/>
+    <Include file="test_channel.cell.nml"/>
     <Include file="Golgi_Na.channel.nml"/>
     <Include file="Golgi_NaR.channel.nml"/>
     <Include file="Golgi_NaP.channel.nml"/>
     <Include file="Golgi_KA.channel.nml"/>
+    <Include file="Golgi_SK2.channel.nml"/>
     <Include file="Golgi_KM.channel.nml"/>
     <Include file="Golgi_KV.channel.nml"/>
     <Include file="Golgi_BK.channel.nml"/>
