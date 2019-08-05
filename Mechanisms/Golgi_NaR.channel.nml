@@ -73,7 +73,7 @@
             <DerivedVariable name="BETA" dimension="none" value="beta * TIME_SCALE"/>
             <ConditionalDerivedVariable name="t" exposure="t" dimension="time">
                 <Case condition="(ALPHA + BETA) .lt. 1e-3" value="( 1000 ) * TIME_SCALE"/>
-                <Case condition="1/(ALPHA + BETA)  .lt. ( 0.1 )" value="( 0.1 ) * TIME_SCALE"/>
+                <Case condition="1/(ALPHA + BETA)  .lt. ( 0.01 )" value="( 0.01 ) * TIME_SCALE"/>
                 <Case value="( 1/(ALPHA + BETA)) * TIME_SCALE"/>
             </ConditionalDerivedVariable>
         </Dynamics>

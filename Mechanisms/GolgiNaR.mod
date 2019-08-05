@@ -274,8 +274,8 @@ PROCEDURE rates() {
     s_timeCourse_BETA = s_beta  *  s_timeCourse_TIME_SCALE ? evaluable
     if (( s_timeCourse_ALPHA  +  s_timeCourse_BETA ) < 1e-3)  { 
         s_timeCourse_t = 1000.0  *  s_timeCourse_TIME_SCALE ? evaluable cdv
-    } else if (1/( s_timeCourse_ALPHA  +  s_timeCourse_BETA )  < ( 0.1 ))  { 
-        s_timeCourse_t = 0.1  *  s_timeCourse_TIME_SCALE ? evaluable cdv
+    } else if (1/( s_timeCourse_ALPHA  +  s_timeCourse_BETA )  < ( 0.01 ))  { 
+        s_timeCourse_t = 0.01  *  s_timeCourse_TIME_SCALE ? evaluable cdv
     } else  { 
         s_timeCourse_t = ( 1/( s_timeCourse_ALPHA  +  s_timeCourse_BETA )) *  s_timeCourse_TIME_SCALE ? evaluable cdv
     }
@@ -303,8 +303,8 @@ PROCEDURE rates() {
     f_timeCourse_BETA = f_beta  *  f_timeCourse_TIME_SCALE ? evaluable
     if (( f_timeCourse_ALPHA  +  f_timeCourse_BETA ) < 1e-3)  { 
         f_timeCourse_t = 1000.0  *  f_timeCourse_TIME_SCALE ? evaluable cdv
-    } else if (1/( f_timeCourse_ALPHA  +  f_timeCourse_BETA )  < ( 0.1 ))  { 
-        f_timeCourse_t = 0.1  *  f_timeCourse_TIME_SCALE ? evaluable cdv
+    } else if (1/( f_timeCourse_ALPHA  +  f_timeCourse_BETA )  < ( 0.01 ))  { 
+        f_timeCourse_t = 0.01  *  f_timeCourse_TIME_SCALE ? evaluable cdv
     } else  { 
         f_timeCourse_t = ( 1/( f_timeCourse_ALPHA  +  f_timeCourse_BETA )) *  f_timeCourse_TIME_SCALE ? evaluable cdv
     }
