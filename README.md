@@ -35,5 +35,5 @@ python LEMS_sim_goc1_nrn.py
 ### Available sims:
 - simple_cell with HCN and leak channels : 
 ```GoC_file_name = 'simple_cell.cell.nml'```
-- single compartment GoC with all channels from Solinas et al 2007: (!!!!Currently failing because of some channels)
+- single compartment GoC with all channels from Solinas et al 2007:
 ```GoC_file_name = 'test_channel.cell.nml'```
