@@ -398,8 +398,8 @@ static int  rates ( _threadargsproto_ ) {
    if ( 1.0 / ( m_alpha + m_beta ) > ( 1000.0 ) ) {
      m_timeCourse_t = 1000.0 * m_timeCourse_TIME_SCALE ;
      }
-   else if ( 1.0 / ( m_alpha + m_beta ) < ( 0.1 ) ) {
-     m_timeCourse_t = 0.1 * m_timeCourse_TIME_SCALE ;
+   else if ( 1.0 / ( m_alpha + m_beta ) < ( 0.01 ) ) {
+     m_timeCourse_t = 0.01 * m_timeCourse_TIME_SCALE ;
      }
    else {
      m_timeCourse_t = 1.0 / ( m_alpha + m_beta ) ;

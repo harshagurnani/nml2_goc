@@ -8,7 +8,7 @@ def create_test_goc1():
 	ls = LEMSSimulation( simid, duration=150, dt=0.025, target='net1' )
 	
 	#Load NeuroML components
-	GoC_file_name = 'test_channel.cell.nml' #'simple_cell.cell.nml'	#Cell_Golgi.cell.nml
+	GoC_file_name = 'test_channel.cell.nml'#'Golgi.cell.nml'#'test_channel.cell.nml' #'simple_cell.cell.nml'	#Cell_Golgi.cell.nml
 	ls.include_neuroml2_file( GoC_file_name )
 	
 	disp0 = 'dispaly0'
@@ -18,6 +18,10 @@ def create_test_goc1():
 	of0 = 'Volts_file'
 	ls.create_output_file(of0, "%s.v.dat"%simid)
 	ls.add_column_to_output_file(of0, 'v', "gocpop[0]/v")
+	
+	#of1 = 'Na_file'
+	#ls.create_output_file(of1, "%s.na.dat"%simid)
+	#ls.add_column_to_output_file(of1, '0', "gocpop[0]/ina")
 	
 	eof0 = 'Events_file'
 	ls.create_event_output_file(eof0, "%s.v.spikes"%simid,format='ID_TIME')
