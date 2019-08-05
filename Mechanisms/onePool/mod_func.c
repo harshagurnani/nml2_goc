@@ -5,6 +5,7 @@ IMPORT int nrnmpi_myid, nrn_nobanner_;
 
 extern void _GolgiBK_reg();
 extern void _GolgiCaHVA_reg();
+extern void _GolgiCaLVA_reg();
 extern void _GolgiHCN1f_reg();
 extern void _GolgiHCN1s_reg();
 extern void _GolgiHCN2f_reg();
@@ -26,6 +27,7 @@ void modl_reg(){
 
 fprintf(stderr," GolgiBK.mod");
 fprintf(stderr," GolgiCaHVA.mod");
+fprintf(stderr," GolgiCaLVA.mod");
 fprintf(stderr," GolgiHCN1f.mod");
 fprintf(stderr," GolgiHCN1s.mod");
 fprintf(stderr," GolgiHCN2f.mod");
@@ -43,6 +45,7 @@ fprintf(stderr, "\n");
     }
 _GolgiBK_reg();
 _GolgiCaHVA_reg();
+_GolgiCaLVA_reg();
 _GolgiHCN1f_reg();
 _GolgiHCN1s_reg();
 _GolgiHCN2f_reg();

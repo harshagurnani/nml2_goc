@@ -21,6 +21,8 @@ Components:
     null (Type: notes)
     GolgiCaHVA (Type: ionChannelHH:  conductance=1.0E-11 (SI conductance))
     null (Type: notes)
+    GolgiCaLVA (Type: ionChannelHH:  conductance=1.0E-11 (SI conductance))
+    null (Type: notes)
     GolgiHCN1f (Type: ionChannelHH:  conductance=1.0E-11 (SI conductance))
     null (Type: notes)
     GolgiHCN1s (Type: ionChannelHH:  conductance=1.0E-11 (SI conductance))

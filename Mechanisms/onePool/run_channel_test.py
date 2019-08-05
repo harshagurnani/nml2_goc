@@ -5,7 +5,7 @@ import lems.api as lems
 
 def create_test_goc1():
 	simid = 'sim_goc1'
-	ls = LEMSSimulation( simid, duration=150, dt=0.025, target='net1' )
+	ls = LEMSSimulation( simid, duration=1500, dt=0.025, target='net1' )
 	
 	#Load NeuroML components
 	GoC_file_name = 'test_channel.cell.nml'#'Golgi.cell.nml'#'test_channel.cell.nml' #'simple_cell.cell.nml'	#Cell_Golgi.cell.nml

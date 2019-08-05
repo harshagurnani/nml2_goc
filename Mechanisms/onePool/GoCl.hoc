@@ -162,6 +162,13 @@
     "group" : "soma_group",
     "condDens" : "4.5999998E-4",
     "erev" : "calculated_by_Nernst_equation"
+  }, {
+    "id" : "Ca_LVA_soma_group",
+    "ionChannel" : "GolgiCaLVA",
+    "ion" : "ca2",
+    "group" : "soma_group",
+    "condDens" : "2.4999998E-4",
+    "erev" : "calculated_by_Nernst_equation"
   } ],
   "species" : [ {
     "id" : "ca",
@@ -385,6 +392,11 @@ proc biophys() {
     forsec soma_group {
         insert GolgiCaHVA
         gmax_GolgiCaHVA = 4.5999998E-4  // units: S cm-2
+        // erev is calculated by Nernst equation
+    }
+    forsec soma_group {
+        insert GolgiCaLVA
+        gmax_GolgiCaLVA = 2.4999998E-4  // units: S cm-2
         // erev is calculated by Nernst equation
     }
 

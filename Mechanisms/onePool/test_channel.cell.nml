@@ -22,7 +22,7 @@
     <include href="Golgi_BK.channel.nml"/>
     
     <include href="Golgi_CaHVA.channel.nml"/>
-    <!--include href="Golgi_CaLVA.channel.nml"/-->
+    <include href="Golgi_CaLVA.channel.nml"/>
     
     <include href="Golgi_HCN1f.channel.nml"/>
     <include href="Golgi_HCN1s.channel.nml"/>
@@ -194,7 +194,7 @@
 				<!--calcium channnels -->
 				<channelDensityNernst condDensity="0.46 mS_per_cm2" id="Golgi_Ca_HVA_soma_group" ionChannel="GolgiCaHVA" segmentGroup="soma_group" ion="ca"/> <!--calculate erev by nernst eqn-->
 				
-				<!--channelDensityNernst condDensity="0.25 mS_per_cm2" id="Ca_LVA_soma_group" ionChannel="GolgiCaLVA" segmentGroup="soma_group" ion="ca2"/-->
+				<channelDensityNernst condDensity="0.25 mS_per_cm2" id="Ca_LVA_soma_group" ionChannel="GolgiCaLVA" segmentGroup="soma_group" ion="ca2"/>
 				
 				
 				<!-- general properties-->
