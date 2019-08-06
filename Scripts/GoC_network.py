@@ -52,36 +52,33 @@ def create_GoC_network( N_goc=0, duration, dt, seed, run=False ):
 		conn = nml.ElectricalConnectionInstance( id=jj, preCell='../{}/{}/{}'.format(goc_pop.id, GJ_pairs[0,jj], goc_type.id), postCell='../{}/{}/{}'.format(goc_pop.id, GJ_pairs[1,jj], goc_type.id), preSegment="2", preFractionAlong=0, postSegment="2", postFractionAlong=0, synapse="GapJuncCML" )
 		# ------------ need to create GJ component
 		GCCoupling.electrical_connection_instances.append( conn )
+		
+		
+	net_filename = 'gocNetwork.nml'
+	pynml.write_neuroml2_file( net_doc, net_filename )
+	
 
-	simid = 'sim_goc1'
-	ls = LEMSSimulation( simid, duration=150, dt=0.025, target='net1' )
+	simid = 'sim_gocnet'
+	ls = LEMSSimulation( simid, duration=duration, dt=dt, simulation_seed=seed )
+	ls.assign_simulation_target( net.id )
 	
-	#Load NeuroML components
-	GoC_file_name = 'test_channel.cell.nml'#'Golgi.cell.nml'#'test_channel.cell.nml' #'simple_cell.cell.nml'	#Cell_Golgi.cell.nml
-	ls.include_neuroml2_file( GoC_file_name )
+	ls.include_neuroml2_file( net_filename)
+	ls.include_neuroml2_file( goc_filename)
 	
-	disp0 = 'dispaly0'
-	ls.create_display(disp0, "Voltage", "-90", "50" )
-	ls.add_line_to_display(disp0, "v", "gocpop[0]/v", "1mV", "#ffffff")
-
-	of0 = 'Volts_file'
-	ls.create_output_file(of0, "%s.v.dat"%simid)
-	ls.add_column_to_output_file(of0, 'v', "gocpop[0]/v")
 	
-	#of1 = 'Na_file'
-	#ls.create_output_file(of1, "%s.na.dat"%simid)
-	#ls.add_column_to_output_file(of1, '0', "gocpop[0]/ina")
+	# Specify outputs
 	
 	eof0 = 'Events_file'
 	ls.create_event_output_file(eof0, "%s.v.spikes"%simid,format='ID_TIME')
-	ls.add_selection_to_event_output_file(eof0, '0', "gocpop[0]", "spike")
-
+	for jj in range( goc_pop.size):
+		ls.add_selection_to_event_output_file( eof0, jj, '{}/{}/{}'.format( goc_pop.id, jj, foc_type.id), 'spike' )
+		
 	#Create Lems file to run
 	lems_simfile = ls.save_to_file()
 
 	#res = pynml.run_lems_with_jneuroml_neuron( lems_simfile, max_memory="1G", compile_mods =False, nogui=True, plot=False)
-	res = pynml.run_lems_with_jneuroml_neuron( lems_simfile, max_memory="1G", nogui=True, plot=False)
-	#res=True
+	#res = pynml.run_lems_with_jneuroml_neuron( lems_simfile, max_memory="1G", nogui=True, plot=False)
+	res=True
 	return res
 
 
@@ -129,5 +126,5 @@ def set_GJ_strength_Vervaeke2010( radDist ):
 	return GJw
 	
 if __name__ =='__main__':
-	res = create_test_goc1()
+	res = create_test_goc1( duration = 200, dt=0.025, simseed = 12345)
 	print(res)
