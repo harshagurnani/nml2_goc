@@ -1,0 +1,68 @@
+<Lems>
+    
+    <!-- 
+
+        This LEMS file has been automatically generated using PyNeuroML v0.3.15 (libNeuroML v0.2.47)
+
+     -->
+    
+    <!-- Specify which component to run -->
+    <Target component="sim_gocnetGoCl"/>
+
+    <!-- Include core NeuroML2 ComponentType definitions -->
+    <Include file="Cells.xml"/>
+    <Include file="Networks.xml"/>
+    <Include file="Simulation.xml"/>
+    
+    <Include file="gocNetwork.nml"/>
+    <Include file="GoC.cell.nml"/>
+    <Include file="Golgi_Na.channel.nml"/>
+    <Include file="Golgi_NaR.channel.nml"/>
+    <Include file="Golgi_NaP.channel.nml"/>
+    <Include file="Golgi_KA.channel.nml"/>
+    <Include file="Golgi_SK2.channel.nml"/>
+    <Include file="Golgi_KM.channel.nml"/>
+    <Include file="Golgi_KV.channel.nml"/>
+    <Include file="Golgi_BK.channel.nml"/>
+    <Include file="Golgi_CaHVA.channel.nml"/>
+    <Include file="Golgi_CaLVA.channel.nml"/>
+    <Include file="Golgi_HCN1f.channel.nml"/>
+    <Include file="Golgi_HCN1s.channel.nml"/>
+    <Include file="Golgi_HCN2f.channel.nml"/>
+    <Include file="Golgi_HCN2s.channel.nml"/>
+    <Include file="Golgi_lkg.channel.nml"/>
+    <Include file="Golgi_CALC.nml"/>
+    <Include file="GapJuncCML.nml"/>
+    <Include file="instances.xml"/>
+   
+    <Simulation id="sim_gocnetGoCl" length="2000ms" step="0.025ms" target="gocNetwork" seed="12345">  <!-- Note seed: ensures same random numbers used every run -->
+        
+        <OutputFile id="Volts_file" fileName="sim_gocnetGoCl.v.dat">
+            <OutputColumn id="0" quantity="GoClPop/0/GoCl/v"/> 
+            <OutputColumn id="1" quantity="GoClPop/1/GoCl/v"/> 
+            <OutputColumn id="2" quantity="GoClPop/2/GoCl/v"/> 
+            <OutputColumn id="3" quantity="GoClPop/3/GoCl/v"/> 
+            <OutputColumn id="4" quantity="GoClPop/4/GoCl/v"/> 
+            <OutputColumn id="5" quantity="GoClPop/5/GoCl/v"/> 
+            <OutputColumn id="6" quantity="GoClPop/6/GoCl/v"/> 
+            <OutputColumn id="7" quantity="GoClPop/7/GoCl/v"/> 
+            <OutputColumn id="8" quantity="GoClPop/8/GoCl/v"/> 
+            <OutputColumn id="9" quantity="GoClPop/9/GoCl/v"/> 
+        </OutputFile>
+        
+        <EventOutputFile id="Events_file" fileName="sim_gocnetGoCl.v.spikes" format="ID_TIME">
+            <EventSelection id="0" select="GoClPop/0/GoCl" eventPort="spike"/> 
+            <EventSelection id="1" select="GoClPop/1/GoCl" eventPort="spike"/> 
+            <EventSelection id="2" select="GoClPop/2/GoCl" eventPort="spike"/> 
+            <EventSelection id="3" select="GoClPop/3/GoCl" eventPort="spike"/> 
+            <EventSelection id="4" select="GoClPop/4/GoCl" eventPort="spike"/> 
+            <EventSelection id="5" select="GoClPop/5/GoCl" eventPort="spike"/> 
+            <EventSelection id="6" select="GoClPop/6/GoCl" eventPort="spike"/> 
+            <EventSelection id="7" select="GoClPop/7/GoCl" eventPort="spike"/> 
+            <EventSelection id="8" select="GoClPop/8/GoCl" eventPort="spike"/> 
+            <EventSelection id="9" select="GoClPop/9/GoCl" eventPort="spike"/> 
+        </EventOutputFile>
+        
+    </Simulation>
+
+</Lems>

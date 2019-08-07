@@ -11,7 +11,7 @@ import math
 def create_GoC_network( duration, dt, seed, N_goc=0, run=False ):
 
 
-	goc_filename = 'simple_cell.cell.nml'
+	goc_filename = 'GoC.cell.nml'
 	goc_file = pynml.read_neuroml2_file( goc_filename )
 	goc_type = goc_file.cells[0]
 	
@@ -34,12 +34,10 @@ def create_GoC_network( duration, dt, seed, N_goc=0, run=False ):
 	goc_pop = nml.Population( id=goc_type.id+"Pop", component = goc_type.id, type="populationList", size=N_goc )
 	
 	# Create NML document for network specification
-	net = nml.Network( id="gocNetwork" )
+	net = nml.Network( id="gocNetwork", type="networkWithTemperature" , temperature="23 degC" )
 	net_doc = nml.NeuroMLDocument( id=net.id )
 	net_doc.networks.append( net )
-	#net_doc.cells.append( goc_type )
 	net.populations.append( goc_pop )
-	
 	
 	#Add locations for GoC instances in the population:
 	for goc in range(N_goc):
@@ -47,36 +45,66 @@ def create_GoC_network( duration, dt, seed, N_goc=0, run=False ):
 		goc_pop.instances.append( inst )
 		inst.location = nml.Location( x=GoC_pos[goc,0], y=GoC_pos[goc,1], z=GoC_pos[goc,2] )
 		
-		
 	# Add electrical synapses
 	GoCCoupling = nml.ElectricalProjection( id="gocGJ", presynaptic_population=goc_pop.id, postsynaptic_population=goc_pop.id )
 	net.electrical_projections.append( GoCCoupling )
 	
-	print(GJ_pairs)
+	#print(GJ_pairs)
 	for jj in range( GJ_pairs.shape[0] ):
-		cell1 = int(GJ_pairs[jj,0])
-		print(cell1)
-		cell2 = int(GJ_pairs[jj,1])
-		print(cell2)
-		conn = nml.ElectricalConnectionInstance( id=jj, pre_cell='../{}/{}/{}'.format(goc_pop.id, cell1, goc_type.id), pre_segment='1', pre_fraction_along='0.5', post_cell='../{}/{}/{}'.format(goc_pop.id, cell2, goc_type.id), post_segment='1', post_fraction_along='0.5', synapse="GapJuncCML" )
+		conn = nml.ElectricalConnectionInstance( id=jj, pre_cell='../{}/{}/{}'.format(goc_pop.id, GJ_pairs[jj,0], goc_type.id), pre_segment='1', pre_fraction_along='0.5', post_cell='../{}/{}/{}'.format(goc_pop.id, GJ_pairs[jj,1], goc_type.id), post_segment='1', post_fraction_along='0.5', synapse="GapJuncCML" )
 		# ------------ need to create GJ component
 		GoCCoupling.electrical_connection_instances.append( conn )
 		
 		
+	# Define input spiketrains
+	input_type = 'spikeGenerator'#'spikeGeneratorPoisson'
+	lems_inst_doc = lems.Model()
+	mf_inputs = lems.Component( "MF_Input", input_type)
+	mf_inputs.set_parameter("period", "150 ms" )
+	#mf_inputs.set_parameter("averageRate", "50 Hz")
+	lems_inst_doc.add( mf_inputs )
+	
+	synapse_type = 'alphaCurrentSynapse'
+	alpha_syn = lems.Component( "AlphaSyn", synapse_type)
+	alpha_syn.set_parameter("tau", "30 ms" )
+	alpha_syn.set_parameter("ibase", "200 pA")
+	lems_inst_doc.add( alpha_syn )
+	
+	N_mf = 3
+	# Define input population
+	MF_pop = nml.Population(id=mf_inputs.id+"_pop", component=mf_inputs.id, type="populationList", size=N_mf)
+	net.populations.append( MF_pop )
+	
+	# Setup Mf->GoC synapses
+	MFprojection = nml.Projection(id="MFtoGoC", presynaptic_population=MF_pop.id, postsynaptic_population=goc_pop.id, synapse=alpha_syn.id)
+	net.projections.append(MFprojection)
+	
+	for goc in range(N_mf):
+		inst = nml.Instance(id=goc)
+		MF_pop.instances.append( inst )
+		inst.location = nml.Location( x=GoC_pos[goc,0], y=GoC_pos[goc,1], z=GoC_pos[goc,2]+100 )
+		conn = nml.Connection(id=goc, pre_cell_id='../{}/{}/{}'.format(MF_pop.id, goc, mf_inputs.id), post_cell_id='../{}/{}/{}'.format(goc_pop.id, goc, goc_type.id), post_segmen_id='0', post_fraction_along="0.5")
+		MFprojection.connections.append(conn)
+		
+		
 	net_filename = 'gocNetwork.nml'
 	pynml.write_neuroml2_file( net_doc, net_filename )
-	
+	lems_filename = 'instances.xml'
+	pynml.write_lems_file( lems_inst_doc, lems_filename, validate=False )
 
-	simid = 'sim_gocnet'
+	simid = 'sim_gocnet'+goc_type.id
 	ls = LEMSSimulation( simid, duration=duration, dt=dt, simulation_seed=seed )
 	ls.assign_simulation_target( net.id )
 	
+	#ls.include_lems_file( 'Synapses.xml', include_included=False)
+	#ls.include_lems_file( 'Inputs.xml', include_included=False)
 	ls.include_neuroml2_file( net_filename)
 	ls.include_neuroml2_file( goc_filename)
 	ls.include_neuroml2_file( GJ_filename)
+	ls.include_lems_file( lems_filename, include_included=False)
+	
 	
 	# Specify outputs
-	
 	eof0 = 'Events_file'
 	ls.create_event_output_file(eof0, "%s.v.spikes"%simid,format='ID_TIME')
 	for jj in range( goc_pop.size):
@@ -91,7 +119,8 @@ def create_GoC_network( duration, dt, seed, N_goc=0, run=False ):
 	lems_simfile = ls.save_to_file()
 
 	#res = pynml.run_lems_with_jneuroml( lems_simfile, max_memory="1G",nogui=True, plot=False)
-	res = pynml.run_lems_with_jneuroml_neuron( lems_simfile, max_memory="2G",  nogui=True, plot=False)
+	#res = pynml.run_lems_with_jneuroml_neuron( lems_simfile, max_memory="2G", only_generate_scripts = True, compile_mods = False, nogui=True, plot=False)
+	res = pynml.run_lems_with_jneuroml_neuron( lems_simfile, max_memory="2G", compile_mods = False,nogui=True, plot=False)
 	#res=True
 	return res
 
@@ -141,5 +170,5 @@ def set_GJ_strength_Vervaeke2010( radDist ):
 	return GJw
 	
 if __name__ =='__main__':
-	res = create_GoC_network( duration = 200, dt=0.025, seed = 12345, N_goc=10)
+	res = create_GoC_network( duration = 2000, dt=0.025, seed = 12345, N_goc=10)
 	print(res)

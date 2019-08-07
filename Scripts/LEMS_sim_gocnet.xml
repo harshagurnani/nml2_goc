@@ -17,6 +17,9 @@
     <Include file="gocNetwork.nml"/>
     <Include file="simple_cell.cell.nml"/>
     <Include file="Golgi_lkg.channel.nml"/>
+    <Include file="Golgi_Na.channel.nml"/>
+    <Include file="Golgi_KV.channel.nml"/>
+    <Include file="Golgi_NaP.channel.nml"/>
     <Include file="GapJuncCML.nml"/>
    
     <Simulation id="sim_gocnet" length="200ms" step="0.025ms" target="gocNetwork" seed="12345">  <!-- Note seed: ensures same random numbers used every run -->

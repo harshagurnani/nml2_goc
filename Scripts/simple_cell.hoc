@@ -71,6 +71,27 @@
     "group" : "all",
     "condDens" : "2.0999998E-5",
     "erev" : "-55.0"
+  }, {
+    "id" : "Golgi_Na_soma_group",
+    "ionChannel" : "GolgiNa",
+    "ion" : "na",
+    "group" : "soma_group",
+    "condDens" : "0.048",
+    "erev" : "87.39"
+  }, {
+    "id" : "Golgi_KV_soma_group",
+    "ionChannel" : "GolgiKV",
+    "ion" : "k",
+    "group" : "soma_group",
+    "condDens" : "0.031999998",
+    "erev" : "-84.689995"
+  }, {
+    "id" : "Golgi_NaP_soma_group",
+    "ionChannel" : "GolgiNaP",
+    "ion" : "na",
+    "group" : "soma_group",
+    "condDens" : "1.8999999E-4",
+    "erev" : "87.39"
   } ],
   "species" : [ ]
 }
@@ -218,6 +239,21 @@ proc biophys() {
         insert LeakConductance
         gmax_LeakConductance = 2.0999998E-5  // units: S cm-2
         e_LeakConductance = -55.0  // units: mV
+    }
+    forsec soma_group {
+        insert GolgiNa
+        gmax_GolgiNa = 0.048  // units: S cm-2
+        ena = 87.39  // units: mV
+    }
+    forsec soma_group {
+        insert GolgiKV
+        gmax_GolgiKV = 0.031999998  // units: S cm-2
+        ek = -84.689995  // units: mV
+    }
+    forsec soma_group {
+        insert GolgiNaP
+        gmax_GolgiNaP = 1.8999999E-4  // units: S cm-2
+        ena = 87.39  // units: mV
     }
 
     // Concentration models for species

@@ -2,9 +2,15 @@
 Neuron simulator export for:
 
 Components:
-    gocNetwork (Type: network)
+    gocNetwork (Type: networkWithTemperature:  temperature=296.15 (SI temperature))
     null (Type: notes)
     LeakConductance (Type: ionChannelPassive:  conductance=1.0E-11 (SI conductance))
+    null (Type: notes)
+    GolgiNa (Type: ionChannelHH:  conductance=1.0E-11 (SI conductance))
+    null (Type: notes)
+    GolgiKV (Type: ionChannelHH:  conductance=1.0E-11 (SI conductance))
+    null (Type: notes)
+    GolgiNaP (Type: ionChannelHH:  conductance=1.0E-11 (SI conductance))
     simple_cell (Type: cell)
     net1 (Type: networkWithTemperature:  temperature=296.15 (SI temperature))
     null (Type: notes)
@@ -46,9 +52,13 @@ class NeuronSimulation():
         self.next_spiking_input_id = 0  # Used in Random123 classes for elements using random(), etc. 
 
         '''
-        Adding simulation Component(id=sim_gocnet type=Simulation) of network/component: gocNetwork (Type: network)
+        Adding simulation Component(id=sim_gocnet type=Simulation) of network/component: gocNetwork (Type: networkWithTemperature:  temperature=296.15 (SI temperature))
         
         '''
+
+        # Temperature used for network: 296.15 K
+        h.celsius = 296.15 - 273.15
+
         # ######################   Population: simple_cellPop
         print("Population simple_cellPop contains 10 instance(s) of component: simple_cell of type: cell")
 
@@ -62,16 +72,16 @@ class NeuronSimulation():
 
             self.next_global_id+=1
 
-        h("{ a_simple_cellPop[0].position(166.03151, 186.20934, 62.619892) }")
-        h("{ a_simple_cellPop[1].position(171.00993, 160.25784, 1.9725893) }")
-        h("{ a_simple_cellPop[2].position(336.77838, 145.02882, 11.83306) }")
-        h("{ a_simple_cellPop[3].position(26.245073, 112.21559, 63.44849) }")
-        h("{ a_simple_cellPop[4].position(189.8273, 78.08479, 70.78726) }")
-        h("{ a_simple_cellPop[5].position(119.0621, 169.56064, 23.729378) }")
-        h("{ a_simple_cellPop[6].position(72.73818, 349.5742, 76.71984) }")
-        h("{ a_simple_cellPop[7].position(58.881645, 343.97714, 48.0128) }")
-        h("{ a_simple_cellPop[8].position(214.621, 71.80528, 38.70833) }")
-        h("{ a_simple_cellPop[9].position(229.75789, 290.6576, 21.059566) }")
+        h("{ a_simple_cellPop[0].position(158.05548, 109.10128, 76.53857) }")
+        h("{ a_simple_cellPop[1].position(30.594244, 143.80536, 57.756615) }")
+        h("{ a_simple_cellPop[2].position(65.61163, 5.291004, 9.313237) }")
+        h("{ a_simple_cellPop[3].position(249.94395, 241.57002, 78.05853) }")
+        h("{ a_simple_cellPop[4].position(3.7272198, 93.293915, 22.83718) }")
+        h("{ a_simple_cellPop[5].position(311.8748, 75.57683, 10.074388) }")
+        h("{ a_simple_cellPop[6].position(288.1411, 54.85699, 75.083755) }")
+        h("{ a_simple_cellPop[7].position(112.928314, 231.76147, 23.973436) }")
+        h("{ a_simple_cellPop[8].position(41.179295, 69.801735, 74.458664) }")
+        h("{ a_simple_cellPop[9].position(263.83517, 171.57458, 70.37245) }")
 
         h("proc initialiseV_simple_cellPop() { for i = 0, n_simple_cellPop-1 { a_simple_cellPop[i].set_initial_v() } }")
         h("objref fih_simple_cellPop")
@@ -82,10 +92,10 @@ class NeuronSimulation():
         h('{fih_ion_simple_cellPop = new FInitializeHandler(1, "initialiseIons_simple_cellPop()")}')
 
         # ######################   Electrical Projection: gocGJ
-        print("Adding electrical projection: gocGJ from simple_cellPop to simple_cellPop, with 8 connection(s)")
+        print("Adding electrical projection: gocGJ from simple_cellPop to simple_cellPop, with 10 connection(s)")
 
-        h("objectvar syn_gocGJ_GapJuncCML_A[8]")
-        h("objectvar syn_gocGJ_GapJuncCML_B[8]")
+        h("objectvar syn_gocGJ_GapJuncCML_A[10]")
+        h("objectvar syn_gocGJ_GapJuncCML_B[10]")
 
         # Elect Connection 0: cell 0, seg 1 (0.5) [0.5 on a_simple_cellPop[0].Section_1] -> cell 1, seg 1 (0.5) [0.5 on a_simple_cellPop[1].Section_1], weight: 1.0
         h("a_simple_cellPop[0].Section_1 { syn_gocGJ_GapJuncCML_A[0] = new GapJuncCML(0.5) }")
@@ -93,16 +103,16 @@ class NeuronSimulation():
         h("setpointer syn_gocGJ_GapJuncCML_A[0].vpeer, a_simple_cellPop[1].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GapJuncCML_B[0].vpeer, a_simple_cellPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 1: cell 0, seg 1 (0.5) [0.5 on a_simple_cellPop[0].Section_1] -> cell 4, seg 1 (0.5) [0.5 on a_simple_cellPop[4].Section_1], weight: 1.0
+        # Elect Connection 1: cell 0, seg 1 (0.5) [0.5 on a_simple_cellPop[0].Section_1] -> cell 7, seg 1 (0.5) [0.5 on a_simple_cellPop[7].Section_1], weight: 1.0
         h("a_simple_cellPop[0].Section_1 { syn_gocGJ_GapJuncCML_A[1] = new GapJuncCML(0.5) }")
-        h("a_simple_cellPop[4].Section_1 { syn_gocGJ_GapJuncCML_B[1] = new GapJuncCML(0.5) }")
-        h("setpointer syn_gocGJ_GapJuncCML_A[1].vpeer, a_simple_cellPop[4].Section_1.v(0.5)")
+        h("a_simple_cellPop[7].Section_1 { syn_gocGJ_GapJuncCML_B[1] = new GapJuncCML(0.5) }")
+        h("setpointer syn_gocGJ_GapJuncCML_A[1].vpeer, a_simple_cellPop[7].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GapJuncCML_B[1].vpeer, a_simple_cellPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 2: cell 0, seg 1 (0.5) [0.5 on a_simple_cellPop[0].Section_1] -> cell 5, seg 1 (0.5) [0.5 on a_simple_cellPop[5].Section_1], weight: 1.0
+        # Elect Connection 2: cell 0, seg 1 (0.5) [0.5 on a_simple_cellPop[0].Section_1] -> cell 8, seg 1 (0.5) [0.5 on a_simple_cellPop[8].Section_1], weight: 1.0
         h("a_simple_cellPop[0].Section_1 { syn_gocGJ_GapJuncCML_A[2] = new GapJuncCML(0.5) }")
-        h("a_simple_cellPop[5].Section_1 { syn_gocGJ_GapJuncCML_B[2] = new GapJuncCML(0.5) }")
-        h("setpointer syn_gocGJ_GapJuncCML_A[2].vpeer, a_simple_cellPop[5].Section_1.v(0.5)")
+        h("a_simple_cellPop[8].Section_1 { syn_gocGJ_GapJuncCML_B[2] = new GapJuncCML(0.5) }")
+        h("setpointer syn_gocGJ_GapJuncCML_A[2].vpeer, a_simple_cellPop[8].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GapJuncCML_B[2].vpeer, a_simple_cellPop[0].Section_1.v(0.5)")
 
         # Elect Connection 3: cell 0, seg 1 (0.5) [0.5 on a_simple_cellPop[0].Section_1] -> cell 9, seg 1 (0.5) [0.5 on a_simple_cellPop[9].Section_1], weight: 1.0
@@ -111,29 +121,41 @@ class NeuronSimulation():
         h("setpointer syn_gocGJ_GapJuncCML_A[3].vpeer, a_simple_cellPop[9].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GapJuncCML_B[3].vpeer, a_simple_cellPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 4: cell 1, seg 1 (0.5) [0.5 on a_simple_cellPop[1].Section_1] -> cell 8, seg 1 (0.5) [0.5 on a_simple_cellPop[8].Section_1], weight: 1.0
+        # Elect Connection 4: cell 1, seg 1 (0.5) [0.5 on a_simple_cellPop[1].Section_1] -> cell 4, seg 1 (0.5) [0.5 on a_simple_cellPop[4].Section_1], weight: 1.0
         h("a_simple_cellPop[1].Section_1 { syn_gocGJ_GapJuncCML_A[4] = new GapJuncCML(0.5) }")
-        h("a_simple_cellPop[8].Section_1 { syn_gocGJ_GapJuncCML_B[4] = new GapJuncCML(0.5) }")
-        h("setpointer syn_gocGJ_GapJuncCML_A[4].vpeer, a_simple_cellPop[8].Section_1.v(0.5)")
+        h("a_simple_cellPop[4].Section_1 { syn_gocGJ_GapJuncCML_B[4] = new GapJuncCML(0.5) }")
+        h("setpointer syn_gocGJ_GapJuncCML_A[4].vpeer, a_simple_cellPop[4].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GapJuncCML_B[4].vpeer, a_simple_cellPop[1].Section_1.v(0.5)")
 
-        # Elect Connection 5: cell 3, seg 1 (0.5) [0.5 on a_simple_cellPop[3].Section_1] -> cell 5, seg 1 (0.5) [0.5 on a_simple_cellPop[5].Section_1], weight: 1.0
-        h("a_simple_cellPop[3].Section_1 { syn_gocGJ_GapJuncCML_A[5] = new GapJuncCML(0.5) }")
-        h("a_simple_cellPop[5].Section_1 { syn_gocGJ_GapJuncCML_B[5] = new GapJuncCML(0.5) }")
-        h("setpointer syn_gocGJ_GapJuncCML_A[5].vpeer, a_simple_cellPop[5].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GapJuncCML_B[5].vpeer, a_simple_cellPop[3].Section_1.v(0.5)")
+        # Elect Connection 5: cell 1, seg 1 (0.5) [0.5 on a_simple_cellPop[1].Section_1] -> cell 8, seg 1 (0.5) [0.5 on a_simple_cellPop[8].Section_1], weight: 1.0
+        h("a_simple_cellPop[1].Section_1 { syn_gocGJ_GapJuncCML_A[5] = new GapJuncCML(0.5) }")
+        h("a_simple_cellPop[8].Section_1 { syn_gocGJ_GapJuncCML_B[5] = new GapJuncCML(0.5) }")
+        h("setpointer syn_gocGJ_GapJuncCML_A[5].vpeer, a_simple_cellPop[8].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GapJuncCML_B[5].vpeer, a_simple_cellPop[1].Section_1.v(0.5)")
 
-        # Elect Connection 6: cell 4, seg 1 (0.5) [0.5 on a_simple_cellPop[4].Section_1] -> cell 8, seg 1 (0.5) [0.5 on a_simple_cellPop[8].Section_1], weight: 1.0
-        h("a_simple_cellPop[4].Section_1 { syn_gocGJ_GapJuncCML_A[6] = new GapJuncCML(0.5) }")
+        # Elect Connection 6: cell 2, seg 1 (0.5) [0.5 on a_simple_cellPop[2].Section_1] -> cell 8, seg 1 (0.5) [0.5 on a_simple_cellPop[8].Section_1], weight: 1.0
+        h("a_simple_cellPop[2].Section_1 { syn_gocGJ_GapJuncCML_A[6] = new GapJuncCML(0.5) }")
         h("a_simple_cellPop[8].Section_1 { syn_gocGJ_GapJuncCML_B[6] = new GapJuncCML(0.5) }")
         h("setpointer syn_gocGJ_GapJuncCML_A[6].vpeer, a_simple_cellPop[8].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GapJuncCML_B[6].vpeer, a_simple_cellPop[4].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GapJuncCML_B[6].vpeer, a_simple_cellPop[2].Section_1.v(0.5)")
 
-        # Elect Connection 7: cell 6, seg 1 (0.5) [0.5 on a_simple_cellPop[6].Section_1] -> cell 7, seg 1 (0.5) [0.5 on a_simple_cellPop[7].Section_1], weight: 1.0
-        h("a_simple_cellPop[6].Section_1 { syn_gocGJ_GapJuncCML_A[7] = new GapJuncCML(0.5) }")
-        h("a_simple_cellPop[7].Section_1 { syn_gocGJ_GapJuncCML_B[7] = new GapJuncCML(0.5) }")
-        h("setpointer syn_gocGJ_GapJuncCML_A[7].vpeer, a_simple_cellPop[7].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GapJuncCML_B[7].vpeer, a_simple_cellPop[6].Section_1.v(0.5)")
+        # Elect Connection 7: cell 3, seg 1 (0.5) [0.5 on a_simple_cellPop[3].Section_1] -> cell 9, seg 1 (0.5) [0.5 on a_simple_cellPop[9].Section_1], weight: 1.0
+        h("a_simple_cellPop[3].Section_1 { syn_gocGJ_GapJuncCML_A[7] = new GapJuncCML(0.5) }")
+        h("a_simple_cellPop[9].Section_1 { syn_gocGJ_GapJuncCML_B[7] = new GapJuncCML(0.5) }")
+        h("setpointer syn_gocGJ_GapJuncCML_A[7].vpeer, a_simple_cellPop[9].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GapJuncCML_B[7].vpeer, a_simple_cellPop[3].Section_1.v(0.5)")
+
+        # Elect Connection 8: cell 4, seg 1 (0.5) [0.5 on a_simple_cellPop[4].Section_1] -> cell 8, seg 1 (0.5) [0.5 on a_simple_cellPop[8].Section_1], weight: 1.0
+        h("a_simple_cellPop[4].Section_1 { syn_gocGJ_GapJuncCML_A[8] = new GapJuncCML(0.5) }")
+        h("a_simple_cellPop[8].Section_1 { syn_gocGJ_GapJuncCML_B[8] = new GapJuncCML(0.5) }")
+        h("setpointer syn_gocGJ_GapJuncCML_A[8].vpeer, a_simple_cellPop[8].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GapJuncCML_B[8].vpeer, a_simple_cellPop[4].Section_1.v(0.5)")
+
+        # Elect Connection 9: cell 5, seg 1 (0.5) [0.5 on a_simple_cellPop[5].Section_1] -> cell 6, seg 1 (0.5) [0.5 on a_simple_cellPop[6].Section_1], weight: 1.0
+        h("a_simple_cellPop[5].Section_1 { syn_gocGJ_GapJuncCML_A[9] = new GapJuncCML(0.5) }")
+        h("a_simple_cellPop[6].Section_1 { syn_gocGJ_GapJuncCML_B[9] = new GapJuncCML(0.5) }")
+        h("setpointer syn_gocGJ_GapJuncCML_A[9].vpeer, a_simple_cellPop[6].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GapJuncCML_B[9].vpeer, a_simple_cellPop[5].Section_1.v(0.5)")
 
         trec = h.Vector()
         trec.record(h._ref_t)

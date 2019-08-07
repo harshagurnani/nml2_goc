@@ -13,7 +13,9 @@
 
 
     <include href="Golgi_lkg.channel.nml"/>
-    
+    <include href="Golgi_Na.channel.nml"/>
+    <include href="Golgi_KV.channel.nml"/>
+    <include href="Golgi_NaP.channel.nml"/>
     <!-- Note, no <cells> element...  -->
     
     <cell id="simple_cell" >
@@ -144,8 +146,10 @@
 				<!--Leak -->
 				<channelDensity condDensity="0.021 mS_per_cm2" id="Leak" ionChannel="LeakConductance" erev="-55.0 mV" ion="non_specific"/>
 				
-				
-				
+				<!-- Na channels -->
+				<channelDensity condDensity="48.0 mS_per_cm2" id="Golgi_Na_soma_group" ionChannel="GolgiNa" segmentGroup="soma_group" ion="na" erev="87.39 mV"/>
+				<channelDensity condDensity="32.0 mS_per_cm2" id="Golgi_KV_soma_group" ionChannel="GolgiKV" segmentGroup="soma_group" ion="k" erev="-84.69 mV"/>
+				<channelDensity condDensity="0.19 mS_per_cm2" id="Golgi_NaP_soma_group" ionChannel="GolgiNaP" segmentGroup="soma_group" ion="na" erev="87.39 mV"/>
 				<!-- general properties-->
 				<spikeThresh value="0.0 mV"/>
                 <specificCapacitance value="1.0 uF_per_cm2"/>
