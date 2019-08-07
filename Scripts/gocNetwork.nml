@@ -1,0 +1,46 @@
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2"  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2 https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2beta5.xsd" id="gocNetwork">
+    <network id="gocNetwork">
+        <population id="simple_cellPop" component="simple_cell" size="10" type="populationList">
+            <instance id="0">
+                <location x="166.031502783085131" y="186.209332298232596" z="62.619893245540752"/>
+            </instance>
+            <instance id="1">
+                <location x="171.009938866785745" y="160.257835984521876" z="1.972589305869681"/>
+            </instance>
+            <instance id="2">
+                <location x="336.778372577126845" y="145.028830190952391" z="11.833060079424005"/>
+            </instance>
+            <instance id="3">
+                <location x="26.245073302730919" y="112.215594579073837" z="63.448490277187524"/>
+            </instance>
+            <instance id="4">
+                <location x="189.827295723124735" y="78.084793391459812" z="70.787260266615093"/>
+            </instance>
+            <instance id="5">
+                <location x="119.062102109346625" y="169.560642190371652" z="23.729378611906498"/>
+            </instance>
+            <instance id="6">
+                <location x="72.738183811158052" y="349.574192611698948" z="76.719841091431732"/>
+            </instance>
+            <instance id="7">
+                <location x="58.881645556742882" y="343.977136502585779" z="48.01279834070003"/>
+            </instance>
+            <instance id="8">
+                <location x="214.621005892514688" y="71.805284987720498" z="38.708326605583622"/>
+            </instance>
+            <instance id="9">
+                <location x="229.757887616570514" y="290.657607079132333" z="21.059566341338005"/>
+            </instance>
+        </population>
+        <electricalProjection id="gocGJ" presynapticPopulation="simple_cellPop" postsynapticPopulation="simple_cellPop">
+            <electricalConnectionInstance id="0" preCell="../simple_cellPop/0/simple_cell" preSegment="1" postCell="../simple_cellPop/1/simple_cell" postSegment="1" synapse="GapJuncCML"/>
+            <electricalConnectionInstance id="1" preCell="../simple_cellPop/0/simple_cell" preSegment="1" postCell="../simple_cellPop/4/simple_cell" postSegment="1" synapse="GapJuncCML"/>
+            <electricalConnectionInstance id="2" preCell="../simple_cellPop/0/simple_cell" preSegment="1" postCell="../simple_cellPop/5/simple_cell" postSegment="1" synapse="GapJuncCML"/>
+            <electricalConnectionInstance id="3" preCell="../simple_cellPop/0/simple_cell" preSegment="1" postCell="../simple_cellPop/9/simple_cell" postSegment="1" synapse="GapJuncCML"/>
+            <electricalConnectionInstance id="4" preCell="../simple_cellPop/1/simple_cell" preSegment="1" postCell="../simple_cellPop/8/simple_cell" postSegment="1" synapse="GapJuncCML"/>
+            <electricalConnectionInstance id="5" preCell="../simple_cellPop/3/simple_cell" preSegment="1" postCell="../simple_cellPop/5/simple_cell" postSegment="1" synapse="GapJuncCML"/>
+            <electricalConnectionInstance id="6" preCell="../simple_cellPop/4/simple_cell" preSegment="1" postCell="../simple_cellPop/8/simple_cell" postSegment="1" synapse="GapJuncCML"/>
+            <electricalConnectionInstance id="7" preCell="../simple_cellPop/6/simple_cell" preSegment="1" postCell="../simple_cellPop/7/simple_cell" postSegment="1" synapse="GapJuncCML"/>
+        </electricalProjection>
+    </network>
+</neuroml>

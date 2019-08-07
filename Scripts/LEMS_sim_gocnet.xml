@@ -1,0 +1,52 @@
+<Lems>
+    
+    <!-- 
+
+        This LEMS file has been automatically generated using PyNeuroML v0.3.15 (libNeuroML v0.2.47)
+
+     -->
+    
+    <!-- Specify which component to run -->
+    <Target component="sim_gocnet"/>
+
+    <!-- Include core NeuroML2 ComponentType definitions -->
+    <Include file="Cells.xml"/>
+    <Include file="Networks.xml"/>
+    <Include file="Simulation.xml"/>
+    
+    <Include file="gocNetwork.nml"/>
+    <Include file="simple_cell.cell.nml"/>
+    <Include file="Golgi_lkg.channel.nml"/>
+    <Include file="GapJuncCML.nml"/>
+   
+    <Simulation id="sim_gocnet" length="200ms" step="0.025ms" target="gocNetwork" seed="12345">  <!-- Note seed: ensures same random numbers used every run -->
+        
+        <OutputFile id="Volts_file" fileName="sim_gocnet.v.dat">
+            <OutputColumn id="0" quantity="simple_cellPop/0/simple_cell/v"/> 
+            <OutputColumn id="1" quantity="simple_cellPop/1/simple_cell/v"/> 
+            <OutputColumn id="2" quantity="simple_cellPop/2/simple_cell/v"/> 
+            <OutputColumn id="3" quantity="simple_cellPop/3/simple_cell/v"/> 
+            <OutputColumn id="4" quantity="simple_cellPop/4/simple_cell/v"/> 
+            <OutputColumn id="5" quantity="simple_cellPop/5/simple_cell/v"/> 
+            <OutputColumn id="6" quantity="simple_cellPop/6/simple_cell/v"/> 
+            <OutputColumn id="7" quantity="simple_cellPop/7/simple_cell/v"/> 
+            <OutputColumn id="8" quantity="simple_cellPop/8/simple_cell/v"/> 
+            <OutputColumn id="9" quantity="simple_cellPop/9/simple_cell/v"/> 
+        </OutputFile>
+        
+        <EventOutputFile id="Events_file" fileName="sim_gocnet.v.spikes" format="ID_TIME">
+            <EventSelection id="0" select="simple_cellPop/0/simple_cell" eventPort="spike"/> 
+            <EventSelection id="1" select="simple_cellPop/1/simple_cell" eventPort="spike"/> 
+            <EventSelection id="2" select="simple_cellPop/2/simple_cell" eventPort="spike"/> 
+            <EventSelection id="3" select="simple_cellPop/3/simple_cell" eventPort="spike"/> 
+            <EventSelection id="4" select="simple_cellPop/4/simple_cell" eventPort="spike"/> 
+            <EventSelection id="5" select="simple_cellPop/5/simple_cell" eventPort="spike"/> 
+            <EventSelection id="6" select="simple_cellPop/6/simple_cell" eventPort="spike"/> 
+            <EventSelection id="7" select="simple_cellPop/7/simple_cell" eventPort="spike"/> 
+            <EventSelection id="8" select="simple_cellPop/8/simple_cell" eventPort="spike"/> 
+            <EventSelection id="9" select="simple_cellPop/9/simple_cell" eventPort="spike"/> 
+        </EventOutputFile>
+        
+    </Simulation>
+
+</Lems>
