@@ -3,6 +3,6 @@
 
     <notes>ChannelML file describing a single synaptic mechanism</notes>
 
-    <gapJunction id="GapJuncCML" conductance="1.00E-9mS"/>
+    <gapJunction id="GapJuncCML" conductance="500E-9mS"/>
 
 </neuroml>

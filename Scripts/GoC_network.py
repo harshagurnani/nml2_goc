@@ -48,16 +48,19 @@ def create_GoC_network( duration, dt, seed, N_goc=0, run=False ):
 		
 	# Add electrical synapses
 	GoCCoupling = nml.ElectricalProjection( id="gocGJ", presynaptic_population=goc_pop.id, postsynaptic_population=goc_pop.id )
-	net.electrical_projections.append( GoCCoupling )
 	
 	#print(GJ_pairs)
 	for jj in range( GJ_pairs.shape[0] ):
-		gj = nml.GapJunction( id="GJ_"+str(jj), conductance='{}pS'.format(GJWt[jj]*200) )
+		print(jj)
+		#gj = nml.GapJunction( id="GJ_"+str(jj), conductance='{}pS'.format(GJWt[jj]*200) )
+		gj = nml.GapJunction(id="GJ_%d"%jj, conductance="%fnS"%(GJWt[jj]))
 		net_doc.gap_junctions.append(gj)
-		conn = nml.ElectricalConnectionInstance( id=jj, pre_cell='../{}/{}/{}'.format(goc_pop.id, GJ_pairs[jj,0], goc_type.id), pre_segment='1', pre_fraction_along='0.5', post_cell='../{}/{}/{}'.format(goc_pop.id, GJ_pairs[jj,1], goc_type.id), post_segment='1', post_fraction_along='0.5', synapse=gj.id)#synapse="GapJuncCML" 
+		print("%fnS"%(GJWt[jj]))
+		conn = nml.ElectricalConnectionInstance( id=jj, pre_cell='../{}/{}/{}'.format(goc_pop.id, GJ_pairs[jj,0], goc_type.id), pre_segment='1', pre_fraction_along='0.5', post_cell='../{}/{}/{}'.format(goc_pop.id, GJ_pairs[jj,1], goc_type.id), post_segment='1', post_fraction_along='0.5', synapse=gj.id, conductance="%fnS"%(GJWt[jj]) )#synapse="GapJuncCML" synapse=gj.id , conductance="100E-9mS"
 		# ------------ need to create GJ component
-		GoCCoupling.electrical_connection_instances.append( conn )
 		
+		GoCCoupling.electrical_connection_instances.append( conn )
+	net.electrical_projections.append( GoCCoupling )	
 		
 	# Define input spiketrains
 	input_type = 'spikeGenerator'#'spikeGeneratorPoisson'
