@@ -2,12 +2,7 @@
 Neuron simulator export for:
 
 Components:
-    GJ_0 (Type: gapJunction:  conductance=6.65199E-10 (SI conductance))
-    GJ_1 (Type: gapJunction:  conductance=3.37885E-10 (SI conductance))
-    GJ_2 (Type: gapJunction:  conductance=1.33902E-10 (SI conductance))
-    GJ_3 (Type: gapJunction:  conductance=3.5857890000000004E-9 (SI conductance))
-    GJ_4 (Type: gapJunction:  conductance=6.345340000000001E-10 (SI conductance))
-    GJ_5 (Type: gapJunction:  conductance=3.2687600000000003E-10 (SI conductance))
+    GJ_0 (Type: gapJunction:  conductance=9.5E-7 (SI conductance))
     gocNetwork (Type: networkWithTemperature:  temperature=296.15 (SI temperature))
     null (Type: notes)
     GolgiNa (Type: ionChannelHH:  conductance=1.0E-11 (SI conductance))
@@ -108,16 +103,16 @@ class NeuronSimulation():
 
             self.next_global_id+=1
 
-        h("{ a_GoClPop[0].position(49.7045, 150.12769, 30.9051) }")
-        h("{ a_GoClPop[1].position(69.30694, 348.67297, 49.861843) }")
-        h("{ a_GoClPop[2].position(30.727016, 96.14264, 64.94015) }")
-        h("{ a_GoClPop[3].position(299.1904, 286.89096, 7.6727) }")
-        h("{ a_GoClPop[4].position(13.741691, 235.73753, 15.579345) }")
-        h("{ a_GoClPop[5].position(342.7841, 41.847103, 6.43794) }")
-        h("{ a_GoClPop[6].position(64.937065, 342.93213, 65.762535) }")
-        h("{ a_GoClPop[7].position(312.24387, 169.92679, 67.08473) }")
-        h("{ a_GoClPop[8].position(130.04079, 273.26013, 60.909798) }")
-        h("{ a_GoClPop[9].position(278.58798, 321.88776, 62.757538) }")
+        h("{ a_GoClPop[0].position(153.84595, 280.9172, 68.7745) }")
+        h("{ a_GoClPop[1].position(338.48444, 47.495975, 71.5809) }")
+        h("{ a_GoClPop[2].position(138.16876, 325.84924, 19.017193) }")
+        h("{ a_GoClPop[3].position(81.976105, 320.1327, 37.828262) }")
+        h("{ a_GoClPop[4].position(245.7251, 19.752747, 58.472363) }")
+        h("{ a_GoClPop[5].position(293.70624, 232.32382, 52.43278) }")
+        h("{ a_GoClPop[6].position(296.3659, 280.08475, 41.77984) }")
+        h("{ a_GoClPop[7].position(27.42112, 246.73148, 49.04739) }")
+        h("{ a_GoClPop[8].position(50.924698, 66.59721, 46.417328) }")
+        h("{ a_GoClPop[9].position(37.842297, 53.361412, 67.64089) }")
 
         h("proc initialiseV_GoClPop() { for i = 0, n_GoClPop-1 { a_GoClPop[i].set_initial_v() } }")
         h("objref fih_GoClPop")
@@ -151,14 +146,14 @@ class NeuronSimulation():
             self.next_global_id+=1
 
         h(" MF_Input_pop[0] { pt3dclear() } ")
-        h(" MF_Input_pop[0] { pt3dadd(49.7045, 150.12769 + (5), 130.9051, 10) } ")
-        h(" MF_Input_pop[0] { pt3dadd(49.7045, 150.12769 + (-5), 130.9051, 10) } ")
+        h(" MF_Input_pop[0] { pt3dadd(153.84595, 280.9172 + (5), 168.77449, 10) } ")
+        h(" MF_Input_pop[0] { pt3dadd(153.84595, 280.9172 + (-5), 168.77449, 10) } ")
         h(" MF_Input_pop[1] { pt3dclear() } ")
-        h(" MF_Input_pop[1] { pt3dadd(69.30694, 348.67297 + (5), 149.86185, 10) } ")
-        h(" MF_Input_pop[1] { pt3dadd(69.30694, 348.67297 + (-5), 149.86185, 10) } ")
+        h(" MF_Input_pop[1] { pt3dadd(338.48444, 47.495975 + (5), 171.5809, 10) } ")
+        h(" MF_Input_pop[1] { pt3dadd(338.48444, 47.495975 + (-5), 171.5809, 10) } ")
         h(" MF_Input_pop[2] { pt3dclear() } ")
-        h(" MF_Input_pop[2] { pt3dadd(30.727016, 96.14264 + (5), 164.94014, 10) } ")
-        h(" MF_Input_pop[2] { pt3dadd(30.727016, 96.14264 + (-5), 164.94014, 10) } ")
+        h(" MF_Input_pop[2] { pt3dadd(138.16876, 325.84924 + (5), 119.01719, 10) } ")
+        h(" MF_Input_pop[2] { pt3dadd(138.16876, 325.84924 + (-5), 119.01719, 10) } ")
 
         # ######################   Projection: MFtoGoC
         print("Adding projection: MFtoGoC, from MF_Input_pop to GoClPop with synapse AlphaSyn, 3 connection(s)")
@@ -187,41 +182,53 @@ class NeuronSimulation():
         h("objectvar syn_gocGJ_GJ_0_A[6]")
         h("objectvar syn_gocGJ_GJ_0_B[6]")
 
-        # Elect Connection 0: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 2, seg 1 (0.5) [0.5 on a_GoClPop[2].Section_1], weight: 1.0
+        # Elect Connection 0: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 2, seg 1 (0.5) [0.5 on a_GoClPop[2].Section_1], weight: 0.6279175
         h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[0] = new GJ_0(0.5) }")
         h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_B[0] = new GJ_0(0.5) }")
+        h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[0].weight = 0.6279175 }")
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_B[0].weight = 0.6279175 }")
         h("setpointer syn_gocGJ_GJ_0_A[0].vpeer, a_GoClPop[2].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GJ_0_B[0].vpeer, a_GoClPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 1: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1], weight: 1.0
+        # Elect Connection 1: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1], weight: 0.39635995
         h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[1] = new GJ_0(0.5) }")
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_B[1] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[1].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_B[1] = new GJ_0(0.5) }")
+        h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[1].weight = 0.39635995 }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_B[1].weight = 0.39635995 }")
+        h("setpointer syn_gocGJ_GJ_0_A[1].vpeer, a_GoClPop[3].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GJ_0_B[1].vpeer, a_GoClPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 2: cell 1, seg 1 (0.5) [0.5 on a_GoClPop[1].Section_1] -> cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1], weight: 1.0
+        # Elect Connection 2: cell 1, seg 1 (0.5) [0.5 on a_GoClPop[1].Section_1] -> cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1], weight: 0.3096943
         h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[2] = new GJ_0(0.5) }")
         h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_B[2] = new GJ_0(0.5) }")
+        h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[2].weight = 0.3096943 }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_B[2].weight = 0.3096943 }")
         h("setpointer syn_gocGJ_GJ_0_A[2].vpeer, a_GoClPop[4].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GJ_0_B[2].vpeer, a_GoClPop[1].Section_1.v(0.5)")
 
-        # Elect Connection 3: cell 1, seg 1 (0.5) [0.5 on a_GoClPop[1].Section_1] -> cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1], weight: 1.0
-        h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[3] = new GJ_0(0.5) }")
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_B[3] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[3].vpeer, a_GoClPop[6].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[3].vpeer, a_GoClPop[1].Section_1.v(0.5)")
+        # Elect Connection 3: cell 2, seg 1 (0.5) [0.5 on a_GoClPop[2].Section_1] -> cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1], weight: 0.79883605
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[3] = new GJ_0(0.5) }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_B[3] = new GJ_0(0.5) }")
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[3].weight = 0.79883605 }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_B[3].weight = 0.79883605 }")
+        h("setpointer syn_gocGJ_GJ_0_A[3].vpeer, a_GoClPop[3].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[3].vpeer, a_GoClPop[2].Section_1.v(0.5)")
 
-        # Elect Connection 4: cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1] -> cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1], weight: 1.0
-        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[4] = new GJ_0(0.5) }")
-        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_B[4] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[4].vpeer, a_GoClPop[9].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[4].vpeer, a_GoClPop[3].Section_1.v(0.5)")
+        # Elect Connection 4: cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1] -> cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1], weight: 1.0673481
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[4] = new GJ_0(0.5) }")
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_B[4] = new GJ_0(0.5) }")
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[4].weight = 1.0673481 }")
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_B[4].weight = 1.0673481 }")
+        h("setpointer syn_gocGJ_GJ_0_A[4].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[4].vpeer, a_GoClPop[5].Section_1.v(0.5)")
 
-        # Elect Connection 5: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1], weight: 1.0
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[5] = new GJ_0(0.5) }")
-        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_B[5] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[5].vpeer, a_GoClPop[8].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[5].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+        # Elect Connection 5: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1], weight: 2.1381714
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[5] = new GJ_0(0.5) }")
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_B[5] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[5].weight = 2.1381714 }")
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_B[5].weight = 2.1381714 }")
+        h("setpointer syn_gocGJ_GJ_0_A[5].vpeer, a_GoClPop[9].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[5].vpeer, a_GoClPop[8].Section_1.v(0.5)")
 
         trec = h.Vector()
         trec.record(h._ref_t)

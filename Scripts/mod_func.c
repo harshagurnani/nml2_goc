@@ -4,6 +4,7 @@
 IMPORT int nrnmpi_myid, nrn_nobanner_;
 
 extern void _AlphaSyn_reg();
+extern void _GJ_0_reg();
 extern void _GapJuncCML_reg();
 extern void _GolgiBK_reg();
 extern void _GolgiCaHVA_reg();
@@ -29,6 +30,7 @@ void modl_reg(){
 	fprintf(stderr, "Additional mechanisms from files\n");
 
 fprintf(stderr," AlphaSyn.mod");
+fprintf(stderr," GJ_0.mod");
 fprintf(stderr," GapJuncCML.mod");
 fprintf(stderr," GolgiBK.mod");
 fprintf(stderr," GolgiCaHVA.mod");
@@ -50,6 +52,7 @@ fprintf(stderr," MF_Input.mod");
 fprintf(stderr, "\n");
     }
 _AlphaSyn_reg();
+_GJ_0_reg();
 _GapJuncCML_reg();
 _GolgiBK_reg();
 _GolgiCaHVA_reg();
