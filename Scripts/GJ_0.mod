@@ -43,7 +43,7 @@ UNITS {
 PARAMETER {
     
     weight = 1
-    conductance = 0.95 (uS)
+    conductance = 0.426 (uS)
 }
 
 ASSIGNED {

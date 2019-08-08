@@ -35,7 +35,7 @@
     <Include file="GapJuncCML.nml"/>
     <Include file="instances.xml"/>
    
-    <Simulation id="sim_gocnetGoCl" length="2000ms" step="0.025ms" target="gocNetwork" seed="12345">  <!-- Note seed: ensures same random numbers used every run -->
+    <Simulation id="sim_gocnetGoCl" length="5000ms" step="0.025ms" target="gocNetwork" seed="12345">  <!-- Note seed: ensures same random numbers used every run -->
         
         <OutputFile id="Volts_file" fileName="sim_gocnetGoCl.v.dat">
             <OutputColumn id="0" quantity="GoClPop/0/GoCl/v"/> 
@@ -48,6 +48,11 @@
             <OutputColumn id="7" quantity="GoClPop/7/GoCl/v"/> 
             <OutputColumn id="8" quantity="GoClPop/8/GoCl/v"/> 
             <OutputColumn id="9" quantity="GoClPop/9/GoCl/v"/> 
+            <OutputColumn id="10" quantity="GoClPop/10/GoCl/v"/> 
+            <OutputColumn id="11" quantity="GoClPop/11/GoCl/v"/> 
+            <OutputColumn id="12" quantity="GoClPop/12/GoCl/v"/> 
+            <OutputColumn id="13" quantity="GoClPop/13/GoCl/v"/> 
+            <OutputColumn id="14" quantity="GoClPop/14/GoCl/v"/> 
         </OutputFile>
         
         <EventOutputFile id="Events_file" fileName="sim_gocnetGoCl.v.spikes" format="ID_TIME">
@@ -61,6 +66,11 @@
             <EventSelection id="7" select="GoClPop/7/GoCl" eventPort="spike"/> 
             <EventSelection id="8" select="GoClPop/8/GoCl" eventPort="spike"/> 
             <EventSelection id="9" select="GoClPop/9/GoCl" eventPort="spike"/> 
+            <EventSelection id="10" select="GoClPop/10/GoCl" eventPort="spike"/> 
+            <EventSelection id="11" select="GoClPop/11/GoCl" eventPort="spike"/> 
+            <EventSelection id="12" select="GoClPop/12/GoCl" eventPort="spike"/> 
+            <EventSelection id="13" select="GoClPop/13/GoCl" eventPort="spike"/> 
+            <EventSelection id="14" select="GoClPop/14/GoCl" eventPort="spike"/> 
         </EventOutputFile>
         
     </Simulation>

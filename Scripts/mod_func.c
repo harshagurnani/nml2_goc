@@ -23,6 +23,7 @@ extern void _GolgiSK2_reg();
 extern void _Golgi_CALC_reg();
 extern void _LeakConductance_reg();
 extern void _MF_Input_reg();
+extern void _MF_Poisson_reg();
 
 void modl_reg(){
 	//nrn_mswindll_stdio(stdin, stdout, stderr);
@@ -49,6 +50,7 @@ fprintf(stderr," GolgiSK2.mod");
 fprintf(stderr," Golgi_CALC.mod");
 fprintf(stderr," LeakConductance.mod");
 fprintf(stderr," MF_Input.mod");
+fprintf(stderr," MF_Poisson.mod");
 fprintf(stderr, "\n");
     }
 _AlphaSyn_reg();
@@ -71,4 +73,5 @@ _GolgiSK2_reg();
 _Golgi_CALC_reg();
 _LeakConductance_reg();
 _MF_Input_reg();
+_MF_Poisson_reg();
 }
