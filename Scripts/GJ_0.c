@@ -164,7 +164,7 @@ static void nrn_alloc(Prop* _prop) {
  	_p = nrn_prop_data_alloc(_mechtype, 5, _prop);
  	/*initialize range parameters*/
  	weight = 1;
- 	conductance = 0.426;
+ 	conductance = 0.000426;
   }
  	_prop->param = _p;
  	_prop->param_size = 5;

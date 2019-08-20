@@ -176,7 +176,7 @@ static void nrn_alloc(Prop* _prop) {
  }else{
  	_p = nrn_prop_data_alloc(_mechtype, 7, _prop);
  	/*initialize range parameters*/
- 	period = 300;
+ 	period = 2000;
   }
  	_prop->param = _p;
  	_prop->param_size = 7;

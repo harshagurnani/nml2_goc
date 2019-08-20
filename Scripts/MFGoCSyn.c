@@ -22,17 +22,15 @@ extern int _method3;
 extern double hoc_Exp(double);
 #endif
  
-#define nrn_init _nrn_init__MF_Poisson
-#define _nrn_initial _nrn_initial__MF_Poisson
-#define nrn_cur _nrn_cur__MF_Poisson
-#define _nrn_current _nrn_current__MF_Poisson
-#define nrn_jacob _nrn_jacob__MF_Poisson
-#define nrn_state _nrn_state__MF_Poisson
-#define _net_receive _net_receive__MF_Poisson 
-#define noiseFromRandom noiseFromRandom__MF_Poisson 
-#define rates rates__MF_Poisson 
-#define seed seed__MF_Poisson 
-#define states states__MF_Poisson 
+#define nrn_init _nrn_init__MFGoCSyn
+#define _nrn_initial _nrn_initial__MFGoCSyn
+#define nrn_cur _nrn_cur__MFGoCSyn
+#define _nrn_current _nrn_current__MFGoCSyn
+#define nrn_jacob _nrn_jacob__MFGoCSyn
+#define nrn_state _nrn_state__MFGoCSyn
+#define _net_receive _net_receive__MFGoCSyn 
+#define rates rates__MFGoCSyn 
+#define states states__MFGoCSyn 
  
 #define _threadargscomma_ _p, _ppvar, _thread, _nt,
 #define _threadargsprotocomma_ double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt,
@@ -47,18 +45,32 @@ extern double hoc_Exp(double);
  
 #define t _nt->_t
 #define dt _nt->_dt
-#define averageRate _p[0]
-#define averageIsi _p[1]
-#define tsince _p[2]
-#define isi _p[3]
-#define rate_tsince _p[4]
-#define Dtsince _p[5]
-#define v _p[6]
-#define _g _p[7]
-#define _tsav _p[8]
+#define tauRise _p[0]
+#define tauDecay1 _p[1]
+#define tauDecay2 _p[2]
+#define peakTime1 _p[3]
+#define waveformFactor1 _p[4]
+#define peakTime2 _p[5]
+#define waveformFactor2 _p[6]
+#define gbase1 _p[7]
+#define gbase2 _p[8]
+#define erev _p[9]
+#define g _p[10]
+#define i _p[11]
+#define A _p[12]
+#define B _p[13]
+#define C _p[14]
+#define temperature _p[15]
+#define rate_A _p[16]
+#define rate_B _p[17]
+#define rate_C _p[18]
+#define DA _p[19]
+#define DB _p[20]
+#define DC _p[21]
+#define v _p[22]
+#define _g _p[23]
+#define _tsav _p[24]
 #define _nd_area  *_ppvar[0]._pval
-#define donotuse	*_ppvar[2]._pval
-#define _p_donotuse	_ppvar[2]._pval
  
 #if MAC
 #if !defined(v)
@@ -72,16 +84,13 @@ extern double hoc_Exp(double);
 #if defined(__cplusplus)
 extern "C" {
 #endif
- static int hoc_nrnpointerindex =  2;
+ static int hoc_nrnpointerindex =  -1;
  static Datum* _extcall_thread;
  static Prop* _extcall_prop;
  /* external NEURON variables */
+ extern double celsius;
  /* declaration of user functions */
- static double _hoc_erand();
- static double _hoc_noiseFromRandom();
- static double _hoc_random_float();
  static double _hoc_rates();
- static double _hoc_seed();
  static int _mechtype;
 extern void _nrn_cacheloop_reg(int, int);
 extern void hoc_register_prop_size(int, int, int);
@@ -120,30 +129,31 @@ extern Memb_func* memb_func;
  "loc", _hoc_loc_pnt,
  "has_loc", _hoc_has_loc,
  "get_loc", _hoc_get_loc_pnt,
- "erand", _hoc_erand,
- "noiseFromRandom", _hoc_noiseFromRandom,
- "random_float", _hoc_random_float,
  "rates", _hoc_rates,
- "seed", _hoc_seed,
  0, 0
 };
-#define erand erand_MF_Poisson
-#define random_float random_float_MF_Poisson
- extern double erand( _threadargsproto_ );
- extern double random_float( _threadargsprotocomma_ double );
  /* declare global and static user variables */
  /* some parameters have upper and lower limits */
  static HocParmLimits _hoc_parm_limits[] = {
  0,0,0
 };
  static HocParmUnits _hoc_parm_units[] = {
- "averageRate", "kHz",
- "averageIsi", "ms",
- "tsince", "ms",
+ "tauRise", "ms",
+ "tauDecay1", "ms",
+ "tauDecay2", "ms",
+ "peakTime1", "ms",
+ "peakTime2", "ms",
+ "gbase1", "uS",
+ "gbase2", "uS",
+ "erev", "mV",
+ "g", "uS",
+ "i", "nA",
  0,0
 };
+ static double A0 = 0;
+ static double B0 = 0;
+ static double C0 = 0;
  static double delta_t = 0.01;
- static double tsince0 = 0;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
  0,0
@@ -157,11 +167,7 @@ static void  nrn_init(_NrnThread*, _Memb_list*, int);
 static void nrn_state(_NrnThread*, _Memb_list*, int);
  static void nrn_cur(_NrnThread*, _Memb_list*, int);
 static void  nrn_jacob(_NrnThread*, _Memb_list*, int);
- 
-#define _watch_array _ppvar + 4 
  static void _hoc_destroy_pnt(_vptr) void* _vptr; {
-   Prop* _prop = ((Point_process*)_vptr)->_prop;
-   if (_prop) { _nrn_free_watch(_prop->dparam, 4, 3);}
    destroy_point_process(_vptr);
 }
  
@@ -170,19 +176,30 @@ static void _ode_map(int, double**, double**, double*, Datum*, double*, int);
 static void _ode_spec(_NrnThread*, _Memb_list*, int);
 static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  
-#define _cvode_ieq _ppvar[7]._i
+#define _cvode_ieq _ppvar[2]._i
  static void _ode_matsol_instance1(_threadargsproto_);
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "7.5.0",
-"MF_Poisson",
- "averageRate",
- "averageIsi",
+"MFGoCSyn",
+ "tauRise",
+ "tauDecay1",
+ "tauDecay2",
+ "peakTime1",
+ "waveformFactor1",
+ "peakTime2",
+ "waveformFactor2",
+ "gbase1",
+ "gbase2",
+ "erev",
  0,
+ "g",
+ "i",
  0,
- "tsince",
+ "A",
+ "B",
+ "C",
  0,
- "donotuse",
  0};
  
 extern Prop* need_memb(Symbol*);
@@ -195,15 +212,23 @@ static void nrn_alloc(Prop* _prop) {
 	_p = nrn_point_prop_->param;
 	_ppvar = nrn_point_prop_->dparam;
  }else{
- 	_p = nrn_prop_data_alloc(_mechtype, 9, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 25, _prop);
  	/*initialize range parameters*/
- 	averageRate = 0.005;
- 	averageIsi = 200;
+ 	tauRise = 0.1;
+ 	tauDecay1 = 0.7;
+ 	tauDecay2 = 3.5;
+ 	peakTime1 = 0.227023;
+ 	waveformFactor1 = 1.6136;
+ 	peakTime2 = 0.365992;
+ 	waveformFactor2 = 1.14289;
+ 	gbase1 = 0.0007;
+ 	gbase2 = 0.0002;
+ 	erev = 0;
   }
  	_prop->param = _p;
- 	_prop->param_size = 9;
+ 	_prop->param_size = 25;
   if (!nrn_point_prop_) {
- 	_ppvar = nrn_prop_datum_alloc(_mechtype, 8, _prop);
+ 	_ppvar = nrn_prop_datum_alloc(_mechtype, 3, _prop);
   }
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
@@ -215,8 +240,6 @@ static void nrn_alloc(Prop* _prop) {
  static HocStateTolerance _hoc_state_tol[] = {
  0,0
 };
- 
-#define _tqitem &(_ppvar[3]._pvoid)
  static void _net_receive(Point_process*, double*, double);
  extern Symbol* hoc_lookup(const char*);
 extern void _nrn_thread_reg(int, int, void(*)(Datum*));
@@ -224,7 +247,7 @@ extern void _nrn_thread_table_reg(int, void(*)(double*, Datum*, Datum*, _NrnThre
 extern void hoc_register_tolerance(int, HocStateTolerance*, Symbol***);
 extern void _cvode_abstol( Symbol**, double*, int);
 
- void _MF_Poisson_reg() {
+ void _MFGoCSyn_reg() {
 	int _vectorized = 1;
   _initlists();
  	_pointtype = point_register_mech(_mechanism,
@@ -233,106 +256,99 @@ extern void _cvode_abstol( Symbol**, double*, int);
 	 _hoc_create_pnt, _hoc_destroy_pnt, _member_func);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
-  hoc_register_prop_size(_mechtype, 9, 8);
+  hoc_register_prop_size(_mechtype, 25, 3);
   hoc_register_dparam_semantics(_mechtype, 0, "area");
   hoc_register_dparam_semantics(_mechtype, 1, "pntproc");
-  hoc_register_dparam_semantics(_mechtype, 2, "pointer");
-  hoc_register_dparam_semantics(_mechtype, 3, "netsend");
-  hoc_register_dparam_semantics(_mechtype, 4, "watch");
-  hoc_register_dparam_semantics(_mechtype, 5, "watch");
-  hoc_register_dparam_semantics(_mechtype, 6, "watch");
-  hoc_register_dparam_semantics(_mechtype, 7, "cvodeieq");
+  hoc_register_dparam_semantics(_mechtype, 2, "cvodeieq");
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
- add_nrn_has_net_event(_mechtype);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 MF_Poisson D:/Work/Comp Models/Learn Neuroml2/nml2_goc/Scripts/MF_Poisson.mod\n");
+ 	ivoc_help("help ?1 MFGoCSyn D:/Work/Comp Models/Learn Neuroml2/nml2_goc/Scripts/MFGoCSyn.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
 static int _reset;
-static char *modelname = "Mod file for component: Component(id=MF_Poisson type=spikeGeneratorPoisson)";
+static char *modelname = "Mod file for component: Component(id=MFGoCSyn type=expThreeSynapse)";
 
 static int error;
 static int _ninits = 0;
 static int _match_recurse=1;
 static void _modl_cleanup(){ _match_recurse=1;}
-static int noiseFromRandom(_threadargsproto_);
 static int rates(_threadargsproto_);
-static int seed(_threadargsprotocomma_ double);
  
 static int _ode_spec1(_threadargsproto_);
 /*static int _ode_matsol1(_threadargsproto_);*/
- static int _slist1[1], _dlist1[1];
+ static int _slist1[3], _dlist1[3];
  static int states(_threadargsproto_);
- 
-static double _watch1_cond(_pnt) Point_process* _pnt; {
- 	double* _p; Datum* _ppvar; Datum* _thread; _NrnThread* _nt;
-	_thread= (Datum*)0; _nt = (_NrnThread*)_pnt->_vnt;
- 	_p = _pnt->_prop->param; _ppvar = _pnt->_prop->dparam;
-	v = NODEV(_pnt->node);
-	return  ( tsince ) - ( isi ) ;
-}
- 
-static double _watch2_cond(_pnt) Point_process* _pnt; {
- 	double* _p; Datum* _ppvar; Datum* _thread; _NrnThread* _nt;
-	_thread= (Datum*)0; _nt = (_NrnThread*)_pnt->_vnt;
- 	_p = _pnt->_prop->param; _ppvar = _pnt->_prop->dparam;
-	v = NODEV(_pnt->node);
-	return  ( tsince ) - ( isi ) ;
-}
  
 static void _net_receive (_pnt, _args, _lflag) Point_process* _pnt; double* _args; double _lflag; 
 {  double* _p; Datum* _ppvar; Datum* _thread; _NrnThread* _nt;
-   int _watch_rm = 0;
    _thread = (Datum*)0; _nt = (_NrnThread*)_pnt->_vnt;   _p = _pnt->_prop->param; _ppvar = _pnt->_prop->dparam;
   if (_tsav > t){ extern char* hoc_object_name(); hoc_execerror(hoc_object_name(_pnt->ob), ":Event arrived out of order. Must call ParallelContext.set_maxstep AFTER assigning minimum NetCon.delay");}
- _tsav = t;   if (_lflag == 1. ) {*(_tqitem) = 0;}
- {
-   double _lweight ;
- if ( _lflag  == 1.0 ) {
-       _nrn_watch_activate(_watch_array, _watch1_cond, 1, _pnt, _watch_rm++, 1000.0);
- }
-   if ( _lflag  == 1000.0 ) {
-       if (nrn_netrec_state_adjust && !cvode_active_){
+ _tsav = t; {
+     if (nrn_netrec_state_adjust && !cvode_active_){
     /* discon state adjustment for cnexp case (rate uses no local variable) */
-    double __state = tsince;
-    double __primary = (0.0) - __state;
-     __primary -= 0.5*dt*( - ( rate_tsince )  );
-    tsince += __primary;
+    double __state = A;
+    double __primary = (A + ( gbase1 * _args[0] * waveformFactor1 + gbase2 * _args[0] * waveformFactor2 ) / ( gbase1 + gbase2 )) - __state;
+     __primary -= 0.5*dt*( - ( rate_A )  );
+    A += __primary;
   } else {
- tsince = 0.0 ;
-       }
- isi = - averageIsi * log ( 1.0 - random_float ( _threadargscomma_ 1.0 ) ) ;
-     net_event ( _pnt, t ) ;
-       _nrn_watch_activate(_watch_array, _watch2_cond, 2, _pnt, _watch_rm++, 1000.0);
- }
-   } }
+ A = A + ( gbase1 * _args[0] * waveformFactor1 + gbase2 * _args[0] * waveformFactor2 ) / ( gbase1 + gbase2 ) ;
+     }
+   if (nrn_netrec_state_adjust && !cvode_active_){
+    /* discon state adjustment for cnexp case (rate uses no local variable) */
+    double __state = B;
+    double __primary = (B + ( _args[0] * waveformFactor1 )) - __state;
+     __primary -= 0.5*dt*( - ( rate_B )  );
+    B += __primary;
+  } else {
+ B = B + ( _args[0] * waveformFactor1 ) ;
+     }
+   if (nrn_netrec_state_adjust && !cvode_active_){
+    /* discon state adjustment for cnexp case (rate uses no local variable) */
+    double __state = C;
+    double __primary = (C + ( _args[0] * waveformFactor2 )) - __state;
+     __primary -= 0.5*dt*( - ( rate_C )  );
+    C += __primary;
+  } else {
+ C = C + ( _args[0] * waveformFactor2 ) ;
+     }
+ } }
  
 /*CVODE*/
  static int _ode_spec1 (double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {int _reset = 0; {
    rates ( _threadargs_ ) ;
-   Dtsince = rate_tsince ;
+   DA = rate_A ;
+   DB = rate_B ;
+   DC = rate_C ;
    }
  return _reset;
 }
  static int _ode_matsol1 (double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
  rates ( _threadargs_ ) ;
- Dtsince = Dtsince  / (1. - dt*( 0.0 )) ;
+ DA = DA  / (1. - dt*( 0.0 )) ;
+ DB = DB  / (1. - dt*( 0.0 )) ;
+ DC = DC  / (1. - dt*( 0.0 )) ;
   return 0;
 }
  /*END CVODE*/
  static int states (double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) { {
    rates ( _threadargs_ ) ;
-    tsince = tsince - dt*(- ( rate_tsince ) ) ;
+    A = A - dt*(- ( rate_A ) ) ;
+    B = B - dt*(- ( rate_B ) ) ;
+    C = C - dt*(- ( rate_C ) ) ;
    }
   return 0;
 }
  
 static int  rates ( _threadargsproto_ ) {
-   rate_tsince = 1.0 ;
+   g = gbase1 * ( B - A ) + gbase2 * ( C - A ) ;
+   i = - 1.0 * g * ( erev - v ) ;
+   rate_A = - A / tauRise ;
+   rate_B = - B / tauDecay1 ;
+   rate_C = - C / tauDecay2 ;
     return 0; }
  
 static double _hoc_rates(void* _vptr) {
@@ -347,105 +363,7 @@ static double _hoc_rates(void* _vptr) {
  return(_r);
 }
  
-double random_float ( _threadargsprotocomma_ double _lmax ) {
-   double _lrandom_float;
- _lrandom_float = exp ( - 1.0 * erand ( _threadargs_ ) ) * _lmax ;
-   
-return _lrandom_float;
- }
- 
-static double _hoc_random_float(void* _vptr) {
- double _r;
-   double* _p; Datum* _ppvar; Datum* _thread; _NrnThread* _nt;
-   _p = ((Point_process*)_vptr)->_prop->param;
-  _ppvar = ((Point_process*)_vptr)->_prop->dparam;
-  _thread = _extcall_thread;
-  _nt = (_NrnThread*)((Point_process*)_vptr)->_vnt;
- _r =  random_float ( _p, _ppvar, _thread, _nt, *getarg(1) );
- return(_r);
-}
- 
-static int  seed ( _threadargsprotocomma_ double _lx ) {
-   set_seed ( _lx ) ;
-    return 0; }
- 
-static double _hoc_seed(void* _vptr) {
- double _r;
-   double* _p; Datum* _ppvar; Datum* _thread; _NrnThread* _nt;
-   _p = ((Point_process*)_vptr)->_prop->param;
-  _ppvar = ((Point_process*)_vptr)->_prop->dparam;
-  _thread = _extcall_thread;
-  _nt = (_NrnThread*)((Point_process*)_vptr)->_vnt;
- _r = 1.;
- seed ( _p, _ppvar, _thread, _nt, *getarg(1) );
- return(_r);
-}
- 
-/*VERBATIM*/
-double nrn_random_pick(void* r);
-void* nrn_random_arg(int argpos);
- 
-double erand ( _threadargsproto_ ) {
-   double _lerand;
- 
-/*VERBATIM*/
-	if (_p_donotuse) {
-		/*
-		:Supports separate independent but reproducible streams for
-		: each instance. However, the corresponding hoc Random
-		: distribution MUST be set to Random.negexp(1)
-		*/
-		_lerand = nrn_random_pick(_p_donotuse);
-	}else{
-		/* only can be used in main thread */
-		if (_nt != nrn_threads) {
-           hoc_execerror("multithread random in NetStim"," only via hoc Random");
-		}
- _lerand = exprand ( 1.0 ) ;
-   
-/*VERBATIM*/
-	}
- 
-return _lerand;
- }
- 
-static double _hoc_erand(void* _vptr) {
- double _r;
-   double* _p; Datum* _ppvar; Datum* _thread; _NrnThread* _nt;
-   _p = ((Point_process*)_vptr)->_prop->param;
-  _ppvar = ((Point_process*)_vptr)->_prop->dparam;
-  _thread = _extcall_thread;
-  _nt = (_NrnThread*)((Point_process*)_vptr)->_vnt;
- _r =  erand ( _p, _ppvar, _thread, _nt );
- return(_r);
-}
- 
-static int  noiseFromRandom ( _threadargsproto_ ) {
-   
-/*VERBATIM*/
- {
-	void** pv = (void**)(&_p_donotuse);
-	if (ifarg(1)) {
-		*pv = nrn_random_arg(1);
-	}else{
-		*pv = (void*)0;
-	}
- }
-  return 0; }
- 
-static double _hoc_noiseFromRandom(void* _vptr) {
- double _r;
-   double* _p; Datum* _ppvar; Datum* _thread; _NrnThread* _nt;
-   _p = ((Point_process*)_vptr)->_prop->param;
-  _ppvar = ((Point_process*)_vptr)->_prop->dparam;
-  _thread = _extcall_thread;
-  _nt = (_NrnThread*)((Point_process*)_vptr)->_vnt;
- _r = 1.;
- noiseFromRandom ( _p, _ppvar, _thread, _nt );
- return(_r);
-}
- 
-static int _ode_count(int _type){ return 1;}
+static int _ode_count(int _type){ return 3;}
  
 static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
    double* _p; Datum* _ppvar; Datum* _thread;
@@ -463,7 +381,7 @@ static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum
 	double* _p; Datum* _ppvar;
  	int _i; _p = _pp; _ppvar = _ppd;
 	_cvode_ieq = _ieq;
-	for (_i=0; _i < 1; ++_i) {
+	for (_i=0; _i < 3; ++_i) {
 		_pv[_i] = _pp + _slist1[_i];  _pvdot[_i] = _pp + _dlist1[_i];
 		_cvode_abstol(_atollist, _atol, _i);
 	}
@@ -487,13 +405,16 @@ static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
 
 static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
   int _i; double _save;{
-  tsince = tsince0;
+  A = A0;
+  B = B0;
+  C = C0;
  {
+   temperature = celsius + 273.15 ;
    rates ( _threadargs_ ) ;
    rates ( _threadargs_ ) ;
-   tsince = 0.0 ;
-   isi = - averageIsi * log ( 1.0 - random_float ( _threadargscomma_ 1.0 ) ) ;
-   net_send ( _tqitem, (double*)0, _ppvar[1]._pvoid, t +  0.0 , 1.0 ) ;
+   A = 0.0 ;
+   B = 0.0 ;
+   C = 0.0 ;
    }
  
 }
@@ -524,7 +445,10 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
 }
 }
 
-static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt, double _v){double _current=0.;v=_v;{
+static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt, double _v){double _current=0.;v=_v;{ {
+   }
+ _current += i;
+
 } return _current;
 }
 
@@ -546,6 +470,20 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   {
     _nd = _ml->_nodelist[_iml];
     _v = NODEV(_nd);
+  }
+ _g = _nrn_current(_p, _ppvar, _thread, _nt, _v + .001);
+ 	{ _rhs = _nrn_current(_p, _ppvar, _thread, _nt, _v);
+ 	}
+ _g = (_g - _rhs)/.001;
+ _g *=  1.e2/(_nd_area);
+ _rhs *= 1.e2/(_nd_area);
+#if CACHEVEC
+  if (use_cachevec) {
+	VEC_RHS(_ni[_iml]) -= _rhs;
+  }else
+#endif
+  {
+	NODERHS(_nd) -= _rhs;
   }
  
 }
@@ -599,9 +537,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  v=_v;
 {
  {   states(_p, _ppvar, _thread, _nt);
-  } {
-   }
-}}
+  }}}
 
 }
 
@@ -611,7 +547,9 @@ static void _initlists(){
  double _x; double* _p = &_x;
  int _i; static int _first = 1;
   if (!_first) return;
- _slist1[0] = &(tsince) - _p;  _dlist1[0] = &(Dtsince) - _p;
+ _slist1[0] = &(A) - _p;  _dlist1[0] = &(DA) - _p;
+ _slist1[1] = &(B) - _p;  _dlist1[1] = &(DB) - _p;
+ _slist1[2] = &(C) - _p;  _dlist1[2] = &(DC) - _p;
 _first = 0;
 }
 

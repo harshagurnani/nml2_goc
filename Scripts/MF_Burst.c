@@ -22,17 +22,17 @@ extern int _method3;
 extern double hoc_Exp(double);
 #endif
  
-#define nrn_init _nrn_init__MF_Poisson
-#define _nrn_initial _nrn_initial__MF_Poisson
-#define nrn_cur _nrn_cur__MF_Poisson
-#define _nrn_current _nrn_current__MF_Poisson
-#define nrn_jacob _nrn_jacob__MF_Poisson
-#define nrn_state _nrn_state__MF_Poisson
-#define _net_receive _net_receive__MF_Poisson 
-#define noiseFromRandom noiseFromRandom__MF_Poisson 
-#define rates rates__MF_Poisson 
-#define seed seed__MF_Poisson 
-#define states states__MF_Poisson 
+#define nrn_init _nrn_init__MF_Burst
+#define _nrn_initial _nrn_initial__MF_Burst
+#define nrn_cur _nrn_cur__MF_Burst
+#define _nrn_current _nrn_current__MF_Burst
+#define nrn_jacob _nrn_jacob__MF_Burst
+#define nrn_state _nrn_state__MF_Burst
+#define _net_receive _net_receive__MF_Burst 
+#define noiseFromRandom noiseFromRandom__MF_Burst 
+#define rates rates__MF_Burst 
+#define seed seed__MF_Burst 
+#define states states__MF_Burst 
  
 #define _threadargscomma_ _p, _ppvar, _thread, _nt,
 #define _threadargsprotocomma_ double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt,
@@ -47,15 +47,43 @@ extern double hoc_Exp(double);
  
 #define t _nt->_t
 #define dt _nt->_dt
-#define averageRate _p[0]
-#define averageIsi _p[1]
-#define tsince _p[2]
-#define isi _p[3]
-#define rate_tsince _p[4]
-#define Dtsince _p[5]
-#define v _p[6]
-#define _g _p[7]
-#define _tsav _p[8]
+#define weight _p[0]
+#define averageRate _p[1]
+#define delay _p[2]
+#define duration _p[3]
+#define averageIsi _p[4]
+#define LONG_TIME _p[5]
+#define MFGoC_SynMult_tauRise _p[6]
+#define MFGoC_SynMult_tauDecay1 _p[7]
+#define MFGoC_SynMult_tauDecay2 _p[8]
+#define MFGoC_SynMult_peakTime1 _p[9]
+#define MFGoC_SynMult_waveformFactor1 _p[10]
+#define MFGoC_SynMult_peakTime2 _p[11]
+#define MFGoC_SynMult_waveformFactor2 _p[12]
+#define MFGoC_SynMult_gbase1 _p[13]
+#define MFGoC_SynMult_gbase2 _p[14]
+#define MFGoC_SynMult_erev _p[15]
+#define MFGoC_SynMult_g _p[16]
+#define MFGoC_SynMult_i _p[17]
+#define iSyn _p[18]
+#define i _p[19]
+#define tsince _p[20]
+#define MFGoC_SynMult_A _p[21]
+#define MFGoC_SynMult_B _p[22]
+#define MFGoC_SynMult_C _p[23]
+#define nextIsi _p[24]
+#define isi _p[25]
+#define rate_tsince _p[26]
+#define rate_MFGoC_SynMult_A _p[27]
+#define rate_MFGoC_SynMult_B _p[28]
+#define rate_MFGoC_SynMult_C _p[29]
+#define Dtsince _p[30]
+#define DMFGoC_SynMult_A _p[31]
+#define DMFGoC_SynMult_B _p[32]
+#define DMFGoC_SynMult_C _p[33]
+#define v _p[34]
+#define _g _p[35]
+#define _tsav _p[36]
 #define _nd_area  *_ppvar[0]._pval
 #define donotuse	*_ppvar[2]._pval
 #define _p_donotuse	_ppvar[2]._pval
@@ -77,6 +105,7 @@ extern "C" {
  static Prop* _extcall_prop;
  /* external NEURON variables */
  /* declaration of user functions */
+ static double _hoc_H();
  static double _hoc_erand();
  static double _hoc_noiseFromRandom();
  static double _hoc_random_float();
@@ -120,6 +149,7 @@ extern Memb_func* memb_func;
  "loc", _hoc_loc_pnt,
  "has_loc", _hoc_has_loc,
  "get_loc", _hoc_get_loc_pnt,
+ "H", _hoc_H,
  "erand", _hoc_erand,
  "noiseFromRandom", _hoc_noiseFromRandom,
  "random_float", _hoc_random_float,
@@ -127,8 +157,10 @@ extern Memb_func* memb_func;
  "seed", _hoc_seed,
  0, 0
 };
-#define erand erand_MF_Poisson
-#define random_float random_float_MF_Poisson
+#define H H_MF_Burst
+#define erand erand_MF_Burst
+#define random_float random_float_MF_Burst
+ extern double H( _threadargsprotocomma_ double );
  extern double erand( _threadargsproto_ );
  extern double random_float( _threadargsprotocomma_ double );
  /* declare global and static user variables */
@@ -138,10 +170,28 @@ extern Memb_func* memb_func;
 };
  static HocParmUnits _hoc_parm_units[] = {
  "averageRate", "kHz",
+ "delay", "ms",
+ "duration", "ms",
  "averageIsi", "ms",
+ "LONG_TIME", "ms",
+ "MFGoC_SynMult_tauRise", "ms",
+ "MFGoC_SynMult_tauDecay1", "ms",
+ "MFGoC_SynMult_tauDecay2", "ms",
+ "MFGoC_SynMult_peakTime1", "ms",
+ "MFGoC_SynMult_peakTime2", "ms",
+ "MFGoC_SynMult_gbase1", "uS",
+ "MFGoC_SynMult_gbase2", "uS",
+ "MFGoC_SynMult_erev", "mV",
  "tsince", "ms",
+ "MFGoC_SynMult_g", "uS",
+ "MFGoC_SynMult_i", "nA",
+ "iSyn", "nA",
+ "i", "nA",
  0,0
 };
+ static double MFGoC_SynMult_C0 = 0;
+ static double MFGoC_SynMult_B0 = 0;
+ static double MFGoC_SynMult_A0 = 0;
  static double delta_t = 0.01;
  static double tsince0 = 0;
  /* connect global user variables to hoc */
@@ -175,12 +225,33 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "7.5.0",
-"MF_Poisson",
+"MF_Burst",
+ "weight",
  "averageRate",
+ "delay",
+ "duration",
  "averageIsi",
+ "LONG_TIME",
+ "MFGoC_SynMult_tauRise",
+ "MFGoC_SynMult_tauDecay1",
+ "MFGoC_SynMult_tauDecay2",
+ "MFGoC_SynMult_peakTime1",
+ "MFGoC_SynMult_waveformFactor1",
+ "MFGoC_SynMult_peakTime2",
+ "MFGoC_SynMult_waveformFactor2",
+ "MFGoC_SynMult_gbase1",
+ "MFGoC_SynMult_gbase2",
+ "MFGoC_SynMult_erev",
  0,
+ "MFGoC_SynMult_g",
+ "MFGoC_SynMult_i",
+ "iSyn",
+ "i",
  0,
  "tsince",
+ "MFGoC_SynMult_A",
+ "MFGoC_SynMult_B",
+ "MFGoC_SynMult_C",
  0,
  "donotuse",
  0};
@@ -195,13 +266,27 @@ static void nrn_alloc(Prop* _prop) {
 	_p = nrn_point_prop_->param;
 	_ppvar = nrn_point_prop_->dparam;
  }else{
- 	_p = nrn_prop_data_alloc(_mechtype, 9, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 37, _prop);
  	/*initialize range parameters*/
- 	averageRate = 0.005;
- 	averageIsi = 200;
+ 	weight = 1;
+ 	averageRate = 0.1;
+ 	delay = 2000;
+ 	duration = 500;
+ 	averageIsi = 10;
+ 	LONG_TIME = 3.6e+015;
+ 	MFGoC_SynMult_tauRise = 0.1;
+ 	MFGoC_SynMult_tauDecay1 = 0.7;
+ 	MFGoC_SynMult_tauDecay2 = 3.5;
+ 	MFGoC_SynMult_peakTime1 = 0.227023;
+ 	MFGoC_SynMult_waveformFactor1 = 1.6136;
+ 	MFGoC_SynMult_peakTime2 = 0.365992;
+ 	MFGoC_SynMult_waveformFactor2 = 1.14289;
+ 	MFGoC_SynMult_gbase1 = 0.0035;
+ 	MFGoC_SynMult_gbase2 = 0.001;
+ 	MFGoC_SynMult_erev = 0;
   }
  	_prop->param = _p;
- 	_prop->param_size = 9;
+ 	_prop->param_size = 37;
   if (!nrn_point_prop_) {
  	_ppvar = nrn_prop_datum_alloc(_mechtype, 8, _prop);
   }
@@ -224,7 +309,7 @@ extern void _nrn_thread_table_reg(int, void(*)(double*, Datum*, Datum*, _NrnThre
 extern void hoc_register_tolerance(int, HocStateTolerance*, Symbol***);
 extern void _cvode_abstol( Symbol**, double*, int);
 
- void _MF_Poisson_reg() {
+ void _MF_Burst_reg() {
 	int _vectorized = 1;
   _initlists();
  	_pointtype = point_register_mech(_mechanism,
@@ -233,7 +318,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
 	 _hoc_create_pnt, _hoc_destroy_pnt, _member_func);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
-  hoc_register_prop_size(_mechtype, 9, 8);
+  hoc_register_prop_size(_mechtype, 37, 8);
   hoc_register_dparam_semantics(_mechtype, 0, "area");
   hoc_register_dparam_semantics(_mechtype, 1, "pntproc");
   hoc_register_dparam_semantics(_mechtype, 2, "pointer");
@@ -248,12 +333,12 @@ extern void _cvode_abstol( Symbol**, double*, int);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 MF_Poisson D:/Work/Comp Models/Learn Neuroml2/nml2_goc/Scripts/MF_Poisson.mod\n");
+ 	ivoc_help("help ?1 MF_Burst D:/Work/Comp Models/Learn Neuroml2/nml2_goc/Scripts/MF_Burst.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
 static int _reset;
-static char *modelname = "Mod file for component: Component(id=MF_Poisson type=spikeGeneratorPoisson)";
+static char *modelname = "Mod file for component: Component(id=MF_Burst type=transientPoissonFiringSynapse)";
 
 static int error;
 static int _ninits = 0;
@@ -265,7 +350,7 @@ static int seed(_threadargsprotocomma_ double);
  
 static int _ode_spec1(_threadargsproto_);
 /*static int _ode_matsol1(_threadargsproto_);*/
- static int _slist1[1], _dlist1[1];
+ static int _slist1[4], _dlist1[4];
  static int states(_threadargsproto_);
  
 static double _watch1_cond(_pnt) Point_process* _pnt; {
@@ -305,8 +390,37 @@ static void _net_receive (_pnt, _args, _lflag) Point_process* _pnt; double* _arg
   } else {
  tsince = 0.0 ;
        }
- isi = - averageIsi * log ( 1.0 - random_float ( _threadargscomma_ 1.0 ) ) ;
-     net_event ( _pnt, t ) ;
+ nextIsi = - averageIsi * log ( 1.0 - random_float ( _threadargscomma_ 1.0 ) ) ;
+     isi = nextIsi + H ( _threadargscomma_ ( ( t + nextIsi ) - ( delay + duration ) ) / duration ) * LONG_TIME ;
+     _lweight = 1.0 ;
+       if (nrn_netrec_state_adjust && !cvode_active_){
+    /* discon state adjustment for cnexp case (rate uses no local variable) */
+    double __state = MFGoC_SynMult_A;
+    double __primary = (MFGoC_SynMult_A + ( MFGoC_SynMult_gbase1 * _lweight * MFGoC_SynMult_waveformFactor1 + MFGoC_SynMult_gbase2 * _lweight * MFGoC_SynMult_waveformFactor2 ) / ( MFGoC_SynMult_gbase1 + MFGoC_SynMult_gbase2 )) - __state;
+     __primary -= 0.5*dt*( - ( rate_MFGoC_SynMult_A )  );
+    MFGoC_SynMult_A += __primary;
+  } else {
+ MFGoC_SynMult_A = MFGoC_SynMult_A + ( MFGoC_SynMult_gbase1 * _lweight * MFGoC_SynMult_waveformFactor1 + MFGoC_SynMult_gbase2 * _lweight * MFGoC_SynMult_waveformFactor2 ) / ( MFGoC_SynMult_gbase1 + MFGoC_SynMult_gbase2 ) ;
+       }
+   if (nrn_netrec_state_adjust && !cvode_active_){
+    /* discon state adjustment for cnexp case (rate uses no local variable) */
+    double __state = MFGoC_SynMult_B;
+    double __primary = (MFGoC_SynMult_B + ( _lweight * MFGoC_SynMult_waveformFactor1 )) - __state;
+     __primary -= 0.5*dt*( - ( rate_MFGoC_SynMult_B )  );
+    MFGoC_SynMult_B += __primary;
+  } else {
+ MFGoC_SynMult_B = MFGoC_SynMult_B + ( _lweight * MFGoC_SynMult_waveformFactor1 ) ;
+       }
+   if (nrn_netrec_state_adjust && !cvode_active_){
+    /* discon state adjustment for cnexp case (rate uses no local variable) */
+    double __state = MFGoC_SynMult_C;
+    double __primary = (MFGoC_SynMult_C + ( _lweight * MFGoC_SynMult_waveformFactor2 )) - __state;
+     __primary -= 0.5*dt*( - ( rate_MFGoC_SynMult_C )  );
+    MFGoC_SynMult_C += __primary;
+  } else {
+ MFGoC_SynMult_C = MFGoC_SynMult_C + ( _lweight * MFGoC_SynMult_waveformFactor2 ) ;
+       }
+ net_event ( _pnt, t ) ;
        _nrn_watch_activate(_watch_array, _watch2_cond, 2, _pnt, _watch_rm++, 1000.0);
  }
    } }
@@ -315,24 +429,40 @@ static void _net_receive (_pnt, _args, _lflag) Point_process* _pnt; double* _arg
  static int _ode_spec1 (double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {int _reset = 0; {
    rates ( _threadargs_ ) ;
    Dtsince = rate_tsince ;
+   DMFGoC_SynMult_A = rate_MFGoC_SynMult_A ;
+   DMFGoC_SynMult_B = rate_MFGoC_SynMult_B ;
+   DMFGoC_SynMult_C = rate_MFGoC_SynMult_C ;
    }
  return _reset;
 }
  static int _ode_matsol1 (double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
  rates ( _threadargs_ ) ;
  Dtsince = Dtsince  / (1. - dt*( 0.0 )) ;
+ DMFGoC_SynMult_A = DMFGoC_SynMult_A  / (1. - dt*( 0.0 )) ;
+ DMFGoC_SynMult_B = DMFGoC_SynMult_B  / (1. - dt*( 0.0 )) ;
+ DMFGoC_SynMult_C = DMFGoC_SynMult_C  / (1. - dt*( 0.0 )) ;
   return 0;
 }
  /*END CVODE*/
  static int states (double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) { {
    rates ( _threadargs_ ) ;
     tsince = tsince - dt*(- ( rate_tsince ) ) ;
+    MFGoC_SynMult_A = MFGoC_SynMult_A - dt*(- ( rate_MFGoC_SynMult_A ) ) ;
+    MFGoC_SynMult_B = MFGoC_SynMult_B - dt*(- ( rate_MFGoC_SynMult_B ) ) ;
+    MFGoC_SynMult_C = MFGoC_SynMult_C - dt*(- ( rate_MFGoC_SynMult_C ) ) ;
    }
   return 0;
 }
  
 static int  rates ( _threadargsproto_ ) {
+   MFGoC_SynMult_g = MFGoC_SynMult_gbase1 * ( MFGoC_SynMult_B - MFGoC_SynMult_A ) + MFGoC_SynMult_gbase2 * ( MFGoC_SynMult_C - MFGoC_SynMult_A ) ;
+   MFGoC_SynMult_i = MFGoC_SynMult_g * ( MFGoC_SynMult_erev - v ) ;
+   iSyn = MFGoC_SynMult_i ;
+   i = weight * iSyn ;
    rate_tsince = 1.0 ;
+   rate_MFGoC_SynMult_A = - MFGoC_SynMult_A / MFGoC_SynMult_tauRise ;
+   rate_MFGoC_SynMult_B = - MFGoC_SynMult_B / MFGoC_SynMult_tauDecay1 ;
+   rate_MFGoC_SynMult_C = - MFGoC_SynMult_C / MFGoC_SynMult_tauDecay2 ;
     return 0; }
  
 static double _hoc_rates(void* _vptr) {
@@ -445,7 +575,33 @@ static double _hoc_noiseFromRandom(void* _vptr) {
  return(_r);
 }
  
-static int _ode_count(int _type){ return 1;}
+double H ( _threadargsprotocomma_ double _lx ) {
+   double _lH;
+ if ( _lx < 0.0 ) {
+     _lH = 0.0 ;
+     }
+   else if ( _lx > 0.0 ) {
+     _lH = 1.0 ;
+     }
+   else {
+     _lH = 0.5 ;
+     }
+   
+return _lH;
+ }
+ 
+static double _hoc_H(void* _vptr) {
+ double _r;
+   double* _p; Datum* _ppvar; Datum* _thread; _NrnThread* _nt;
+   _p = ((Point_process*)_vptr)->_prop->param;
+  _ppvar = ((Point_process*)_vptr)->_prop->dparam;
+  _thread = _extcall_thread;
+  _nt = (_NrnThread*)((Point_process*)_vptr)->_vnt;
+ _r =  H ( _p, _ppvar, _thread, _nt, *getarg(1) );
+ return(_r);
+}
+ 
+static int _ode_count(int _type){ return 4;}
  
 static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
    double* _p; Datum* _ppvar; Datum* _thread;
@@ -463,7 +619,7 @@ static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum
 	double* _p; Datum* _ppvar;
  	int _i; _p = _pp; _ppvar = _ppd;
 	_cvode_ieq = _ieq;
-	for (_i=0; _i < 1; ++_i) {
+	for (_i=0; _i < 4; ++_i) {
 		_pv[_i] = _pp + _slist1[_i];  _pvdot[_i] = _pp + _dlist1[_i];
 		_cvode_abstol(_atollist, _atol, _i);
 	}
@@ -487,13 +643,20 @@ static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
 
 static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
   int _i; double _save;{
+  MFGoC_SynMult_C = MFGoC_SynMult_C0;
+  MFGoC_SynMult_B = MFGoC_SynMult_B0;
+  MFGoC_SynMult_A = MFGoC_SynMult_A0;
   tsince = tsince0;
  {
    rates ( _threadargs_ ) ;
    rates ( _threadargs_ ) ;
    tsince = 0.0 ;
-   isi = - averageIsi * log ( 1.0 - random_float ( _threadargscomma_ 1.0 ) ) ;
+   nextIsi = - averageIsi * log ( 1.0 - random_float ( _threadargscomma_ 1.0 ) ) + delay ;
+   isi = nextIsi ;
    net_send ( _tqitem, (double*)0, _ppvar[1]._pvoid, t +  0.0 , 1.0 ) ;
+   MFGoC_SynMult_A = 0.0 ;
+   MFGoC_SynMult_B = 0.0 ;
+   MFGoC_SynMult_C = 0.0 ;
    }
  
 }
@@ -510,6 +673,13 @@ _thread = _ml->_thread;
 for (_iml = 0; _iml < _cntml; ++_iml) {
  _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
  _tsav = -1e20;
+#if EXTRACELLULAR
+ _nd = _ml->_nodelist[_iml];
+ if (_nd->_extnode) {
+    _v = NODEV(_nd) +_nd->_extnode->_v[0];
+ }else
+#endif
+ {
 #if CACHEVEC
   if (use_cachevec) {
     _v = VEC_V(_ni[_iml]);
@@ -519,12 +689,16 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
     _nd = _ml->_nodelist[_iml];
     _v = NODEV(_nd);
   }
+ }
  v = _v;
  initmodel(_p, _ppvar, _thread, _nt);
 }
 }
 
-static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt, double _v){double _current=0.;v=_v;{
+static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt, double _v){double _current=0.;v=_v;{ {
+   }
+ _current += i;
+
 } return _current;
 }
 
@@ -538,6 +712,13 @@ _cntml = _ml->_nodecount;
 _thread = _ml->_thread;
 for (_iml = 0; _iml < _cntml; ++_iml) {
  _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
+#if EXTRACELLULAR
+ _nd = _ml->_nodelist[_iml];
+ if (_nd->_extnode) {
+    _v = NODEV(_nd) +_nd->_extnode->_v[0];
+ }else
+#endif
+ {
 #if CACHEVEC
   if (use_cachevec) {
     _v = VEC_V(_ni[_iml]);
@@ -547,6 +728,27 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
     _nd = _ml->_nodelist[_iml];
     _v = NODEV(_nd);
   }
+ }
+ _g = _nrn_current(_p, _ppvar, _thread, _nt, _v + .001);
+ 	{ _rhs = _nrn_current(_p, _ppvar, _thread, _nt, _v);
+ 	}
+ _g = (_g - _rhs)/.001;
+ _g *=  1.e2/(_nd_area);
+ _rhs *= 1.e2/(_nd_area);
+#if CACHEVEC
+  if (use_cachevec) {
+	VEC_RHS(_ni[_iml]) += _rhs;
+  }else
+#endif
+  {
+	NODERHS(_nd) += _rhs;
+  }
+  if (_nt->_nrn_fast_imem) { _nt->_nrn_fast_imem->_nrn_sav_rhs[_ni[_iml]] += _rhs; }
+#if EXTRACELLULAR
+ if (_nd->_extnode) {
+   *_nd->_extnode->_rhs[0] += _rhs;
+ }
+#endif
  
 }
  
@@ -562,15 +764,21 @@ _cntml = _ml->_nodecount;
 _thread = _ml->_thread;
 for (_iml = 0; _iml < _cntml; ++_iml) {
  _p = _ml->_data[_iml];
+ _nd = _ml->_nodelist[_iml];
 #if CACHEVEC
   if (use_cachevec) {
-	VEC_D(_ni[_iml]) += _g;
+	VEC_D(_ni[_iml]) -= _g;
   }else
 #endif
   {
-     _nd = _ml->_nodelist[_iml];
-	NODED(_nd) += _g;
+	NODED(_nd) -= _g;
   }
+  if (_nt->_nrn_fast_imem) { _nt->_nrn_fast_imem->_nrn_sav_d[_ni[_iml]] -= _g; }
+#if EXTRACELLULAR
+ if (_nd->_extnode) {
+   *_nd->_extnode->_d[0] += _g;
+ }
+#endif
  
 }
  
@@ -587,6 +795,13 @@ _thread = _ml->_thread;
 for (_iml = 0; _iml < _cntml; ++_iml) {
  _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
  _nd = _ml->_nodelist[_iml];
+#if EXTRACELLULAR
+ _nd = _ml->_nodelist[_iml];
+ if (_nd->_extnode) {
+    _v = NODEV(_nd) +_nd->_extnode->_v[0];
+ }else
+#endif
+ {
 #if CACHEVEC
   if (use_cachevec) {
     _v = VEC_V(_ni[_iml]);
@@ -596,12 +811,11 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
     _nd = _ml->_nodelist[_iml];
     _v = NODEV(_nd);
   }
+ }
  v=_v;
 {
  {   states(_p, _ppvar, _thread, _nt);
-  } {
-   }
-}}
+  }}}
 
 }
 
@@ -612,6 +826,9 @@ static void _initlists(){
  int _i; static int _first = 1;
   if (!_first) return;
  _slist1[0] = &(tsince) - _p;  _dlist1[0] = &(Dtsince) - _p;
+ _slist1[1] = &(MFGoC_SynMult_A) - _p;  _dlist1[1] = &(DMFGoC_SynMult_A) - _p;
+ _slist1[2] = &(MFGoC_SynMult_B) - _p;  _dlist1[2] = &(DMFGoC_SynMult_B) - _p;
+ _slist1[3] = &(MFGoC_SynMult_C) - _p;  _dlist1[3] = &(DMFGoC_SynMult_C) - _p;
 _first = 0;
 }
 

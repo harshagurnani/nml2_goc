@@ -35,7 +35,7 @@ UNITS {
 
 PARAMETER {
     
-    period = 300 (ms)
+    period = 2000 (ms)
 }
 
 ASSIGNED {

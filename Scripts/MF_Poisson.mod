@@ -38,8 +38,8 @@ UNITS {
 
 PARAMETER {
     
-    averageRate = 0.030000001 (kHz)
-    averageIsi = 33.333336 (ms)
+    averageRate = 0.0050000004 (kHz)
+    averageIsi = 200 (ms)
 }
 
 ASSIGNED {

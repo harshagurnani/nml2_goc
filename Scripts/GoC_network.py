@@ -2,11 +2,16 @@ import neuroml as nml
 from pyneuroml import pynml
 from pyneuroml.lems import LEMSSimulation
 import lems.api as lems
+import hashlib
+
 
 
 import numpy as np
 from scipy.spatial import distance
 import math
+
+import network_utils as nu
+import validate_network as valnet
 
 def create_GoC_network( duration, dt, seed, N_goc=0, run=False, prob_type='Boltzmann', GJw_type='Vervaeke2010' ):
 
@@ -18,21 +23,27 @@ def create_GoC_network( duration, dt, seed, N_goc=0, run=False, prob_type='Boltz
 	GJ_filename = 'GapJuncCML.nml'
 	GJ_file = pynml.read_neuroml2_file( GJ_filename )
 	GJ_type = GJ_file.gap_junctions[0]
+
+	MFSyn_filename = 'MF_GoC_Syn.nml'
+	mfsyn_file = pynml.read_neuroml2_file( MFSyn_filename )
+	MFSyn_type = mfsyn_file.exp_three_synapses[0]
 	
-	
-		
-		
+	MF20Syn_filename = 'MF_GoC_SynMult.nml'
+	mf20syn_file = pynml.read_neuroml2_file( MF20Syn_filename )
+	MF20Syn_type = mf20syn_file.exp_three_synapses[0]
 	
 	# Distribute cells in 3D
 	if N_goc>0:
-		GoC_pos = GoC_locate(N_goc)
+		GoC_pos = nu.GoC_locate(N_goc)
 	else:
-		GoC_pos = GoC_density_locate()
+		GoC_pos = nu.GoC_density_locate()
 		N_goc = GoC_pos.shape[0]
 		
 	# get GJ connectivity
-	GJ_pairs, GJWt = GJ_conn( GoC_pos, prob_type, GJw_type )
-	
+	GJ_pairs, GJWt = nu.GJ_conn( GoC_pos, prob_type, GJw_type )
+	tmp1, tmp2 = valnet.gapJuncAnalysis( GJ_pairs, GJWt )
+	print("Number of gap junctions per cell: ", tmp1)
+	print("Net GJ conductance per cell:", tmp2)
 	
 	# Create pop List
 	goc_pop = nml.Population( id=goc_type.id+"Pop", component = goc_type.id, type="populationList", size=N_goc )
@@ -53,57 +64,98 @@ def create_GoC_network( duration, dt, seed, N_goc=0, run=False, prob_type='Boltz
 	input_type = 'spikeGenerator'#'spikeGeneratorPoisson'
 	lems_inst_doc = lems.Model()
 	mf_inputs = lems.Component( "MF_Input", input_type)
-	mf_inputs.set_parameter("period", "300 ms" )
+	mf_inputs.set_parameter("period", "2000 ms" )
 	#mf_inputs.set_parameter("averageRate", "50 Hz")
 	lems_inst_doc.add( mf_inputs )
 	
-	synapse_type = 'alphaCurrentSynapse'
-	alpha_syn = lems.Component( "AlphaSyn", synapse_type)
-	alpha_syn.set_parameter("tau", "30 ms" )
-	alpha_syn.set_parameter("ibase", "200 pA")
-	lems_inst_doc.add( alpha_syn )
+	#synapse_type = 'alphaCurrentSynapse'
+	#alpha_syn = lems.Component( "AlphaSyn", synapse_type)
+	#alpha_syn.set_parameter("tau", "30 ms" )
+	#alpha_syn.set_parameter("ibase", "200 pA")
+	#lems_inst_doc.add( alpha_syn )
 	
-	N_mf = 2
-	# Define input population
-	MF_pop = nml.Population(id=mf_inputs.id+"_pop", component=mf_inputs.id, type="populationList", size=N_mf)
-	net.populations.append( MF_pop )
+	# Define MF input population
+	
+	N_mf = 15
+	#MF_pop = nml.Population(id=mf_inputs.id+"_pop", component=mf_inputs.id, type="populationList", size=N_mf)
+	#net.populations.append( MF_pop )
 
 	mf_type2 = 'spikeGeneratorPoisson'
 	mf_poisson = lems.Component( "MF_Poisson", mf_type2)
-	mf_poisson.set_parameter("averageRate", "30 Hz")
+	mf_poisson.set_parameter("averageRate", "5 Hz")
 	lems_inst_doc.add( mf_poisson )
 	
 	MF_Poisson_pop = nml.Population(id=mf_poisson.id+"_pop", component=mf_poisson.id, type="populationList", size=N_mf)
 	net.populations.append( MF_Poisson_pop )
-	
+	MF_pos = nu.GoC_locate( N_mf )
+	for mf in range( N_mf ):
+		inst = nml.Instance(id=mf)
+		MF_Poisson_pop.instances.append( inst )
+		inst.location = nml.Location( x=MF_pos[mf,0], y=MF_pos[mf,1], z=MF_pos[mf,2] )
+		
 	# Setup Mf->GoC synapses
-	MFprojection = nml.Projection(id="MFtoGoC", presynaptic_population=MF_pop.id, postsynaptic_population=goc_pop.id, synapse=alpha_syn.id)
-	net.projections.append(MFprojection)
+	#MFprojection = nml.Projection(id="MFtoGoC", presynaptic_population=MF_pop.id, postsynaptic_population=goc_pop.id, synapse=alpha_syn.id)
+	#net.projections.append(MFprojection)
 
-	MF2projection = nml.Projection(id="MF2toGoC", presynaptic_population=MF_Poisson_pop.id, postsynaptic_population=goc_pop.id, synapse=alpha_syn.id)
+	MF2projection = nml.Projection(id="MF2toGoC", presynaptic_population=MF_Poisson_pop.id, postsynaptic_population=goc_pop.id, synapse=MFSyn_type.id)#alpha_syn.id
 	net.projections.append(MF2projection)
 
+
+	#Get list of MF->GoC synapse
+	mf_synlist = nu.randdist_MF_syn( N_mf, N_goc, pConn=0.3)
+	nMFSyn = mf_synlist.shape[1]
+	for syn in range( nMFSyn ):
+		mf, goc = mf_synlist[:, syn]
+		conn2 = nml.Connection(id=syn, pre_cell_id='../{}/{}/{}'.format(MF_Poisson_pop.id, mf, mf_poisson.id), post_cell_id='../{}/{}/{}'.format(goc_pop.id, goc, goc_type.id), post_segment_id='0', post_fraction_along="0.5")
+		MF2projection.connections.append(conn2)
+		
+		
+	# Burst of MF input (as explicit input)
+	mf_bursttype = 'transientPoissonFiringSynapse'
+	mf_burst = lems.Component( "MF_Burst", mf_bursttype)
+	mf_burst.set_parameter( "averageRate", "100 Hz" )
+	mf_burst.set_parameter( "delay", "2000 ms" )
+	mf_burst.set_parameter( "duration", "500 ms" )
+	mf_burst.set_parameter( "synapse", MF20Syn_type.id )
+	mf_burst.set_parameter( "spikeTarget", './{}'.format(MF20Syn_type.id) )
+	lems_inst_doc.add( mf_burst )
 	
+	
+	# Add few burst inputs
+	n_bursts = 4
+	gocPerm = np.random.permutation( N_goc )
+	ctr = 0
+	for gg in range(4):
+		goc = gocPerm[gg]
+		for jj in range( n_bursts ):
+			inst = nml.ExplicitInput( id=ctr, target='../{}/{}/{}'.format(goc_pop.id, goc, goc_type.id), input=mf_burst.id, synapse=MF20Syn_type.id, spikeTarget='./{}'.format(MF20Syn_type.id))
+			net.explicit_inputs.append( inst )
+			ctr += 1
+		
+	
+	'''
+	one-to-one pairing of MF and GoC -> no shared inputs
 	for goc in range(N_mf):
-		inst = nml.Instance(id=goc)
-		MF_pop.instances.append( inst )
-		inst.location = nml.Location( x=GoC_pos[goc,0], y=GoC_pos[goc,1], z=GoC_pos[goc,2]+100 )
-		conn = nml.Connection(id=goc, pre_cell_id='../{}/{}/{}'.format(MF_pop.id, goc, mf_inputs.id), post_cell_id='../{}/{}/{}'.format(goc_pop.id, goc, goc_type.id), post_segment_id='0', post_fraction_along="0.5")
-		MFprojection.connections.append(conn)
+		#inst = nml.Instance(id=goc)
+		#MF_pop.instances.append( inst )
+		#inst.location = nml.Location( x=GoC_pos[goc,0], y=GoC_pos[goc,1], z=GoC_pos[goc,2]+100 )
+		#conn = nml.Connection(id=goc, pre_cell_id='../{}/{}/{}'.format(MF_pop.id, goc, mf_inputs.id), post_cell_id='../{}/{}/{}'.format(goc_pop.id, goc, goc_type.id), post_segment_id='0', post_fraction_along="0.5")
+		#MFprojection.connections.append(conn)
 
 		goc2 = N_goc-goc-1
-		inst2 = nml.Instance(id=goc2)
+		inst2 = nml.Instance(id=goc)
 		MF_Poisson_pop.instances.append( inst2 )
 		inst2.location = nml.Location( x=GoC_pos[goc2,0], y=GoC_pos[goc2,1], z=GoC_pos[goc2,2]+100 )
 		conn2 = nml.Connection(id=goc, pre_cell_id='../{}/{}/{}'.format(MF_Poisson_pop.id, goc, mf_poisson.id), post_cell_id='../{}/{}/{}'.format(goc_pop.id, goc2, goc_type.id), post_segment_id='0', post_fraction_along="0.5")
 		MF2projection.connections.append(conn2)
 
-
+	'''
+	
 	# Add electrical synapses
 	GoCCoupling = nml.ElectricalProjection( id="gocGJ", presynaptic_population=goc_pop.id, postsynaptic_population=goc_pop.id )
 	
 	#print(GJ_pairs)
-	gj = nml.GapJunction( id="GJ_0", conductance="426nS" )
+	gj = nml.GapJunction( id="GJ_0", conductance="426pS" )
 	net_doc.gap_junctions.append(gj)
 	nGJ = GJ_pairs.shape[0]
 	for jj in range( nGJ ):
@@ -112,7 +164,7 @@ def create_GoC_network( duration, dt, seed, N_goc=0, run=False, prob_type='Boltz
 		#gj = nml.GapJunction(id="GJ_%d"%jj, conductance="%fnS"%(GJWt[jj]))
 		#net_doc.gap_junctions.append(gj)
 		#lems_inst_doc.add( gj[jj] )
-		#print("%fnS"%(GJWt[jj]))
+		#print("%fnS"%(GJWt[jj]*0.426))
 		conn = nml.ElectricalConnectionInstanceW( id=jj, pre_cell='../{}/{}/{}'.format(goc_pop.id, GJ_pairs[jj,0], goc_type.id), pre_segment='1', pre_fraction_along='0.5', post_cell='../{}/{}/{}'.format(goc_pop.id, GJ_pairs[jj,1], goc_type.id), post_segment='1', post_fraction_along='0.5', synapse=gj.id, weight=GJWt[jj] )#synapse="GapJuncCML" synapse=gj.id , conductance="100E-9mS"
 		# ------------ need to create GJ component
 		GoCCoupling.electrical_connection_instance_ws.append( conn )
@@ -135,6 +187,8 @@ def create_GoC_network( duration, dt, seed, N_goc=0, run=False, prob_type='Boltz
 	ls.include_neuroml2_file( net_filename)
 	ls.include_neuroml2_file( goc_filename)
 	ls.include_neuroml2_file( GJ_filename)
+	ls.include_neuroml2_file( MFSyn_filename)
+	ls.include_neuroml2_file( MF20Syn_filename)
 	ls.include_lems_file( lems_filename, include_included=False)
 	
 	
@@ -159,60 +213,11 @@ def create_GoC_network( duration, dt, seed, N_goc=0, run=False, prob_type='Boltz
 	return res
 
 
-def GoC_locate( N=1, x=350,y=350,z=80):
-	# Randomly distribute 'N' Golgi Cells in [0,x) X [0, y) X [0,z)
-	GoC_pos = np.random.random( [N,3] ) * [x,y,z]  #in um
-	return GoC_pos
-	
-def GoC_density_locate( density=4607, x=350,y=350,z=80):
-	# Randomly distribute Golgi Cells in [0,x) X [0, y) X [0,z) based on density
-	# Density in cells/mm3, dimensions [x,y,z] in um
-	N = int( density * 1e-9*x*y*z  ) # units um->mm
-	GoC_pos = np.random.random( [N,3] ) * [x,y,z]  #in um
-	return GoC_pos
 
-def GJ_conn( GoC_pos, prob_type='Boltzmann', GJw_type='Vervaeke2010' ):
-	# modelling as single Gap junction between cells/mm3
-	N_goc = GoC_pos.shape[0]
-	radDist= distance.pdist( GoC_pos, 'euclidean' )
-	
-	if prob_type=='Boltzmann':
-		isconn = connProb_Boltzmann( radDist )
-	GJ_pairs = np.asarray(np.nonzero(isconn))
-	GJ_pairs = np.asarray([GJ_pairs[:,jj] for jj in range(GJ_pairs.shape[1]) if GJ_pairs[0,jj]<GJ_pairs[1,jj]])	# N_pairs x 2 array = [cell1, cell2] of each pair
-	
-	radDist = distance.squareform(radDist)
-	
-	# Gap junction conductance as a function of distance
-	if GJw_type == 'Vervaeke2010':
-		GJ_cond = set_GJ_strength_Vervaeke2010( np.asarray([ radDist[GJ_pairs[jj,0], GJ_pairs[jj,1]] for jj in range(GJ_pairs.shape[0]) ]) ) #list of gj conductance for corresponding pair
-	elif GJw_type == 'Szo16_oneGJ':
-		GJ_cond = set_GJ_strength_Szo2016_oneGJ( np.asarray([ radDist[GJ_pairs[jj,0], GJ_pairs[jj,1]] for jj in range(GJ_pairs.shape[0]) ]) )
-	return GJ_pairs, GJ_cond
 
-def connProb_Boltzmann( radDist ):
-	# Coupling prob as Boltzmann function - from Vervaeke 2010
-	connProb = 1e-2 * (-1745 +  1836/( 1+np.exp((radDist-267)/39) ))
-	connGen = np.random.random( radDist.shape )
-	isconn = distance.squareform( (connProb - connGen)>0 ) # symmetric boolean matrix with diag=0 -> GJ or not
-	return isconn
-	
-	
-def set_GJ_strength_Vervaeke2010( radDist ):
-	# Exponential fall-off of coupling coefficient, convert to GJ_cond
-	CC = -2.3 + 29.7*np.exp(-radDist/70.4)	#Coupling coefficient
 
-	GJw = 0.576 * np.exp(CC/12.4) + 0.00059 * np.exp(CC/2.79) - 0.564
-	return GJw
-
-def set_GJ_strength_Szo2016_oneGJ( radDist ):
-	# Exponential fall-off of coupling coefficient, convert to GJ_cond as linear scaling
-	CC = -2.3 + 29.7*np.exp(-radDist/70.4)	#Coupling coefficient
-	print(CC.shape)
-	GJw = np.around(CC/5)
-	return GJw
 
 	
 if __name__ =='__main__':
-	res = create_GoC_network( duration = 5000, dt=0.025, seed = 12345, N_goc=15, GJw_type = 'Szo16_oneGJ')
+	res = create_GoC_network( duration = 5000, dt=0.025, seed = 123, GJw_type = 'Szo16_oneGJ')
 	print(res)

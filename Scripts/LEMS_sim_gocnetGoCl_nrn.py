@@ -2,7 +2,7 @@
 Neuron simulator export for:
 
 Components:
-    GJ_0 (Type: gapJunction:  conductance=4.2600000000000003E-7 (SI conductance))
+    GJ_0 (Type: gapJunction:  conductance=4.26E-10 (SI conductance))
     gocNetwork (Type: networkWithTemperature:  temperature=296.15 (SI temperature))
     null (Type: notes)
     GolgiNa (Type: ionChannelHH:  conductance=1.0E-11 (SI conductance))
@@ -40,8 +40,13 @@ Components:
     net1 (Type: networkWithTemperature:  temperature=296.15 (SI temperature))
     null (Type: notes)
     GapJuncCML (Type: gapJunction:  conductance=5.0E-10 (SI conductance))
-    MF_Input (Type: spikeGenerator:  period=0.3 (SI time))
-    AlphaSyn (Type: alphaCurrentSynapse:  tau=0.03 (SI time) ibase=2.0E-10 (SI current))
+    null (Type: notes)
+    MFGoC_Syn (Type: expThreeSynapse:  tauRise=1.0E-4 (SI time) tauDecay1=7.0E-4 (SI time) tauDecay2=0.0035 (SI time) peakTime1=2.270228507231199E-4 (SI time) waveformFactor1=1.61360214664657 (dimensionless) peakTime2=3.659917122121455E-4 (SI time) waveformFactor2=1.1428859487981908 (dimensionless) gbase1=7.0E-10 (SI conductance) gbase2=2.0000000000000003E-10 (SI conductance) erev=0.0 (SI voltage))
+    null (Type: notes)
+    MFGoC_SynMult (Type: expThreeSynapse:  tauRise=1.0E-4 (SI time) tauDecay1=7.0E-4 (SI time) tauDecay2=0.0035 (SI time) peakTime1=2.270228507231199E-4 (SI time) waveformFactor1=1.61360214664657 (dimensionless) peakTime2=3.659917122121455E-4 (SI time) waveformFactor2=1.1428859487981908 (dimensionless) gbase1=3.5000000000000003E-9 (SI conductance) gbase2=1.0E-9 (SI conductance) erev=0.0 (SI voltage))
+    MF_Input (Type: spikeGenerator:  period=2.0 (SI time))
+    MF_Poisson (Type: spikeGeneratorPoisson:  averageRate=5.0 (SI per_time) averageIsi=0.2 (SI time))
+    MF_Burst (Type: transientPoissonFiringSynapse:  averageRate=100.0 (SI per_time) delay=2.0 (SI time) duration=0.5 (SI time) averageIsi=0.01 (SI time) LONG_TIME=3.6E12 (SI time))
     sim_gocnetGoCl (Type: Simulation:  length=5.0 (SI time) step=2.5E-5 (SI time))
 
 
@@ -68,7 +73,7 @@ h("p = new PythonObject()")
 
 class NeuronSimulation():
 
-    def __init__(self, tstop, dt, seed=12345):
+    def __init__(self, tstop, dt, seed=123):
 
         print("\n    Starting simulation in NEURON of %sms generated from NeuroML2 model...\n"%tstop)
 
@@ -87,7 +92,7 @@ class NeuronSimulation():
         h.celsius = 296.15 - 273.15
 
         # ######################   Population: GoClPop
-        print("Population GoClPop contains 15 instance(s) of component: GoCl of type: cell")
+        print("Population GoClPop contains 45 instance(s) of component: GoCl of type: cell")
 
         print("Setting the default initial concentrations for ca (used in GoCl) to 5.0E-5 mM (internal), 2.0 mM (external)")
         h("cai0_ca_ion = 5.0E-5")
@@ -95,7 +100,7 @@ class NeuronSimulation():
 
         h.load_file("GoCl.hoc")
         a_GoClPop = []
-        h("{ n_GoClPop = 15 }")
+        h("{ n_GoClPop = 45 }")
         h("objectvar a_GoClPop[n_GoClPop]")
         for i in range(int(h.n_GoClPop)):
             h("a_GoClPop[%i] = new GoCl()"%i)
@@ -103,21 +108,51 @@ class NeuronSimulation():
 
             self.next_global_id+=1
 
-        h("{ a_GoClPop[0].position(130.33519, 176.13142, 67.20119) }")
-        h("{ a_GoClPop[1].position(4.5459127, 282.24857, 67.34619) }")
-        h("{ a_GoClPop[2].position(180.19589, 345.478, 29.865997) }")
-        h("{ a_GoClPop[3].position(210.06573, 1.5214437, 59.82358) }")
-        h("{ a_GoClPop[4].position(134.83539, 215.2065, 15.818933) }")
-        h("{ a_GoClPop[5].position(56.74831, 271.65875, 31.212967) }")
-        h("{ a_GoClPop[6].position(161.73051, 163.70578, 9.406995) }")
-        h("{ a_GoClPop[7].position(46.235546, 260.13913, 70.21739) }")
-        h("{ a_GoClPop[8].position(195.0661, 239.48726, 38.078476) }")
-        h("{ a_GoClPop[9].position(214.18188, 127.69329, 48.240204) }")
-        h("{ a_GoClPop[10].position(194.20943, 183.05124, 54.34646) }")
-        h("{ a_GoClPop[11].position(180.46419, 103.854294, 24.450665) }")
-        h("{ a_GoClPop[12].position(286.00375, 234.01692, 23.130564) }")
-        h("{ a_GoClPop[13].position(216.85568, 18.99702, 13.069727) }")
-        h("{ a_GoClPop[14].position(86.91572, 126.21562, 41.99125) }")
+        h("{ a_GoClPop[0].position(36.026142, 266.1574, 69.02037) }")
+        h("{ a_GoClPop[1].position(336.49835, 292.78217, 50.760616) }")
+        h("{ a_GoClPop[2].position(19.752449, 327.37033, 47.33412) }")
+        h("{ a_GoClPop[3].position(24.650267, 268.47623, 47.694763) }")
+        h("{ a_GoClPop[4].position(233.56323, 24.41089, 6.095588) }")
+        h("{ a_GoClPop[5].position(72.00124, 117.918884, 14.35706) }")
+        h("{ a_GoClPop[6].position(148.16472, 65.84808, 58.41381) }")
+        h("{ a_GoClPop[7].position(50.99792, 16.507933, 45.001995) }")
+        h("{ a_GoClPop[8].position(286.34247, 152.19844, 45.096745) }")
+        h("{ a_GoClPop[9].position(282.47186, 174.63835, 57.36411) }")
+        h("{ a_GoClPop[10].position(27.649445, 70.38081, 56.635685) }")
+        h("{ a_GoClPop[11].position(300.6922, 3.3293931, 32.523697) }")
+        h("{ a_GoClPop[12].position(141.20197, 336.3497, 38.44033) }")
+        h("{ a_GoClPop[13].position(11.774633, 349.82516, 75.07686) }")
+        h("{ a_GoClPop[14].position(219.49182, 263.88242, 71.45649) }")
+        h("{ a_GoClPop[15].position(23.715153, 129.52669, 34.13115) }")
+        h("{ a_GoClPop[16].position(171.06235, 109.55432, 68.95555) }")
+        h("{ a_GoClPop[17].position(5.7364354, 176.59642, 19.9894) }")
+        h("{ a_GoClPop[18].position(205.90274, 79.48429, 78.61145) }")
+        h("{ a_GoClPop[19].position(6.08307, 181.78423, 10.598011) }")
+        h("{ a_GoClPop[20].position(117.98515, 295.30087, 14.050448) }")
+        h("{ a_GoClPop[21].position(180.44495, 120.01036, 43.654472) }")
+        h("{ a_GoClPop[22].position(268.48544, 232.42247, 54.312943) }")
+        h("{ a_GoClPop[23].position(346.6952, 13.661717, 6.683794) }")
+        h("{ a_GoClPop[24].position(271.4436, 130.09705, 33.836575) }")
+        h("{ a_GoClPop[25].position(61.397854, 255.82564, 76.85522) }")
+        h("{ a_GoClPop[26].position(54.621334, 253.48125, 63.492023) }")
+        h("{ a_GoClPop[27].position(155.59134, 59.650566, 31.841711) }")
+        h("{ a_GoClPop[28].position(217.54054, 64.23114, 10.902896) }")
+        h("{ a_GoClPop[29].position(320.05505, 251.56989, 74.08609) }")
+        h("{ a_GoClPop[30].position(136.13762, 88.73891, 74.199486) }")
+        h("{ a_GoClPop[31].position(130.4983, 165.93283, 27.41936) }")
+        h("{ a_GoClPop[32].position(279.30212, 7.205508, 16.07514) }")
+        h("{ a_GoClPop[33].position(102.96528, 290.94437, 46.719822) }")
+        h("{ a_GoClPop[34].position(71.19297, 337.42255, 37.970562) }")
+        h("{ a_GoClPop[35].position(67.25513, 230.64034, 30.012283) }")
+        h("{ a_GoClPop[36].position(231.50851, 124.50501, 30.650875) }")
+        h("{ a_GoClPop[37].position(123.92528, 71.148186, 15.660753) }")
+        h("{ a_GoClPop[38].position(85.145935, 23.408255, 1.9504005) }")
+        h("{ a_GoClPop[39].position(230.74345, 222.31635, 69.78621) }")
+        h("{ a_GoClPop[40].position(200.59694, 246.51674, 42.093506) }")
+        h("{ a_GoClPop[41].position(255.46924, 27.168827, 71.25542) }")
+        h("{ a_GoClPop[42].position(150.58879, 285.11536, 28.464228) }")
+        h("{ a_GoClPop[43].position(172.45189, 249.03874, 35.13922) }")
+        h("{ a_GoClPop[44].position(283.0326, 251.24084, 56.978054) }")
 
         h("proc initialiseV_GoClPop() { for i = 0, n_GoClPop-1 { a_GoClPop[i].set_initial_v() } }")
         h("objref fih_GoClPop")
@@ -127,274 +162,2870 @@ class NeuronSimulation():
         h("objref fih_ion_GoClPop")
         h('{fih_ion_GoClPop = new FInitializeHandler(1, "initialiseIons_GoClPop()")}')
 
-        # ######################   Population: MF_Input_pop
-        print("Population MF_Input_pop contains 2 instance(s) of component: MF_Input of type: spikeGenerator")
+        # ######################   Population: MF_Poisson_pop
+        print("Population MF_Poisson_pop contains 15 instance(s) of component: MF_Poisson of type: spikeGeneratorPoisson")
 
-        h(" {n_MF_Input_pop = 2} ")
+        h(" {n_MF_Poisson_pop = 15} ")
         '''
-        Population MF_Input_pop contains instances of Component(id=MF_Input type=spikeGenerator)
-        whose dynamics will be implemented as a mechanism (MF_Input) in a mod file
+        Population MF_Poisson_pop contains instances of Component(id=MF_Poisson type=spikeGeneratorPoisson)
+        whose dynamics will be implemented as a mechanism (MF_Poisson) in a mod file
         '''
-        h(" create MF_Input_pop[2]")
-        h(" objectvar m_MF_Input_MF_Input_pop[2] ")
+        h(" create MF_Poisson_pop[15]")
+        h(" objectvar m_MF_Poisson_MF_Poisson_pop[15] ")
 
-        for i in range(int(h.n_MF_Input_pop)):
-            h.MF_Input_pop[i].L = 10.0
-            h.MF_Input_pop[i](0.5).diam = 10.0
-            h.MF_Input_pop[i](0.5).cm = 318.31
-            h.MF_Input_pop[i].push()
-            h(" MF_Input_pop[%i]  { m_MF_Input_MF_Input_pop[%i] = new MF_Input(0.5) } "%(i,i))
+        for i in range(int(h.n_MF_Poisson_pop)):
+            h.MF_Poisson_pop[i].L = 10.0
+            h.MF_Poisson_pop[i](0.5).diam = 10.0
+            h.MF_Poisson_pop[i](0.5).cm = 318.31
+            h.MF_Poisson_pop[i].push()
+            h(" MF_Poisson_pop[%i]  { m_MF_Poisson_MF_Poisson_pop[%i] = new MF_Poisson(0.5) } "%(i,i))
 
-            h.m_MF_Input_MF_Input_pop[i].period = 300.0
+            h.m_MF_Poisson_MF_Poisson_pop[i].averageRate = 0.0050000004
+            h.m_MF_Poisson_MF_Poisson_pop[i].averageIsi = 200.0
+            # Spiking element (spikeGeneratorPoisson), will require seeding...
+            rand = h.Random()
+            self.randoms.append(rand)
+            #print("Seeding random generator on m_MF_Poisson_MF_Poisson_pop[i] (i=%i) with stim seed %s"%(i, self.seed))
+            self._init_stim_randomizer(rand,"MF_Poisson_pop",i, self.seed)
+            rand.negexp(1)
+            h.m_MF_Poisson_MF_Poisson_pop[i].noiseFromRandom(rand)
+
             h.pop_section()
 
             self.next_global_id+=1
 
-        h(" MF_Input_pop[0] { pt3dclear() } ")
-        h(" MF_Input_pop[0] { pt3dadd(130.33519, 176.13142 + (5), 167.20119, 10) } ")
-        h(" MF_Input_pop[0] { pt3dadd(130.33519, 176.13142 + (-5), 167.20119, 10) } ")
-        h(" MF_Input_pop[1] { pt3dclear() } ")
-        h(" MF_Input_pop[1] { pt3dadd(4.5459127, 282.24857 + (5), 167.34619, 10) } ")
-        h(" MF_Input_pop[1] { pt3dadd(4.5459127, 282.24857 + (-5), 167.34619, 10) } ")
+        h(" MF_Poisson_pop[0] { pt3dclear() } ")
+        h(" MF_Poisson_pop[0] { pt3dadd(76.804985, 215.99374 + (5), 37.49212, 10) } ")
+        h(" MF_Poisson_pop[0] { pt3dadd(76.804985, 215.99374 + (-5), 37.49212, 10) } ")
+        h(" MF_Poisson_pop[1] { pt3dclear() } ")
+        h(" MF_Poisson_pop[1] { pt3dadd(220.0161, 128.8051 + (5), 69.59794, 10) } ")
+        h(" MF_Poisson_pop[1] { pt3dadd(220.0161, 128.8051 + (-5), 69.59794, 10) } ")
+        h(" MF_Poisson_pop[2] { pt3dclear() } ")
+        h(" MF_Poisson_pop[2] { pt3dadd(311.45688, 141.38235 + (5), 75.19881, 10) } ")
+        h(" MF_Poisson_pop[2] { pt3dadd(311.45688, 141.38235 + (-5), 75.19881, 10) } ")
+        h(" MF_Poisson_pop[3] { pt3dclear() } ")
+        h(" MF_Poisson_pop[3] { pt3dadd(251.66641, 242.42638 + (5), 7.587685, 10) } ")
+        h(" MF_Poisson_pop[3] { pt3dadd(251.66641, 242.42638 + (-5), 7.587685, 10) } ")
+        h(" MF_Poisson_pop[4] { pt3dclear() } ")
+        h(" MF_Poisson_pop[4] { pt3dadd(103.07807, 176.7278 + (5), 45.42127, 10) } ")
+        h(" MF_Poisson_pop[4] { pt3dadd(103.07807, 176.7278 + (-5), 45.42127, 10) } ")
+        h(" MF_Poisson_pop[5] { pt3dclear() } ")
+        h(" MF_Poisson_pop[5] { pt3dadd(184.01501, 190.35968 + (5), 15.31806, 10) } ")
+        h(" MF_Poisson_pop[5] { pt3dadd(184.01501, 190.35968 + (-5), 15.31806, 10) } ")
+        h(" MF_Poisson_pop[6] { pt3dclear() } ")
+        h(" MF_Poisson_pop[6] { pt3dadd(131.5221, 209.64467 + (5), 74.848434, 10) } ")
+        h(" MF_Poisson_pop[6] { pt3dadd(131.5221, 209.64467 + (-5), 74.848434, 10) } ")
+        h(" MF_Poisson_pop[7] { pt3dclear() } ")
+        h(" MF_Poisson_pop[7] { pt3dadd(239.6363, 284.48566 + (5), 39.370213, 10) } ")
+        h(" MF_Poisson_pop[7] { pt3dadd(239.6363, 284.48566 + (-5), 39.370213, 10) } ")
+        h(" MF_Poisson_pop[8] { pt3dclear() } ")
+        h(" MF_Poisson_pop[8] { pt3dadd(333.59537, 208.88611 + (5), 51.48483, 10) } ")
+        h(" MF_Poisson_pop[8] { pt3dadd(333.59537, 208.88611 + (-5), 51.48483, 10) } ")
+        h(" MF_Poisson_pop[9] { pt3dclear() } ")
+        h(" MF_Poisson_pop[9] { pt3dadd(300.91028, 296.74863 + (5), 57.92468, 10) } ")
+        h(" MF_Poisson_pop[9] { pt3dadd(300.91028, 296.74863 + (-5), 57.92468, 10) } ")
+        h(" MF_Poisson_pop[10] { pt3dclear() } ")
+        h(" MF_Poisson_pop[10] { pt3dadd(224.21735, 257.09595 + (5), 35.258297, 10) } ")
+        h(" MF_Poisson_pop[10] { pt3dadd(224.21735, 257.09595 + (-5), 35.258297, 10) } ")
+        h(" MF_Poisson_pop[11] { pt3dclear() } ")
+        h(" MF_Poisson_pop[11] { pt3dadd(78.94963, 29.058632 + (5), 70.72982, 10) } ")
+        h(" MF_Poisson_pop[11] { pt3dadd(78.94963, 29.058632 + (-5), 70.72982, 10) } ")
+        h(" MF_Poisson_pop[12] { pt3dclear() } ")
+        h(" MF_Poisson_pop[12] { pt3dadd(164.99329, 183.89633 + (5), 78.123825, 10) } ")
+        h(" MF_Poisson_pop[12] { pt3dadd(164.99329, 183.89633 + (-5), 78.123825, 10) } ")
+        h(" MF_Poisson_pop[13] { pt3dclear() } ")
+        h(" MF_Poisson_pop[13] { pt3dadd(66.89608, 342.80682 + (5), 31.032019, 10) } ")
+        h(" MF_Poisson_pop[13] { pt3dadd(66.89608, 342.80682 + (-5), 31.032019, 10) } ")
+        h(" MF_Poisson_pop[14] { pt3dclear() } ")
+        h(" MF_Poisson_pop[14] { pt3dadd(249.76239, 289.34286 + (5), 6.239767, 10) } ")
+        h(" MF_Poisson_pop[14] { pt3dadd(249.76239, 289.34286 + (-5), 6.239767, 10) } ")
 
-        # ######################   Projection: MFtoGoC
-        print("Adding projection: MFtoGoC, from MF_Input_pop to GoClPop with synapse AlphaSyn, 2 connection(s)")
+        # ######################   Projection: MF2toGoC
+        print("Adding projection: MF2toGoC, from MF_Poisson_pop to GoClPop with synapse MFGoC_Syn, 167 connection(s)")
 
-        # Connection 0: cell 0, seg 0 (0.5) [0.5 on MF_Input_pop[0]] -> cell 0, seg 0 (0.5) [0.5 on a_GoClPop[0].Soma], weight: 1.0, delay 0.0
-        h("objectvar syn_GoClPop_0_0_AlphaSyn_0")
-        h("a_GoClPop[0].Soma syn_GoClPop_0_0_AlphaSyn_0 = new AlphaSyn(0.5)")
-        h("objectvar nc_syn_GoClPop_0_0_AlphaSyn_0_0")
-        h("MF_Input_pop[0] nc_syn_GoClPop_0_0_AlphaSyn_0_0 = new NetCon(m_MF_Input_MF_Input_pop[0], syn_GoClPop_0_0_AlphaSyn_0, 0.0, 0.0, 1.0)")  
+        # Connection 0: cell 0, seg 0 (0.5) [0.5 on MF_Poisson_pop[0]] -> cell 4, seg 0 (0.5) [0.5 on a_GoClPop[4].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_4_0_MFGoC_Syn_0")
+        h("a_GoClPop[4].Soma syn_GoClPop_4_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_4_0_MFGoC_Syn_0_0")
+        h("MF_Poisson_pop[0] nc_syn_GoClPop_4_0_MFGoC_Syn_0_0 = new NetCon(m_MF_Poisson_MF_Poisson_pop[0], syn_GoClPop_4_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
 
-        # Connection 1: cell 1, seg 0 (0.5) [0.5 on MF_Input_pop[1]] -> cell 1, seg 0 (0.5) [0.5 on a_GoClPop[1].Soma], weight: 1.0, delay 0.0
-        h("objectvar syn_GoClPop_1_0_AlphaSyn_0")
-        h("a_GoClPop[1].Soma syn_GoClPop_1_0_AlphaSyn_0 = new AlphaSyn(0.5)")
-        h("objectvar nc_syn_GoClPop_1_0_AlphaSyn_0_1")
-        h("MF_Input_pop[1] nc_syn_GoClPop_1_0_AlphaSyn_0_1 = new NetCon(m_MF_Input_MF_Input_pop[1], syn_GoClPop_1_0_AlphaSyn_0, 0.0, 0.0, 1.0)")  
+        # Connection 1: cell 0, seg 0 (0.5) [0.5 on MF_Poisson_pop[0]] -> cell 6, seg 0 (0.5) [0.5 on a_GoClPop[6].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_6_0_MFGoC_Syn_0")
+        h("a_GoClPop[6].Soma syn_GoClPop_6_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_6_0_MFGoC_Syn_0_1")
+        h("MF_Poisson_pop[0] nc_syn_GoClPop_6_0_MFGoC_Syn_0_1 = new NetCon(m_MF_Poisson_MF_Poisson_pop[0], syn_GoClPop_6_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 2: cell 0, seg 0 (0.5) [0.5 on MF_Poisson_pop[0]] -> cell 8, seg 0 (0.5) [0.5 on a_GoClPop[8].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_8_0_MFGoC_Syn_0")
+        h("a_GoClPop[8].Soma syn_GoClPop_8_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_8_0_MFGoC_Syn_0_2")
+        h("MF_Poisson_pop[0] nc_syn_GoClPop_8_0_MFGoC_Syn_0_2 = new NetCon(m_MF_Poisson_MF_Poisson_pop[0], syn_GoClPop_8_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 3: cell 0, seg 0 (0.5) [0.5 on MF_Poisson_pop[0]] -> cell 18, seg 0 (0.5) [0.5 on a_GoClPop[18].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_18_0_MFGoC_Syn_0")
+        h("a_GoClPop[18].Soma syn_GoClPop_18_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_18_0_MFGoC_Syn_0_3")
+        h("MF_Poisson_pop[0] nc_syn_GoClPop_18_0_MFGoC_Syn_0_3 = new NetCon(m_MF_Poisson_MF_Poisson_pop[0], syn_GoClPop_18_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 4: cell 0, seg 0 (0.5) [0.5 on MF_Poisson_pop[0]] -> cell 19, seg 0 (0.5) [0.5 on a_GoClPop[19].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_19_0_MFGoC_Syn_0")
+        h("a_GoClPop[19].Soma syn_GoClPop_19_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_19_0_MFGoC_Syn_0_4")
+        h("MF_Poisson_pop[0] nc_syn_GoClPop_19_0_MFGoC_Syn_0_4 = new NetCon(m_MF_Poisson_MF_Poisson_pop[0], syn_GoClPop_19_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 5: cell 0, seg 0 (0.5) [0.5 on MF_Poisson_pop[0]] -> cell 26, seg 0 (0.5) [0.5 on a_GoClPop[26].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_26_0_MFGoC_Syn_0")
+        h("a_GoClPop[26].Soma syn_GoClPop_26_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_26_0_MFGoC_Syn_0_5")
+        h("MF_Poisson_pop[0] nc_syn_GoClPop_26_0_MFGoC_Syn_0_5 = new NetCon(m_MF_Poisson_MF_Poisson_pop[0], syn_GoClPop_26_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 6: cell 0, seg 0 (0.5) [0.5 on MF_Poisson_pop[0]] -> cell 28, seg 0 (0.5) [0.5 on a_GoClPop[28].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_28_0_MFGoC_Syn_0")
+        h("a_GoClPop[28].Soma syn_GoClPop_28_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_28_0_MFGoC_Syn_0_6")
+        h("MF_Poisson_pop[0] nc_syn_GoClPop_28_0_MFGoC_Syn_0_6 = new NetCon(m_MF_Poisson_MF_Poisson_pop[0], syn_GoClPop_28_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 7: cell 0, seg 0 (0.5) [0.5 on MF_Poisson_pop[0]] -> cell 33, seg 0 (0.5) [0.5 on a_GoClPop[33].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_33_0_MFGoC_Syn_0")
+        h("a_GoClPop[33].Soma syn_GoClPop_33_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_33_0_MFGoC_Syn_0_7")
+        h("MF_Poisson_pop[0] nc_syn_GoClPop_33_0_MFGoC_Syn_0_7 = new NetCon(m_MF_Poisson_MF_Poisson_pop[0], syn_GoClPop_33_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 8: cell 0, seg 0 (0.5) [0.5 on MF_Poisson_pop[0]] -> cell 39, seg 0 (0.5) [0.5 on a_GoClPop[39].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_39_0_MFGoC_Syn_0")
+        h("a_GoClPop[39].Soma syn_GoClPop_39_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_39_0_MFGoC_Syn_0_8")
+        h("MF_Poisson_pop[0] nc_syn_GoClPop_39_0_MFGoC_Syn_0_8 = new NetCon(m_MF_Poisson_MF_Poisson_pop[0], syn_GoClPop_39_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 9: cell 0, seg 0 (0.5) [0.5 on MF_Poisson_pop[0]] -> cell 43, seg 0 (0.5) [0.5 on a_GoClPop[43].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_43_0_MFGoC_Syn_0")
+        h("a_GoClPop[43].Soma syn_GoClPop_43_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_43_0_MFGoC_Syn_0_9")
+        h("MF_Poisson_pop[0] nc_syn_GoClPop_43_0_MFGoC_Syn_0_9 = new NetCon(m_MF_Poisson_MF_Poisson_pop[0], syn_GoClPop_43_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 10: cell 1, seg 0 (0.5) [0.5 on MF_Poisson_pop[1]] -> cell 0, seg 0 (0.5) [0.5 on a_GoClPop[0].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_0_0_MFGoC_Syn_0")
+        h("a_GoClPop[0].Soma syn_GoClPop_0_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_0_0_MFGoC_Syn_0_10")
+        h("MF_Poisson_pop[1] nc_syn_GoClPop_0_0_MFGoC_Syn_0_10 = new NetCon(m_MF_Poisson_MF_Poisson_pop[1], syn_GoClPop_0_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 11: cell 1, seg 0 (0.5) [0.5 on MF_Poisson_pop[1]] -> cell 10, seg 0 (0.5) [0.5 on a_GoClPop[10].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_10_0_MFGoC_Syn_0")
+        h("a_GoClPop[10].Soma syn_GoClPop_10_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_10_0_MFGoC_Syn_0_11")
+        h("MF_Poisson_pop[1] nc_syn_GoClPop_10_0_MFGoC_Syn_0_11 = new NetCon(m_MF_Poisson_MF_Poisson_pop[1], syn_GoClPop_10_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 12: cell 1, seg 0 (0.5) [0.5 on MF_Poisson_pop[1]] -> cell 17, seg 0 (0.5) [0.5 on a_GoClPop[17].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_17_0_MFGoC_Syn_0")
+        h("a_GoClPop[17].Soma syn_GoClPop_17_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_17_0_MFGoC_Syn_0_12")
+        h("MF_Poisson_pop[1] nc_syn_GoClPop_17_0_MFGoC_Syn_0_12 = new NetCon(m_MF_Poisson_MF_Poisson_pop[1], syn_GoClPop_17_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 13: cell 1, seg 0 (0.5) [0.5 on MF_Poisson_pop[1]] -> cell 18, seg 0 (0.5) [0.5 on a_GoClPop[18].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_18_0_MFGoC_Syn_1")
+        h("a_GoClPop[18].Soma syn_GoClPop_18_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_18_0_MFGoC_Syn_1_13")
+        h("MF_Poisson_pop[1] nc_syn_GoClPop_18_0_MFGoC_Syn_1_13 = new NetCon(m_MF_Poisson_MF_Poisson_pop[1], syn_GoClPop_18_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 14: cell 1, seg 0 (0.5) [0.5 on MF_Poisson_pop[1]] -> cell 19, seg 0 (0.5) [0.5 on a_GoClPop[19].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_19_0_MFGoC_Syn_1")
+        h("a_GoClPop[19].Soma syn_GoClPop_19_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_19_0_MFGoC_Syn_1_14")
+        h("MF_Poisson_pop[1] nc_syn_GoClPop_19_0_MFGoC_Syn_1_14 = new NetCon(m_MF_Poisson_MF_Poisson_pop[1], syn_GoClPop_19_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 15: cell 1, seg 0 (0.5) [0.5 on MF_Poisson_pop[1]] -> cell 20, seg 0 (0.5) [0.5 on a_GoClPop[20].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_20_0_MFGoC_Syn_0")
+        h("a_GoClPop[20].Soma syn_GoClPop_20_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_20_0_MFGoC_Syn_0_15")
+        h("MF_Poisson_pop[1] nc_syn_GoClPop_20_0_MFGoC_Syn_0_15 = new NetCon(m_MF_Poisson_MF_Poisson_pop[1], syn_GoClPop_20_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 16: cell 1, seg 0 (0.5) [0.5 on MF_Poisson_pop[1]] -> cell 29, seg 0 (0.5) [0.5 on a_GoClPop[29].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_29_0_MFGoC_Syn_0")
+        h("a_GoClPop[29].Soma syn_GoClPop_29_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_29_0_MFGoC_Syn_0_16")
+        h("MF_Poisson_pop[1] nc_syn_GoClPop_29_0_MFGoC_Syn_0_16 = new NetCon(m_MF_Poisson_MF_Poisson_pop[1], syn_GoClPop_29_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 17: cell 1, seg 0 (0.5) [0.5 on MF_Poisson_pop[1]] -> cell 35, seg 0 (0.5) [0.5 on a_GoClPop[35].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_35_0_MFGoC_Syn_0")
+        h("a_GoClPop[35].Soma syn_GoClPop_35_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_35_0_MFGoC_Syn_0_17")
+        h("MF_Poisson_pop[1] nc_syn_GoClPop_35_0_MFGoC_Syn_0_17 = new NetCon(m_MF_Poisson_MF_Poisson_pop[1], syn_GoClPop_35_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 18: cell 1, seg 0 (0.5) [0.5 on MF_Poisson_pop[1]] -> cell 40, seg 0 (0.5) [0.5 on a_GoClPop[40].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_40_0_MFGoC_Syn_0")
+        h("a_GoClPop[40].Soma syn_GoClPop_40_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_40_0_MFGoC_Syn_0_18")
+        h("MF_Poisson_pop[1] nc_syn_GoClPop_40_0_MFGoC_Syn_0_18 = new NetCon(m_MF_Poisson_MF_Poisson_pop[1], syn_GoClPop_40_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 19: cell 1, seg 0 (0.5) [0.5 on MF_Poisson_pop[1]] -> cell 41, seg 0 (0.5) [0.5 on a_GoClPop[41].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_41_0_MFGoC_Syn_0")
+        h("a_GoClPop[41].Soma syn_GoClPop_41_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_41_0_MFGoC_Syn_0_19")
+        h("MF_Poisson_pop[1] nc_syn_GoClPop_41_0_MFGoC_Syn_0_19 = new NetCon(m_MF_Poisson_MF_Poisson_pop[1], syn_GoClPop_41_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 20: cell 1, seg 0 (0.5) [0.5 on MF_Poisson_pop[1]] -> cell 43, seg 0 (0.5) [0.5 on a_GoClPop[43].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_43_0_MFGoC_Syn_1")
+        h("a_GoClPop[43].Soma syn_GoClPop_43_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_43_0_MFGoC_Syn_1_20")
+        h("MF_Poisson_pop[1] nc_syn_GoClPop_43_0_MFGoC_Syn_1_20 = new NetCon(m_MF_Poisson_MF_Poisson_pop[1], syn_GoClPop_43_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 21: cell 2, seg 0 (0.5) [0.5 on MF_Poisson_pop[2]] -> cell 1, seg 0 (0.5) [0.5 on a_GoClPop[1].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_1_0_MFGoC_Syn_0")
+        h("a_GoClPop[1].Soma syn_GoClPop_1_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_1_0_MFGoC_Syn_0_21")
+        h("MF_Poisson_pop[2] nc_syn_GoClPop_1_0_MFGoC_Syn_0_21 = new NetCon(m_MF_Poisson_MF_Poisson_pop[2], syn_GoClPop_1_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 22: cell 2, seg 0 (0.5) [0.5 on MF_Poisson_pop[2]] -> cell 3, seg 0 (0.5) [0.5 on a_GoClPop[3].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_3_0_MFGoC_Syn_0")
+        h("a_GoClPop[3].Soma syn_GoClPop_3_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_3_0_MFGoC_Syn_0_22")
+        h("MF_Poisson_pop[2] nc_syn_GoClPop_3_0_MFGoC_Syn_0_22 = new NetCon(m_MF_Poisson_MF_Poisson_pop[2], syn_GoClPop_3_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 23: cell 2, seg 0 (0.5) [0.5 on MF_Poisson_pop[2]] -> cell 4, seg 0 (0.5) [0.5 on a_GoClPop[4].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_4_0_MFGoC_Syn_1")
+        h("a_GoClPop[4].Soma syn_GoClPop_4_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_4_0_MFGoC_Syn_1_23")
+        h("MF_Poisson_pop[2] nc_syn_GoClPop_4_0_MFGoC_Syn_1_23 = new NetCon(m_MF_Poisson_MF_Poisson_pop[2], syn_GoClPop_4_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 24: cell 2, seg 0 (0.5) [0.5 on MF_Poisson_pop[2]] -> cell 10, seg 0 (0.5) [0.5 on a_GoClPop[10].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_10_0_MFGoC_Syn_1")
+        h("a_GoClPop[10].Soma syn_GoClPop_10_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_10_0_MFGoC_Syn_1_24")
+        h("MF_Poisson_pop[2] nc_syn_GoClPop_10_0_MFGoC_Syn_1_24 = new NetCon(m_MF_Poisson_MF_Poisson_pop[2], syn_GoClPop_10_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 25: cell 2, seg 0 (0.5) [0.5 on MF_Poisson_pop[2]] -> cell 11, seg 0 (0.5) [0.5 on a_GoClPop[11].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_11_0_MFGoC_Syn_0")
+        h("a_GoClPop[11].Soma syn_GoClPop_11_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_11_0_MFGoC_Syn_0_25")
+        h("MF_Poisson_pop[2] nc_syn_GoClPop_11_0_MFGoC_Syn_0_25 = new NetCon(m_MF_Poisson_MF_Poisson_pop[2], syn_GoClPop_11_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 26: cell 2, seg 0 (0.5) [0.5 on MF_Poisson_pop[2]] -> cell 14, seg 0 (0.5) [0.5 on a_GoClPop[14].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_14_0_MFGoC_Syn_0")
+        h("a_GoClPop[14].Soma syn_GoClPop_14_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_14_0_MFGoC_Syn_0_26")
+        h("MF_Poisson_pop[2] nc_syn_GoClPop_14_0_MFGoC_Syn_0_26 = new NetCon(m_MF_Poisson_MF_Poisson_pop[2], syn_GoClPop_14_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 27: cell 2, seg 0 (0.5) [0.5 on MF_Poisson_pop[2]] -> cell 17, seg 0 (0.5) [0.5 on a_GoClPop[17].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_17_0_MFGoC_Syn_1")
+        h("a_GoClPop[17].Soma syn_GoClPop_17_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_17_0_MFGoC_Syn_1_27")
+        h("MF_Poisson_pop[2] nc_syn_GoClPop_17_0_MFGoC_Syn_1_27 = new NetCon(m_MF_Poisson_MF_Poisson_pop[2], syn_GoClPop_17_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 28: cell 2, seg 0 (0.5) [0.5 on MF_Poisson_pop[2]] -> cell 20, seg 0 (0.5) [0.5 on a_GoClPop[20].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_20_0_MFGoC_Syn_1")
+        h("a_GoClPop[20].Soma syn_GoClPop_20_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_20_0_MFGoC_Syn_1_28")
+        h("MF_Poisson_pop[2] nc_syn_GoClPop_20_0_MFGoC_Syn_1_28 = new NetCon(m_MF_Poisson_MF_Poisson_pop[2], syn_GoClPop_20_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 29: cell 2, seg 0 (0.5) [0.5 on MF_Poisson_pop[2]] -> cell 23, seg 0 (0.5) [0.5 on a_GoClPop[23].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_23_0_MFGoC_Syn_0")
+        h("a_GoClPop[23].Soma syn_GoClPop_23_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_23_0_MFGoC_Syn_0_29")
+        h("MF_Poisson_pop[2] nc_syn_GoClPop_23_0_MFGoC_Syn_0_29 = new NetCon(m_MF_Poisson_MF_Poisson_pop[2], syn_GoClPop_23_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 30: cell 2, seg 0 (0.5) [0.5 on MF_Poisson_pop[2]] -> cell 35, seg 0 (0.5) [0.5 on a_GoClPop[35].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_35_0_MFGoC_Syn_1")
+        h("a_GoClPop[35].Soma syn_GoClPop_35_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_35_0_MFGoC_Syn_1_30")
+        h("MF_Poisson_pop[2] nc_syn_GoClPop_35_0_MFGoC_Syn_1_30 = new NetCon(m_MF_Poisson_MF_Poisson_pop[2], syn_GoClPop_35_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 31: cell 3, seg 0 (0.5) [0.5 on MF_Poisson_pop[3]] -> cell 1, seg 0 (0.5) [0.5 on a_GoClPop[1].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_1_0_MFGoC_Syn_1")
+        h("a_GoClPop[1].Soma syn_GoClPop_1_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_1_0_MFGoC_Syn_1_31")
+        h("MF_Poisson_pop[3] nc_syn_GoClPop_1_0_MFGoC_Syn_1_31 = new NetCon(m_MF_Poisson_MF_Poisson_pop[3], syn_GoClPop_1_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 32: cell 3, seg 0 (0.5) [0.5 on MF_Poisson_pop[3]] -> cell 5, seg 0 (0.5) [0.5 on a_GoClPop[5].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_5_0_MFGoC_Syn_0")
+        h("a_GoClPop[5].Soma syn_GoClPop_5_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_5_0_MFGoC_Syn_0_32")
+        h("MF_Poisson_pop[3] nc_syn_GoClPop_5_0_MFGoC_Syn_0_32 = new NetCon(m_MF_Poisson_MF_Poisson_pop[3], syn_GoClPop_5_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 33: cell 3, seg 0 (0.5) [0.5 on MF_Poisson_pop[3]] -> cell 15, seg 0 (0.5) [0.5 on a_GoClPop[15].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_15_0_MFGoC_Syn_0")
+        h("a_GoClPop[15].Soma syn_GoClPop_15_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_15_0_MFGoC_Syn_0_33")
+        h("MF_Poisson_pop[3] nc_syn_GoClPop_15_0_MFGoC_Syn_0_33 = new NetCon(m_MF_Poisson_MF_Poisson_pop[3], syn_GoClPop_15_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 34: cell 3, seg 0 (0.5) [0.5 on MF_Poisson_pop[3]] -> cell 20, seg 0 (0.5) [0.5 on a_GoClPop[20].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_20_0_MFGoC_Syn_2")
+        h("a_GoClPop[20].Soma syn_GoClPop_20_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_20_0_MFGoC_Syn_2_34")
+        h("MF_Poisson_pop[3] nc_syn_GoClPop_20_0_MFGoC_Syn_2_34 = new NetCon(m_MF_Poisson_MF_Poisson_pop[3], syn_GoClPop_20_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 35: cell 3, seg 0 (0.5) [0.5 on MF_Poisson_pop[3]] -> cell 25, seg 0 (0.5) [0.5 on a_GoClPop[25].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_25_0_MFGoC_Syn_0")
+        h("a_GoClPop[25].Soma syn_GoClPop_25_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_25_0_MFGoC_Syn_0_35")
+        h("MF_Poisson_pop[3] nc_syn_GoClPop_25_0_MFGoC_Syn_0_35 = new NetCon(m_MF_Poisson_MF_Poisson_pop[3], syn_GoClPop_25_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 36: cell 3, seg 0 (0.5) [0.5 on MF_Poisson_pop[3]] -> cell 26, seg 0 (0.5) [0.5 on a_GoClPop[26].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_26_0_MFGoC_Syn_1")
+        h("a_GoClPop[26].Soma syn_GoClPop_26_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_26_0_MFGoC_Syn_1_36")
+        h("MF_Poisson_pop[3] nc_syn_GoClPop_26_0_MFGoC_Syn_1_36 = new NetCon(m_MF_Poisson_MF_Poisson_pop[3], syn_GoClPop_26_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 37: cell 3, seg 0 (0.5) [0.5 on MF_Poisson_pop[3]] -> cell 29, seg 0 (0.5) [0.5 on a_GoClPop[29].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_29_0_MFGoC_Syn_1")
+        h("a_GoClPop[29].Soma syn_GoClPop_29_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_29_0_MFGoC_Syn_1_37")
+        h("MF_Poisson_pop[3] nc_syn_GoClPop_29_0_MFGoC_Syn_1_37 = new NetCon(m_MF_Poisson_MF_Poisson_pop[3], syn_GoClPop_29_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 38: cell 3, seg 0 (0.5) [0.5 on MF_Poisson_pop[3]] -> cell 34, seg 0 (0.5) [0.5 on a_GoClPop[34].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_34_0_MFGoC_Syn_0")
+        h("a_GoClPop[34].Soma syn_GoClPop_34_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_34_0_MFGoC_Syn_0_38")
+        h("MF_Poisson_pop[3] nc_syn_GoClPop_34_0_MFGoC_Syn_0_38 = new NetCon(m_MF_Poisson_MF_Poisson_pop[3], syn_GoClPop_34_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 39: cell 3, seg 0 (0.5) [0.5 on MF_Poisson_pop[3]] -> cell 42, seg 0 (0.5) [0.5 on a_GoClPop[42].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_42_0_MFGoC_Syn_0")
+        h("a_GoClPop[42].Soma syn_GoClPop_42_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_42_0_MFGoC_Syn_0_39")
+        h("MF_Poisson_pop[3] nc_syn_GoClPop_42_0_MFGoC_Syn_0_39 = new NetCon(m_MF_Poisson_MF_Poisson_pop[3], syn_GoClPop_42_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 40: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 4, seg 0 (0.5) [0.5 on a_GoClPop[4].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_4_0_MFGoC_Syn_2")
+        h("a_GoClPop[4].Soma syn_GoClPop_4_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_4_0_MFGoC_Syn_2_40")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_4_0_MFGoC_Syn_2_40 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_4_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 41: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 5, seg 0 (0.5) [0.5 on a_GoClPop[5].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_5_0_MFGoC_Syn_1")
+        h("a_GoClPop[5].Soma syn_GoClPop_5_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_5_0_MFGoC_Syn_1_41")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_5_0_MFGoC_Syn_1_41 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_5_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 42: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 7, seg 0 (0.5) [0.5 on a_GoClPop[7].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_7_0_MFGoC_Syn_0")
+        h("a_GoClPop[7].Soma syn_GoClPop_7_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_7_0_MFGoC_Syn_0_42")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_7_0_MFGoC_Syn_0_42 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_7_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 43: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 8, seg 0 (0.5) [0.5 on a_GoClPop[8].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_8_0_MFGoC_Syn_1")
+        h("a_GoClPop[8].Soma syn_GoClPop_8_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_8_0_MFGoC_Syn_1_43")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_8_0_MFGoC_Syn_1_43 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_8_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 44: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 11, seg 0 (0.5) [0.5 on a_GoClPop[11].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_11_0_MFGoC_Syn_1")
+        h("a_GoClPop[11].Soma syn_GoClPop_11_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_11_0_MFGoC_Syn_1_44")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_11_0_MFGoC_Syn_1_44 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_11_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 45: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 12, seg 0 (0.5) [0.5 on a_GoClPop[12].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_12_0_MFGoC_Syn_0")
+        h("a_GoClPop[12].Soma syn_GoClPop_12_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_12_0_MFGoC_Syn_0_45")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_12_0_MFGoC_Syn_0_45 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_12_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 46: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 14, seg 0 (0.5) [0.5 on a_GoClPop[14].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_14_0_MFGoC_Syn_1")
+        h("a_GoClPop[14].Soma syn_GoClPop_14_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_14_0_MFGoC_Syn_1_46")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_14_0_MFGoC_Syn_1_46 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_14_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 47: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 18, seg 0 (0.5) [0.5 on a_GoClPop[18].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_18_0_MFGoC_Syn_2")
+        h("a_GoClPop[18].Soma syn_GoClPop_18_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_18_0_MFGoC_Syn_2_47")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_18_0_MFGoC_Syn_2_47 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_18_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 48: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 24, seg 0 (0.5) [0.5 on a_GoClPop[24].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_24_0_MFGoC_Syn_0")
+        h("a_GoClPop[24].Soma syn_GoClPop_24_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_24_0_MFGoC_Syn_0_48")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_24_0_MFGoC_Syn_0_48 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_24_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 49: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 32, seg 0 (0.5) [0.5 on a_GoClPop[32].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_32_0_MFGoC_Syn_0")
+        h("a_GoClPop[32].Soma syn_GoClPop_32_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_32_0_MFGoC_Syn_0_49")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_32_0_MFGoC_Syn_0_49 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_32_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 50: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 34, seg 0 (0.5) [0.5 on a_GoClPop[34].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_34_0_MFGoC_Syn_1")
+        h("a_GoClPop[34].Soma syn_GoClPop_34_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_34_0_MFGoC_Syn_1_50")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_34_0_MFGoC_Syn_1_50 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_34_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 51: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 35, seg 0 (0.5) [0.5 on a_GoClPop[35].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_35_0_MFGoC_Syn_2")
+        h("a_GoClPop[35].Soma syn_GoClPop_35_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_35_0_MFGoC_Syn_2_51")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_35_0_MFGoC_Syn_2_51 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_35_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 52: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 42, seg 0 (0.5) [0.5 on a_GoClPop[42].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_42_0_MFGoC_Syn_1")
+        h("a_GoClPop[42].Soma syn_GoClPop_42_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_42_0_MFGoC_Syn_1_52")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_42_0_MFGoC_Syn_1_52 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_42_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 53: cell 4, seg 0 (0.5) [0.5 on MF_Poisson_pop[4]] -> cell 44, seg 0 (0.5) [0.5 on a_GoClPop[44].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_44_0_MFGoC_Syn_0")
+        h("a_GoClPop[44].Soma syn_GoClPop_44_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_44_0_MFGoC_Syn_0_53")
+        h("MF_Poisson_pop[4] nc_syn_GoClPop_44_0_MFGoC_Syn_0_53 = new NetCon(m_MF_Poisson_MF_Poisson_pop[4], syn_GoClPop_44_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 54: cell 5, seg 0 (0.5) [0.5 on MF_Poisson_pop[5]] -> cell 7, seg 0 (0.5) [0.5 on a_GoClPop[7].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_7_0_MFGoC_Syn_1")
+        h("a_GoClPop[7].Soma syn_GoClPop_7_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_7_0_MFGoC_Syn_1_54")
+        h("MF_Poisson_pop[5] nc_syn_GoClPop_7_0_MFGoC_Syn_1_54 = new NetCon(m_MF_Poisson_MF_Poisson_pop[5], syn_GoClPop_7_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 55: cell 5, seg 0 (0.5) [0.5 on MF_Poisson_pop[5]] -> cell 9, seg 0 (0.5) [0.5 on a_GoClPop[9].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_9_0_MFGoC_Syn_0")
+        h("a_GoClPop[9].Soma syn_GoClPop_9_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_9_0_MFGoC_Syn_0_55")
+        h("MF_Poisson_pop[5] nc_syn_GoClPop_9_0_MFGoC_Syn_0_55 = new NetCon(m_MF_Poisson_MF_Poisson_pop[5], syn_GoClPop_9_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 56: cell 5, seg 0 (0.5) [0.5 on MF_Poisson_pop[5]] -> cell 11, seg 0 (0.5) [0.5 on a_GoClPop[11].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_11_0_MFGoC_Syn_2")
+        h("a_GoClPop[11].Soma syn_GoClPop_11_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_11_0_MFGoC_Syn_2_56")
+        h("MF_Poisson_pop[5] nc_syn_GoClPop_11_0_MFGoC_Syn_2_56 = new NetCon(m_MF_Poisson_MF_Poisson_pop[5], syn_GoClPop_11_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 57: cell 5, seg 0 (0.5) [0.5 on MF_Poisson_pop[5]] -> cell 13, seg 0 (0.5) [0.5 on a_GoClPop[13].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_13_0_MFGoC_Syn_0")
+        h("a_GoClPop[13].Soma syn_GoClPop_13_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_13_0_MFGoC_Syn_0_57")
+        h("MF_Poisson_pop[5] nc_syn_GoClPop_13_0_MFGoC_Syn_0_57 = new NetCon(m_MF_Poisson_MF_Poisson_pop[5], syn_GoClPop_13_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 58: cell 5, seg 0 (0.5) [0.5 on MF_Poisson_pop[5]] -> cell 29, seg 0 (0.5) [0.5 on a_GoClPop[29].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_29_0_MFGoC_Syn_2")
+        h("a_GoClPop[29].Soma syn_GoClPop_29_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_29_0_MFGoC_Syn_2_58")
+        h("MF_Poisson_pop[5] nc_syn_GoClPop_29_0_MFGoC_Syn_2_58 = new NetCon(m_MF_Poisson_MF_Poisson_pop[5], syn_GoClPop_29_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 59: cell 5, seg 0 (0.5) [0.5 on MF_Poisson_pop[5]] -> cell 30, seg 0 (0.5) [0.5 on a_GoClPop[30].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_30_0_MFGoC_Syn_0")
+        h("a_GoClPop[30].Soma syn_GoClPop_30_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_30_0_MFGoC_Syn_0_59")
+        h("MF_Poisson_pop[5] nc_syn_GoClPop_30_0_MFGoC_Syn_0_59 = new NetCon(m_MF_Poisson_MF_Poisson_pop[5], syn_GoClPop_30_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 60: cell 5, seg 0 (0.5) [0.5 on MF_Poisson_pop[5]] -> cell 32, seg 0 (0.5) [0.5 on a_GoClPop[32].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_32_0_MFGoC_Syn_1")
+        h("a_GoClPop[32].Soma syn_GoClPop_32_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_32_0_MFGoC_Syn_1_60")
+        h("MF_Poisson_pop[5] nc_syn_GoClPop_32_0_MFGoC_Syn_1_60 = new NetCon(m_MF_Poisson_MF_Poisson_pop[5], syn_GoClPop_32_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 61: cell 5, seg 0 (0.5) [0.5 on MF_Poisson_pop[5]] -> cell 33, seg 0 (0.5) [0.5 on a_GoClPop[33].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_33_0_MFGoC_Syn_1")
+        h("a_GoClPop[33].Soma syn_GoClPop_33_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_33_0_MFGoC_Syn_1_61")
+        h("MF_Poisson_pop[5] nc_syn_GoClPop_33_0_MFGoC_Syn_1_61 = new NetCon(m_MF_Poisson_MF_Poisson_pop[5], syn_GoClPop_33_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 62: cell 5, seg 0 (0.5) [0.5 on MF_Poisson_pop[5]] -> cell 40, seg 0 (0.5) [0.5 on a_GoClPop[40].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_40_0_MFGoC_Syn_1")
+        h("a_GoClPop[40].Soma syn_GoClPop_40_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_40_0_MFGoC_Syn_1_62")
+        h("MF_Poisson_pop[5] nc_syn_GoClPop_40_0_MFGoC_Syn_1_62 = new NetCon(m_MF_Poisson_MF_Poisson_pop[5], syn_GoClPop_40_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 63: cell 5, seg 0 (0.5) [0.5 on MF_Poisson_pop[5]] -> cell 42, seg 0 (0.5) [0.5 on a_GoClPop[42].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_42_0_MFGoC_Syn_2")
+        h("a_GoClPop[42].Soma syn_GoClPop_42_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_42_0_MFGoC_Syn_2_63")
+        h("MF_Poisson_pop[5] nc_syn_GoClPop_42_0_MFGoC_Syn_2_63 = new NetCon(m_MF_Poisson_MF_Poisson_pop[5], syn_GoClPop_42_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 64: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 6, seg 0 (0.5) [0.5 on a_GoClPop[6].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_6_0_MFGoC_Syn_1")
+        h("a_GoClPop[6].Soma syn_GoClPop_6_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_6_0_MFGoC_Syn_1_64")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_6_0_MFGoC_Syn_1_64 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_6_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 65: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 12, seg 0 (0.5) [0.5 on a_GoClPop[12].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_12_0_MFGoC_Syn_1")
+        h("a_GoClPop[12].Soma syn_GoClPop_12_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_12_0_MFGoC_Syn_1_65")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_12_0_MFGoC_Syn_1_65 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_12_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 66: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 13, seg 0 (0.5) [0.5 on a_GoClPop[13].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_13_0_MFGoC_Syn_1")
+        h("a_GoClPop[13].Soma syn_GoClPop_13_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_13_0_MFGoC_Syn_1_66")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_13_0_MFGoC_Syn_1_66 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_13_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 67: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 16, seg 0 (0.5) [0.5 on a_GoClPop[16].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_16_0_MFGoC_Syn_0")
+        h("a_GoClPop[16].Soma syn_GoClPop_16_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_16_0_MFGoC_Syn_0_67")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_16_0_MFGoC_Syn_0_67 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_16_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 68: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 18, seg 0 (0.5) [0.5 on a_GoClPop[18].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_18_0_MFGoC_Syn_3")
+        h("a_GoClPop[18].Soma syn_GoClPop_18_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_18_0_MFGoC_Syn_3_68")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_18_0_MFGoC_Syn_3_68 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_18_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 69: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 22, seg 0 (0.5) [0.5 on a_GoClPop[22].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_22_0_MFGoC_Syn_0")
+        h("a_GoClPop[22].Soma syn_GoClPop_22_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_22_0_MFGoC_Syn_0_69")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_22_0_MFGoC_Syn_0_69 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_22_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 70: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 24, seg 0 (0.5) [0.5 on a_GoClPop[24].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_24_0_MFGoC_Syn_1")
+        h("a_GoClPop[24].Soma syn_GoClPop_24_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_24_0_MFGoC_Syn_1_70")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_24_0_MFGoC_Syn_1_70 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_24_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 71: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 28, seg 0 (0.5) [0.5 on a_GoClPop[28].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_28_0_MFGoC_Syn_1")
+        h("a_GoClPop[28].Soma syn_GoClPop_28_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_28_0_MFGoC_Syn_1_71")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_28_0_MFGoC_Syn_1_71 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_28_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 72: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 29, seg 0 (0.5) [0.5 on a_GoClPop[29].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_29_0_MFGoC_Syn_3")
+        h("a_GoClPop[29].Soma syn_GoClPop_29_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_29_0_MFGoC_Syn_3_72")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_29_0_MFGoC_Syn_3_72 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_29_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 73: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 30, seg 0 (0.5) [0.5 on a_GoClPop[30].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_30_0_MFGoC_Syn_1")
+        h("a_GoClPop[30].Soma syn_GoClPop_30_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_30_0_MFGoC_Syn_1_73")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_30_0_MFGoC_Syn_1_73 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_30_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 74: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 31, seg 0 (0.5) [0.5 on a_GoClPop[31].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_31_0_MFGoC_Syn_0")
+        h("a_GoClPop[31].Soma syn_GoClPop_31_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_31_0_MFGoC_Syn_0_74")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_31_0_MFGoC_Syn_0_74 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_31_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 75: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 36, seg 0 (0.5) [0.5 on a_GoClPop[36].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_36_0_MFGoC_Syn_0")
+        h("a_GoClPop[36].Soma syn_GoClPop_36_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_36_0_MFGoC_Syn_0_75")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_36_0_MFGoC_Syn_0_75 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_36_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 76: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 37, seg 0 (0.5) [0.5 on a_GoClPop[37].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_37_0_MFGoC_Syn_0")
+        h("a_GoClPop[37].Soma syn_GoClPop_37_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_37_0_MFGoC_Syn_0_76")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_37_0_MFGoC_Syn_0_76 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_37_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 77: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 38, seg 0 (0.5) [0.5 on a_GoClPop[38].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_38_0_MFGoC_Syn_0")
+        h("a_GoClPop[38].Soma syn_GoClPop_38_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_38_0_MFGoC_Syn_0_77")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_38_0_MFGoC_Syn_0_77 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_38_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 78: cell 6, seg 0 (0.5) [0.5 on MF_Poisson_pop[6]] -> cell 43, seg 0 (0.5) [0.5 on a_GoClPop[43].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_43_0_MFGoC_Syn_2")
+        h("a_GoClPop[43].Soma syn_GoClPop_43_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_43_0_MFGoC_Syn_2_78")
+        h("MF_Poisson_pop[6] nc_syn_GoClPop_43_0_MFGoC_Syn_2_78 = new NetCon(m_MF_Poisson_MF_Poisson_pop[6], syn_GoClPop_43_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 79: cell 7, seg 0 (0.5) [0.5 on MF_Poisson_pop[7]] -> cell 9, seg 0 (0.5) [0.5 on a_GoClPop[9].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_9_0_MFGoC_Syn_1")
+        h("a_GoClPop[9].Soma syn_GoClPop_9_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_9_0_MFGoC_Syn_1_79")
+        h("MF_Poisson_pop[7] nc_syn_GoClPop_9_0_MFGoC_Syn_1_79 = new NetCon(m_MF_Poisson_MF_Poisson_pop[7], syn_GoClPop_9_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 80: cell 7, seg 0 (0.5) [0.5 on MF_Poisson_pop[7]] -> cell 13, seg 0 (0.5) [0.5 on a_GoClPop[13].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_13_0_MFGoC_Syn_2")
+        h("a_GoClPop[13].Soma syn_GoClPop_13_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_13_0_MFGoC_Syn_2_80")
+        h("MF_Poisson_pop[7] nc_syn_GoClPop_13_0_MFGoC_Syn_2_80 = new NetCon(m_MF_Poisson_MF_Poisson_pop[7], syn_GoClPop_13_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 81: cell 7, seg 0 (0.5) [0.5 on MF_Poisson_pop[7]] -> cell 21, seg 0 (0.5) [0.5 on a_GoClPop[21].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_21_0_MFGoC_Syn_0")
+        h("a_GoClPop[21].Soma syn_GoClPop_21_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_21_0_MFGoC_Syn_0_81")
+        h("MF_Poisson_pop[7] nc_syn_GoClPop_21_0_MFGoC_Syn_0_81 = new NetCon(m_MF_Poisson_MF_Poisson_pop[7], syn_GoClPop_21_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 82: cell 7, seg 0 (0.5) [0.5 on MF_Poisson_pop[7]] -> cell 30, seg 0 (0.5) [0.5 on a_GoClPop[30].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_30_0_MFGoC_Syn_2")
+        h("a_GoClPop[30].Soma syn_GoClPop_30_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_30_0_MFGoC_Syn_2_82")
+        h("MF_Poisson_pop[7] nc_syn_GoClPop_30_0_MFGoC_Syn_2_82 = new NetCon(m_MF_Poisson_MF_Poisson_pop[7], syn_GoClPop_30_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 83: cell 7, seg 0 (0.5) [0.5 on MF_Poisson_pop[7]] -> cell 31, seg 0 (0.5) [0.5 on a_GoClPop[31].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_31_0_MFGoC_Syn_1")
+        h("a_GoClPop[31].Soma syn_GoClPop_31_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_31_0_MFGoC_Syn_1_83")
+        h("MF_Poisson_pop[7] nc_syn_GoClPop_31_0_MFGoC_Syn_1_83 = new NetCon(m_MF_Poisson_MF_Poisson_pop[7], syn_GoClPop_31_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 84: cell 7, seg 0 (0.5) [0.5 on MF_Poisson_pop[7]] -> cell 41, seg 0 (0.5) [0.5 on a_GoClPop[41].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_41_0_MFGoC_Syn_1")
+        h("a_GoClPop[41].Soma syn_GoClPop_41_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_41_0_MFGoC_Syn_1_84")
+        h("MF_Poisson_pop[7] nc_syn_GoClPop_41_0_MFGoC_Syn_1_84 = new NetCon(m_MF_Poisson_MF_Poisson_pop[7], syn_GoClPop_41_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 85: cell 7, seg 0 (0.5) [0.5 on MF_Poisson_pop[7]] -> cell 43, seg 0 (0.5) [0.5 on a_GoClPop[43].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_43_0_MFGoC_Syn_3")
+        h("a_GoClPop[43].Soma syn_GoClPop_43_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_43_0_MFGoC_Syn_3_85")
+        h("MF_Poisson_pop[7] nc_syn_GoClPop_43_0_MFGoC_Syn_3_85 = new NetCon(m_MF_Poisson_MF_Poisson_pop[7], syn_GoClPop_43_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 86: cell 8, seg 0 (0.5) [0.5 on MF_Poisson_pop[8]] -> cell 8, seg 0 (0.5) [0.5 on a_GoClPop[8].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_8_0_MFGoC_Syn_2")
+        h("a_GoClPop[8].Soma syn_GoClPop_8_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_8_0_MFGoC_Syn_2_86")
+        h("MF_Poisson_pop[8] nc_syn_GoClPop_8_0_MFGoC_Syn_2_86 = new NetCon(m_MF_Poisson_MF_Poisson_pop[8], syn_GoClPop_8_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 87: cell 8, seg 0 (0.5) [0.5 on MF_Poisson_pop[8]] -> cell 9, seg 0 (0.5) [0.5 on a_GoClPop[9].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_9_0_MFGoC_Syn_2")
+        h("a_GoClPop[9].Soma syn_GoClPop_9_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_9_0_MFGoC_Syn_2_87")
+        h("MF_Poisson_pop[8] nc_syn_GoClPop_9_0_MFGoC_Syn_2_87 = new NetCon(m_MF_Poisson_MF_Poisson_pop[8], syn_GoClPop_9_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 88: cell 8, seg 0 (0.5) [0.5 on MF_Poisson_pop[8]] -> cell 17, seg 0 (0.5) [0.5 on a_GoClPop[17].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_17_0_MFGoC_Syn_2")
+        h("a_GoClPop[17].Soma syn_GoClPop_17_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_17_0_MFGoC_Syn_2_88")
+        h("MF_Poisson_pop[8] nc_syn_GoClPop_17_0_MFGoC_Syn_2_88 = new NetCon(m_MF_Poisson_MF_Poisson_pop[8], syn_GoClPop_17_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 89: cell 8, seg 0 (0.5) [0.5 on MF_Poisson_pop[8]] -> cell 18, seg 0 (0.5) [0.5 on a_GoClPop[18].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_18_0_MFGoC_Syn_4")
+        h("a_GoClPop[18].Soma syn_GoClPop_18_0_MFGoC_Syn_4 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_18_0_MFGoC_Syn_4_89")
+        h("MF_Poisson_pop[8] nc_syn_GoClPop_18_0_MFGoC_Syn_4_89 = new NetCon(m_MF_Poisson_MF_Poisson_pop[8], syn_GoClPop_18_0_MFGoC_Syn_4, 0.0, 0.0, 1.0)")  
+
+        # Connection 90: cell 8, seg 0 (0.5) [0.5 on MF_Poisson_pop[8]] -> cell 31, seg 0 (0.5) [0.5 on a_GoClPop[31].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_31_0_MFGoC_Syn_2")
+        h("a_GoClPop[31].Soma syn_GoClPop_31_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_31_0_MFGoC_Syn_2_90")
+        h("MF_Poisson_pop[8] nc_syn_GoClPop_31_0_MFGoC_Syn_2_90 = new NetCon(m_MF_Poisson_MF_Poisson_pop[8], syn_GoClPop_31_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 91: cell 8, seg 0 (0.5) [0.5 on MF_Poisson_pop[8]] -> cell 34, seg 0 (0.5) [0.5 on a_GoClPop[34].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_34_0_MFGoC_Syn_2")
+        h("a_GoClPop[34].Soma syn_GoClPop_34_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_34_0_MFGoC_Syn_2_91")
+        h("MF_Poisson_pop[8] nc_syn_GoClPop_34_0_MFGoC_Syn_2_91 = new NetCon(m_MF_Poisson_MF_Poisson_pop[8], syn_GoClPop_34_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 92: cell 8, seg 0 (0.5) [0.5 on MF_Poisson_pop[8]] -> cell 36, seg 0 (0.5) [0.5 on a_GoClPop[36].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_36_0_MFGoC_Syn_1")
+        h("a_GoClPop[36].Soma syn_GoClPop_36_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_36_0_MFGoC_Syn_1_92")
+        h("MF_Poisson_pop[8] nc_syn_GoClPop_36_0_MFGoC_Syn_1_92 = new NetCon(m_MF_Poisson_MF_Poisson_pop[8], syn_GoClPop_36_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 93: cell 8, seg 0 (0.5) [0.5 on MF_Poisson_pop[8]] -> cell 37, seg 0 (0.5) [0.5 on a_GoClPop[37].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_37_0_MFGoC_Syn_1")
+        h("a_GoClPop[37].Soma syn_GoClPop_37_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_37_0_MFGoC_Syn_1_93")
+        h("MF_Poisson_pop[8] nc_syn_GoClPop_37_0_MFGoC_Syn_1_93 = new NetCon(m_MF_Poisson_MF_Poisson_pop[8], syn_GoClPop_37_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 94: cell 8, seg 0 (0.5) [0.5 on MF_Poisson_pop[8]] -> cell 44, seg 0 (0.5) [0.5 on a_GoClPop[44].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_44_0_MFGoC_Syn_1")
+        h("a_GoClPop[44].Soma syn_GoClPop_44_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_44_0_MFGoC_Syn_1_94")
+        h("MF_Poisson_pop[8] nc_syn_GoClPop_44_0_MFGoC_Syn_1_94 = new NetCon(m_MF_Poisson_MF_Poisson_pop[8], syn_GoClPop_44_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 95: cell 9, seg 0 (0.5) [0.5 on MF_Poisson_pop[9]] -> cell 3, seg 0 (0.5) [0.5 on a_GoClPop[3].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_3_0_MFGoC_Syn_1")
+        h("a_GoClPop[3].Soma syn_GoClPop_3_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_3_0_MFGoC_Syn_1_95")
+        h("MF_Poisson_pop[9] nc_syn_GoClPop_3_0_MFGoC_Syn_1_95 = new NetCon(m_MF_Poisson_MF_Poisson_pop[9], syn_GoClPop_3_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 96: cell 9, seg 0 (0.5) [0.5 on MF_Poisson_pop[9]] -> cell 9, seg 0 (0.5) [0.5 on a_GoClPop[9].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_9_0_MFGoC_Syn_3")
+        h("a_GoClPop[9].Soma syn_GoClPop_9_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_9_0_MFGoC_Syn_3_96")
+        h("MF_Poisson_pop[9] nc_syn_GoClPop_9_0_MFGoC_Syn_3_96 = new NetCon(m_MF_Poisson_MF_Poisson_pop[9], syn_GoClPop_9_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 97: cell 9, seg 0 (0.5) [0.5 on MF_Poisson_pop[9]] -> cell 10, seg 0 (0.5) [0.5 on a_GoClPop[10].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_10_0_MFGoC_Syn_2")
+        h("a_GoClPop[10].Soma syn_GoClPop_10_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_10_0_MFGoC_Syn_2_97")
+        h("MF_Poisson_pop[9] nc_syn_GoClPop_10_0_MFGoC_Syn_2_97 = new NetCon(m_MF_Poisson_MF_Poisson_pop[9], syn_GoClPop_10_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 98: cell 9, seg 0 (0.5) [0.5 on MF_Poisson_pop[9]] -> cell 11, seg 0 (0.5) [0.5 on a_GoClPop[11].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_11_0_MFGoC_Syn_3")
+        h("a_GoClPop[11].Soma syn_GoClPop_11_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_11_0_MFGoC_Syn_3_98")
+        h("MF_Poisson_pop[9] nc_syn_GoClPop_11_0_MFGoC_Syn_3_98 = new NetCon(m_MF_Poisson_MF_Poisson_pop[9], syn_GoClPop_11_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 99: cell 9, seg 0 (0.5) [0.5 on MF_Poisson_pop[9]] -> cell 22, seg 0 (0.5) [0.5 on a_GoClPop[22].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_22_0_MFGoC_Syn_1")
+        h("a_GoClPop[22].Soma syn_GoClPop_22_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_22_0_MFGoC_Syn_1_99")
+        h("MF_Poisson_pop[9] nc_syn_GoClPop_22_0_MFGoC_Syn_1_99 = new NetCon(m_MF_Poisson_MF_Poisson_pop[9], syn_GoClPop_22_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 100: cell 9, seg 0 (0.5) [0.5 on MF_Poisson_pop[9]] -> cell 23, seg 0 (0.5) [0.5 on a_GoClPop[23].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_23_0_MFGoC_Syn_1")
+        h("a_GoClPop[23].Soma syn_GoClPop_23_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_23_0_MFGoC_Syn_1_100")
+        h("MF_Poisson_pop[9] nc_syn_GoClPop_23_0_MFGoC_Syn_1_100 = new NetCon(m_MF_Poisson_MF_Poisson_pop[9], syn_GoClPop_23_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 101: cell 9, seg 0 (0.5) [0.5 on MF_Poisson_pop[9]] -> cell 24, seg 0 (0.5) [0.5 on a_GoClPop[24].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_24_0_MFGoC_Syn_2")
+        h("a_GoClPop[24].Soma syn_GoClPop_24_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_24_0_MFGoC_Syn_2_101")
+        h("MF_Poisson_pop[9] nc_syn_GoClPop_24_0_MFGoC_Syn_2_101 = new NetCon(m_MF_Poisson_MF_Poisson_pop[9], syn_GoClPop_24_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 102: cell 9, seg 0 (0.5) [0.5 on MF_Poisson_pop[9]] -> cell 30, seg 0 (0.5) [0.5 on a_GoClPop[30].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_30_0_MFGoC_Syn_3")
+        h("a_GoClPop[30].Soma syn_GoClPop_30_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_30_0_MFGoC_Syn_3_102")
+        h("MF_Poisson_pop[9] nc_syn_GoClPop_30_0_MFGoC_Syn_3_102 = new NetCon(m_MF_Poisson_MF_Poisson_pop[9], syn_GoClPop_30_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 103: cell 9, seg 0 (0.5) [0.5 on MF_Poisson_pop[9]] -> cell 32, seg 0 (0.5) [0.5 on a_GoClPop[32].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_32_0_MFGoC_Syn_2")
+        h("a_GoClPop[32].Soma syn_GoClPop_32_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_32_0_MFGoC_Syn_2_103")
+        h("MF_Poisson_pop[9] nc_syn_GoClPop_32_0_MFGoC_Syn_2_103 = new NetCon(m_MF_Poisson_MF_Poisson_pop[9], syn_GoClPop_32_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 104: cell 9, seg 0 (0.5) [0.5 on MF_Poisson_pop[9]] -> cell 35, seg 0 (0.5) [0.5 on a_GoClPop[35].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_35_0_MFGoC_Syn_3")
+        h("a_GoClPop[35].Soma syn_GoClPop_35_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_35_0_MFGoC_Syn_3_104")
+        h("MF_Poisson_pop[9] nc_syn_GoClPop_35_0_MFGoC_Syn_3_104 = new NetCon(m_MF_Poisson_MF_Poisson_pop[9], syn_GoClPop_35_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 105: cell 9, seg 0 (0.5) [0.5 on MF_Poisson_pop[9]] -> cell 39, seg 0 (0.5) [0.5 on a_GoClPop[39].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_39_0_MFGoC_Syn_1")
+        h("a_GoClPop[39].Soma syn_GoClPop_39_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_39_0_MFGoC_Syn_1_105")
+        h("MF_Poisson_pop[9] nc_syn_GoClPop_39_0_MFGoC_Syn_1_105 = new NetCon(m_MF_Poisson_MF_Poisson_pop[9], syn_GoClPop_39_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 106: cell 9, seg 0 (0.5) [0.5 on MF_Poisson_pop[9]] -> cell 43, seg 0 (0.5) [0.5 on a_GoClPop[43].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_43_0_MFGoC_Syn_4")
+        h("a_GoClPop[43].Soma syn_GoClPop_43_0_MFGoC_Syn_4 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_43_0_MFGoC_Syn_4_106")
+        h("MF_Poisson_pop[9] nc_syn_GoClPop_43_0_MFGoC_Syn_4_106 = new NetCon(m_MF_Poisson_MF_Poisson_pop[9], syn_GoClPop_43_0_MFGoC_Syn_4, 0.0, 0.0, 1.0)")  
+
+        # Connection 107: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 10, seg 0 (0.5) [0.5 on a_GoClPop[10].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_10_0_MFGoC_Syn_3")
+        h("a_GoClPop[10].Soma syn_GoClPop_10_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_10_0_MFGoC_Syn_3_107")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_10_0_MFGoC_Syn_3_107 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_10_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 108: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 11, seg 0 (0.5) [0.5 on a_GoClPop[11].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_11_0_MFGoC_Syn_4")
+        h("a_GoClPop[11].Soma syn_GoClPop_11_0_MFGoC_Syn_4 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_11_0_MFGoC_Syn_4_108")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_11_0_MFGoC_Syn_4_108 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_11_0_MFGoC_Syn_4, 0.0, 0.0, 1.0)")  
+
+        # Connection 109: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 12, seg 0 (0.5) [0.5 on a_GoClPop[12].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_12_0_MFGoC_Syn_2")
+        h("a_GoClPop[12].Soma syn_GoClPop_12_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_12_0_MFGoC_Syn_2_109")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_12_0_MFGoC_Syn_2_109 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_12_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 110: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 15, seg 0 (0.5) [0.5 on a_GoClPop[15].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_15_0_MFGoC_Syn_1")
+        h("a_GoClPop[15].Soma syn_GoClPop_15_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_15_0_MFGoC_Syn_1_110")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_15_0_MFGoC_Syn_1_110 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_15_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 111: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 16, seg 0 (0.5) [0.5 on a_GoClPop[16].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_16_0_MFGoC_Syn_1")
+        h("a_GoClPop[16].Soma syn_GoClPop_16_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_16_0_MFGoC_Syn_1_111")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_16_0_MFGoC_Syn_1_111 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_16_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 112: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 17, seg 0 (0.5) [0.5 on a_GoClPop[17].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_17_0_MFGoC_Syn_3")
+        h("a_GoClPop[17].Soma syn_GoClPop_17_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_17_0_MFGoC_Syn_3_112")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_17_0_MFGoC_Syn_3_112 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_17_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 113: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 28, seg 0 (0.5) [0.5 on a_GoClPop[28].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_28_0_MFGoC_Syn_2")
+        h("a_GoClPop[28].Soma syn_GoClPop_28_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_28_0_MFGoC_Syn_2_113")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_28_0_MFGoC_Syn_2_113 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_28_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 114: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 29, seg 0 (0.5) [0.5 on a_GoClPop[29].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_29_0_MFGoC_Syn_4")
+        h("a_GoClPop[29].Soma syn_GoClPop_29_0_MFGoC_Syn_4 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_29_0_MFGoC_Syn_4_114")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_29_0_MFGoC_Syn_4_114 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_29_0_MFGoC_Syn_4, 0.0, 0.0, 1.0)")  
+
+        # Connection 115: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 32, seg 0 (0.5) [0.5 on a_GoClPop[32].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_32_0_MFGoC_Syn_3")
+        h("a_GoClPop[32].Soma syn_GoClPop_32_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_32_0_MFGoC_Syn_3_115")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_32_0_MFGoC_Syn_3_115 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_32_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 116: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 33, seg 0 (0.5) [0.5 on a_GoClPop[33].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_33_0_MFGoC_Syn_2")
+        h("a_GoClPop[33].Soma syn_GoClPop_33_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_33_0_MFGoC_Syn_2_116")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_33_0_MFGoC_Syn_2_116 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_33_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 117: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 36, seg 0 (0.5) [0.5 on a_GoClPop[36].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_36_0_MFGoC_Syn_2")
+        h("a_GoClPop[36].Soma syn_GoClPop_36_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_36_0_MFGoC_Syn_2_117")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_36_0_MFGoC_Syn_2_117 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_36_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 118: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 38, seg 0 (0.5) [0.5 on a_GoClPop[38].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_38_0_MFGoC_Syn_1")
+        h("a_GoClPop[38].Soma syn_GoClPop_38_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_38_0_MFGoC_Syn_1_118")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_38_0_MFGoC_Syn_1_118 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_38_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 119: cell 10, seg 0 (0.5) [0.5 on MF_Poisson_pop[10]] -> cell 41, seg 0 (0.5) [0.5 on a_GoClPop[41].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_41_0_MFGoC_Syn_2")
+        h("a_GoClPop[41].Soma syn_GoClPop_41_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_41_0_MFGoC_Syn_2_119")
+        h("MF_Poisson_pop[10] nc_syn_GoClPop_41_0_MFGoC_Syn_2_119 = new NetCon(m_MF_Poisson_MF_Poisson_pop[10], syn_GoClPop_41_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 120: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 1, seg 0 (0.5) [0.5 on a_GoClPop[1].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_1_0_MFGoC_Syn_2")
+        h("a_GoClPop[1].Soma syn_GoClPop_1_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_1_0_MFGoC_Syn_2_120")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_1_0_MFGoC_Syn_2_120 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_1_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 121: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 3, seg 0 (0.5) [0.5 on a_GoClPop[3].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_3_0_MFGoC_Syn_2")
+        h("a_GoClPop[3].Soma syn_GoClPop_3_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_3_0_MFGoC_Syn_2_121")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_3_0_MFGoC_Syn_2_121 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_3_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 122: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 5, seg 0 (0.5) [0.5 on a_GoClPop[5].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_5_0_MFGoC_Syn_2")
+        h("a_GoClPop[5].Soma syn_GoClPop_5_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_5_0_MFGoC_Syn_2_122")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_5_0_MFGoC_Syn_2_122 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_5_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 123: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 8, seg 0 (0.5) [0.5 on a_GoClPop[8].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_8_0_MFGoC_Syn_3")
+        h("a_GoClPop[8].Soma syn_GoClPop_8_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_8_0_MFGoC_Syn_3_123")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_8_0_MFGoC_Syn_3_123 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_8_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 124: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 9, seg 0 (0.5) [0.5 on a_GoClPop[9].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_9_0_MFGoC_Syn_4")
+        h("a_GoClPop[9].Soma syn_GoClPop_9_0_MFGoC_Syn_4 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_9_0_MFGoC_Syn_4_124")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_9_0_MFGoC_Syn_4_124 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_9_0_MFGoC_Syn_4, 0.0, 0.0, 1.0)")  
+
+        # Connection 125: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 12, seg 0 (0.5) [0.5 on a_GoClPop[12].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_12_0_MFGoC_Syn_3")
+        h("a_GoClPop[12].Soma syn_GoClPop_12_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_12_0_MFGoC_Syn_3_125")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_12_0_MFGoC_Syn_3_125 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_12_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 126: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 13, seg 0 (0.5) [0.5 on a_GoClPop[13].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_13_0_MFGoC_Syn_3")
+        h("a_GoClPop[13].Soma syn_GoClPop_13_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_13_0_MFGoC_Syn_3_126")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_13_0_MFGoC_Syn_3_126 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_13_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 127: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 19, seg 0 (0.5) [0.5 on a_GoClPop[19].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_19_0_MFGoC_Syn_2")
+        h("a_GoClPop[19].Soma syn_GoClPop_19_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_19_0_MFGoC_Syn_2_127")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_19_0_MFGoC_Syn_2_127 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_19_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 128: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 20, seg 0 (0.5) [0.5 on a_GoClPop[20].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_20_0_MFGoC_Syn_3")
+        h("a_GoClPop[20].Soma syn_GoClPop_20_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_20_0_MFGoC_Syn_3_128")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_20_0_MFGoC_Syn_3_128 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_20_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 129: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 22, seg 0 (0.5) [0.5 on a_GoClPop[22].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_22_0_MFGoC_Syn_2")
+        h("a_GoClPop[22].Soma syn_GoClPop_22_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_22_0_MFGoC_Syn_2_129")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_22_0_MFGoC_Syn_2_129 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_22_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 130: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 26, seg 0 (0.5) [0.5 on a_GoClPop[26].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_26_0_MFGoC_Syn_2")
+        h("a_GoClPop[26].Soma syn_GoClPop_26_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_26_0_MFGoC_Syn_2_130")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_26_0_MFGoC_Syn_2_130 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_26_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 131: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 30, seg 0 (0.5) [0.5 on a_GoClPop[30].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_30_0_MFGoC_Syn_4")
+        h("a_GoClPop[30].Soma syn_GoClPop_30_0_MFGoC_Syn_4 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_30_0_MFGoC_Syn_4_131")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_30_0_MFGoC_Syn_4_131 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_30_0_MFGoC_Syn_4, 0.0, 0.0, 1.0)")  
+
+        # Connection 132: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 31, seg 0 (0.5) [0.5 on a_GoClPop[31].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_31_0_MFGoC_Syn_3")
+        h("a_GoClPop[31].Soma syn_GoClPop_31_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_31_0_MFGoC_Syn_3_132")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_31_0_MFGoC_Syn_3_132 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_31_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 133: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 33, seg 0 (0.5) [0.5 on a_GoClPop[33].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_33_0_MFGoC_Syn_3")
+        h("a_GoClPop[33].Soma syn_GoClPop_33_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_33_0_MFGoC_Syn_3_133")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_33_0_MFGoC_Syn_3_133 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_33_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 134: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 37, seg 0 (0.5) [0.5 on a_GoClPop[37].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_37_0_MFGoC_Syn_2")
+        h("a_GoClPop[37].Soma syn_GoClPop_37_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_37_0_MFGoC_Syn_2_134")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_37_0_MFGoC_Syn_2_134 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_37_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 135: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 39, seg 0 (0.5) [0.5 on a_GoClPop[39].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_39_0_MFGoC_Syn_2")
+        h("a_GoClPop[39].Soma syn_GoClPop_39_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_39_0_MFGoC_Syn_2_135")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_39_0_MFGoC_Syn_2_135 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_39_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 136: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 41, seg 0 (0.5) [0.5 on a_GoClPop[41].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_41_0_MFGoC_Syn_3")
+        h("a_GoClPop[41].Soma syn_GoClPop_41_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_41_0_MFGoC_Syn_3_136")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_41_0_MFGoC_Syn_3_136 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_41_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 137: cell 11, seg 0 (0.5) [0.5 on MF_Poisson_pop[11]] -> cell 42, seg 0 (0.5) [0.5 on a_GoClPop[42].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_42_0_MFGoC_Syn_3")
+        h("a_GoClPop[42].Soma syn_GoClPop_42_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_42_0_MFGoC_Syn_3_137")
+        h("MF_Poisson_pop[11] nc_syn_GoClPop_42_0_MFGoC_Syn_3_137 = new NetCon(m_MF_Poisson_MF_Poisson_pop[11], syn_GoClPop_42_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 138: cell 12, seg 0 (0.5) [0.5 on MF_Poisson_pop[12]] -> cell 8, seg 0 (0.5) [0.5 on a_GoClPop[8].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_8_0_MFGoC_Syn_4")
+        h("a_GoClPop[8].Soma syn_GoClPop_8_0_MFGoC_Syn_4 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_8_0_MFGoC_Syn_4_138")
+        h("MF_Poisson_pop[12] nc_syn_GoClPop_8_0_MFGoC_Syn_4_138 = new NetCon(m_MF_Poisson_MF_Poisson_pop[12], syn_GoClPop_8_0_MFGoC_Syn_4, 0.0, 0.0, 1.0)")  
+
+        # Connection 139: cell 12, seg 0 (0.5) [0.5 on MF_Poisson_pop[12]] -> cell 9, seg 0 (0.5) [0.5 on a_GoClPop[9].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_9_0_MFGoC_Syn_5")
+        h("a_GoClPop[9].Soma syn_GoClPop_9_0_MFGoC_Syn_5 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_9_0_MFGoC_Syn_5_139")
+        h("MF_Poisson_pop[12] nc_syn_GoClPop_9_0_MFGoC_Syn_5_139 = new NetCon(m_MF_Poisson_MF_Poisson_pop[12], syn_GoClPop_9_0_MFGoC_Syn_5, 0.0, 0.0, 1.0)")  
+
+        # Connection 140: cell 12, seg 0 (0.5) [0.5 on MF_Poisson_pop[12]] -> cell 11, seg 0 (0.5) [0.5 on a_GoClPop[11].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_11_0_MFGoC_Syn_5")
+        h("a_GoClPop[11].Soma syn_GoClPop_11_0_MFGoC_Syn_5 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_11_0_MFGoC_Syn_5_140")
+        h("MF_Poisson_pop[12] nc_syn_GoClPop_11_0_MFGoC_Syn_5_140 = new NetCon(m_MF_Poisson_MF_Poisson_pop[12], syn_GoClPop_11_0_MFGoC_Syn_5, 0.0, 0.0, 1.0)")  
+
+        # Connection 141: cell 12, seg 0 (0.5) [0.5 on MF_Poisson_pop[12]] -> cell 17, seg 0 (0.5) [0.5 on a_GoClPop[17].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_17_0_MFGoC_Syn_4")
+        h("a_GoClPop[17].Soma syn_GoClPop_17_0_MFGoC_Syn_4 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_17_0_MFGoC_Syn_4_141")
+        h("MF_Poisson_pop[12] nc_syn_GoClPop_17_0_MFGoC_Syn_4_141 = new NetCon(m_MF_Poisson_MF_Poisson_pop[12], syn_GoClPop_17_0_MFGoC_Syn_4, 0.0, 0.0, 1.0)")  
+
+        # Connection 142: cell 12, seg 0 (0.5) [0.5 on MF_Poisson_pop[12]] -> cell 20, seg 0 (0.5) [0.5 on a_GoClPop[20].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_20_0_MFGoC_Syn_4")
+        h("a_GoClPop[20].Soma syn_GoClPop_20_0_MFGoC_Syn_4 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_20_0_MFGoC_Syn_4_142")
+        h("MF_Poisson_pop[12] nc_syn_GoClPop_20_0_MFGoC_Syn_4_142 = new NetCon(m_MF_Poisson_MF_Poisson_pop[12], syn_GoClPop_20_0_MFGoC_Syn_4, 0.0, 0.0, 1.0)")  
+
+        # Connection 143: cell 12, seg 0 (0.5) [0.5 on MF_Poisson_pop[12]] -> cell 24, seg 0 (0.5) [0.5 on a_GoClPop[24].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_24_0_MFGoC_Syn_3")
+        h("a_GoClPop[24].Soma syn_GoClPop_24_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_24_0_MFGoC_Syn_3_143")
+        h("MF_Poisson_pop[12] nc_syn_GoClPop_24_0_MFGoC_Syn_3_143 = new NetCon(m_MF_Poisson_MF_Poisson_pop[12], syn_GoClPop_24_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 144: cell 12, seg 0 (0.5) [0.5 on MF_Poisson_pop[12]] -> cell 28, seg 0 (0.5) [0.5 on a_GoClPop[28].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_28_0_MFGoC_Syn_3")
+        h("a_GoClPop[28].Soma syn_GoClPop_28_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_28_0_MFGoC_Syn_3_144")
+        h("MF_Poisson_pop[12] nc_syn_GoClPop_28_0_MFGoC_Syn_3_144 = new NetCon(m_MF_Poisson_MF_Poisson_pop[12], syn_GoClPop_28_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 145: cell 12, seg 0 (0.5) [0.5 on MF_Poisson_pop[12]] -> cell 29, seg 0 (0.5) [0.5 on a_GoClPop[29].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_29_0_MFGoC_Syn_5")
+        h("a_GoClPop[29].Soma syn_GoClPop_29_0_MFGoC_Syn_5 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_29_0_MFGoC_Syn_5_145")
+        h("MF_Poisson_pop[12] nc_syn_GoClPop_29_0_MFGoC_Syn_5_145 = new NetCon(m_MF_Poisson_MF_Poisson_pop[12], syn_GoClPop_29_0_MFGoC_Syn_5, 0.0, 0.0, 1.0)")  
+
+        # Connection 146: cell 12, seg 0 (0.5) [0.5 on MF_Poisson_pop[12]] -> cell 40, seg 0 (0.5) [0.5 on a_GoClPop[40].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_40_0_MFGoC_Syn_2")
+        h("a_GoClPop[40].Soma syn_GoClPop_40_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_40_0_MFGoC_Syn_2_146")
+        h("MF_Poisson_pop[12] nc_syn_GoClPop_40_0_MFGoC_Syn_2_146 = new NetCon(m_MF_Poisson_MF_Poisson_pop[12], syn_GoClPop_40_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 147: cell 12, seg 0 (0.5) [0.5 on MF_Poisson_pop[12]] -> cell 43, seg 0 (0.5) [0.5 on a_GoClPop[43].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_43_0_MFGoC_Syn_5")
+        h("a_GoClPop[43].Soma syn_GoClPop_43_0_MFGoC_Syn_5 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_43_0_MFGoC_Syn_5_147")
+        h("MF_Poisson_pop[12] nc_syn_GoClPop_43_0_MFGoC_Syn_5_147 = new NetCon(m_MF_Poisson_MF_Poisson_pop[12], syn_GoClPop_43_0_MFGoC_Syn_5, 0.0, 0.0, 1.0)")  
+
+        # Connection 148: cell 13, seg 0 (0.5) [0.5 on MF_Poisson_pop[13]] -> cell 0, seg 0 (0.5) [0.5 on a_GoClPop[0].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_0_0_MFGoC_Syn_1")
+        h("a_GoClPop[0].Soma syn_GoClPop_0_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_0_0_MFGoC_Syn_1_148")
+        h("MF_Poisson_pop[13] nc_syn_GoClPop_0_0_MFGoC_Syn_1_148 = new NetCon(m_MF_Poisson_MF_Poisson_pop[13], syn_GoClPop_0_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 149: cell 13, seg 0 (0.5) [0.5 on MF_Poisson_pop[13]] -> cell 9, seg 0 (0.5) [0.5 on a_GoClPop[9].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_9_0_MFGoC_Syn_6")
+        h("a_GoClPop[9].Soma syn_GoClPop_9_0_MFGoC_Syn_6 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_9_0_MFGoC_Syn_6_149")
+        h("MF_Poisson_pop[13] nc_syn_GoClPop_9_0_MFGoC_Syn_6_149 = new NetCon(m_MF_Poisson_MF_Poisson_pop[13], syn_GoClPop_9_0_MFGoC_Syn_6, 0.0, 0.0, 1.0)")  
+
+        # Connection 150: cell 13, seg 0 (0.5) [0.5 on MF_Poisson_pop[13]] -> cell 12, seg 0 (0.5) [0.5 on a_GoClPop[12].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_12_0_MFGoC_Syn_4")
+        h("a_GoClPop[12].Soma syn_GoClPop_12_0_MFGoC_Syn_4 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_12_0_MFGoC_Syn_4_150")
+        h("MF_Poisson_pop[13] nc_syn_GoClPop_12_0_MFGoC_Syn_4_150 = new NetCon(m_MF_Poisson_MF_Poisson_pop[13], syn_GoClPop_12_0_MFGoC_Syn_4, 0.0, 0.0, 1.0)")  
+
+        # Connection 151: cell 13, seg 0 (0.5) [0.5 on MF_Poisson_pop[13]] -> cell 17, seg 0 (0.5) [0.5 on a_GoClPop[17].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_17_0_MFGoC_Syn_5")
+        h("a_GoClPop[17].Soma syn_GoClPop_17_0_MFGoC_Syn_5 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_17_0_MFGoC_Syn_5_151")
+        h("MF_Poisson_pop[13] nc_syn_GoClPop_17_0_MFGoC_Syn_5_151 = new NetCon(m_MF_Poisson_MF_Poisson_pop[13], syn_GoClPop_17_0_MFGoC_Syn_5, 0.0, 0.0, 1.0)")  
+
+        # Connection 152: cell 13, seg 0 (0.5) [0.5 on MF_Poisson_pop[13]] -> cell 19, seg 0 (0.5) [0.5 on a_GoClPop[19].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_19_0_MFGoC_Syn_3")
+        h("a_GoClPop[19].Soma syn_GoClPop_19_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_19_0_MFGoC_Syn_3_152")
+        h("MF_Poisson_pop[13] nc_syn_GoClPop_19_0_MFGoC_Syn_3_152 = new NetCon(m_MF_Poisson_MF_Poisson_pop[13], syn_GoClPop_19_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 153: cell 13, seg 0 (0.5) [0.5 on MF_Poisson_pop[13]] -> cell 20, seg 0 (0.5) [0.5 on a_GoClPop[20].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_20_0_MFGoC_Syn_5")
+        h("a_GoClPop[20].Soma syn_GoClPop_20_0_MFGoC_Syn_5 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_20_0_MFGoC_Syn_5_153")
+        h("MF_Poisson_pop[13] nc_syn_GoClPop_20_0_MFGoC_Syn_5_153 = new NetCon(m_MF_Poisson_MF_Poisson_pop[13], syn_GoClPop_20_0_MFGoC_Syn_5, 0.0, 0.0, 1.0)")  
+
+        # Connection 154: cell 13, seg 0 (0.5) [0.5 on MF_Poisson_pop[13]] -> cell 26, seg 0 (0.5) [0.5 on a_GoClPop[26].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_26_0_MFGoC_Syn_3")
+        h("a_GoClPop[26].Soma syn_GoClPop_26_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_26_0_MFGoC_Syn_3_154")
+        h("MF_Poisson_pop[13] nc_syn_GoClPop_26_0_MFGoC_Syn_3_154 = new NetCon(m_MF_Poisson_MF_Poisson_pop[13], syn_GoClPop_26_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 155: cell 13, seg 0 (0.5) [0.5 on MF_Poisson_pop[13]] -> cell 34, seg 0 (0.5) [0.5 on a_GoClPop[34].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_34_0_MFGoC_Syn_3")
+        h("a_GoClPop[34].Soma syn_GoClPop_34_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_34_0_MFGoC_Syn_3_155")
+        h("MF_Poisson_pop[13] nc_syn_GoClPop_34_0_MFGoC_Syn_3_155 = new NetCon(m_MF_Poisson_MF_Poisson_pop[13], syn_GoClPop_34_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 156: cell 13, seg 0 (0.5) [0.5 on MF_Poisson_pop[13]] -> cell 37, seg 0 (0.5) [0.5 on a_GoClPop[37].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_37_0_MFGoC_Syn_3")
+        h("a_GoClPop[37].Soma syn_GoClPop_37_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_37_0_MFGoC_Syn_3_156")
+        h("MF_Poisson_pop[13] nc_syn_GoClPop_37_0_MFGoC_Syn_3_156 = new NetCon(m_MF_Poisson_MF_Poisson_pop[13], syn_GoClPop_37_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 157: cell 13, seg 0 (0.5) [0.5 on MF_Poisson_pop[13]] -> cell 43, seg 0 (0.5) [0.5 on a_GoClPop[43].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_43_0_MFGoC_Syn_6")
+        h("a_GoClPop[43].Soma syn_GoClPop_43_0_MFGoC_Syn_6 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_43_0_MFGoC_Syn_6_157")
+        h("MF_Poisson_pop[13] nc_syn_GoClPop_43_0_MFGoC_Syn_6_157 = new NetCon(m_MF_Poisson_MF_Poisson_pop[13], syn_GoClPop_43_0_MFGoC_Syn_6, 0.0, 0.0, 1.0)")  
+
+        # Connection 158: cell 14, seg 0 (0.5) [0.5 on MF_Poisson_pop[14]] -> cell 0, seg 0 (0.5) [0.5 on a_GoClPop[0].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_0_0_MFGoC_Syn_2")
+        h("a_GoClPop[0].Soma syn_GoClPop_0_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_0_0_MFGoC_Syn_2_158")
+        h("MF_Poisson_pop[14] nc_syn_GoClPop_0_0_MFGoC_Syn_2_158 = new NetCon(m_MF_Poisson_MF_Poisson_pop[14], syn_GoClPop_0_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 159: cell 14, seg 0 (0.5) [0.5 on MF_Poisson_pop[14]] -> cell 8, seg 0 (0.5) [0.5 on a_GoClPop[8].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_8_0_MFGoC_Syn_5")
+        h("a_GoClPop[8].Soma syn_GoClPop_8_0_MFGoC_Syn_5 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_8_0_MFGoC_Syn_5_159")
+        h("MF_Poisson_pop[14] nc_syn_GoClPop_8_0_MFGoC_Syn_5_159 = new NetCon(m_MF_Poisson_MF_Poisson_pop[14], syn_GoClPop_8_0_MFGoC_Syn_5, 0.0, 0.0, 1.0)")  
+
+        # Connection 160: cell 14, seg 0 (0.5) [0.5 on MF_Poisson_pop[14]] -> cell 16, seg 0 (0.5) [0.5 on a_GoClPop[16].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_16_0_MFGoC_Syn_2")
+        h("a_GoClPop[16].Soma syn_GoClPop_16_0_MFGoC_Syn_2 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_16_0_MFGoC_Syn_2_160")
+        h("MF_Poisson_pop[14] nc_syn_GoClPop_16_0_MFGoC_Syn_2_160 = new NetCon(m_MF_Poisson_MF_Poisson_pop[14], syn_GoClPop_16_0_MFGoC_Syn_2, 0.0, 0.0, 1.0)")  
+
+        # Connection 161: cell 14, seg 0 (0.5) [0.5 on MF_Poisson_pop[14]] -> cell 22, seg 0 (0.5) [0.5 on a_GoClPop[22].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_22_0_MFGoC_Syn_3")
+        h("a_GoClPop[22].Soma syn_GoClPop_22_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_22_0_MFGoC_Syn_3_161")
+        h("MF_Poisson_pop[14] nc_syn_GoClPop_22_0_MFGoC_Syn_3_161 = new NetCon(m_MF_Poisson_MF_Poisson_pop[14], syn_GoClPop_22_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
+
+        # Connection 162: cell 14, seg 0 (0.5) [0.5 on MF_Poisson_pop[14]] -> cell 25, seg 0 (0.5) [0.5 on a_GoClPop[25].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_25_0_MFGoC_Syn_1")
+        h("a_GoClPop[25].Soma syn_GoClPop_25_0_MFGoC_Syn_1 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_25_0_MFGoC_Syn_1_162")
+        h("MF_Poisson_pop[14] nc_syn_GoClPop_25_0_MFGoC_Syn_1_162 = new NetCon(m_MF_Poisson_MF_Poisson_pop[14], syn_GoClPop_25_0_MFGoC_Syn_1, 0.0, 0.0, 1.0)")  
+
+        # Connection 163: cell 14, seg 0 (0.5) [0.5 on MF_Poisson_pop[14]] -> cell 26, seg 0 (0.5) [0.5 on a_GoClPop[26].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_26_0_MFGoC_Syn_4")
+        h("a_GoClPop[26].Soma syn_GoClPop_26_0_MFGoC_Syn_4 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_26_0_MFGoC_Syn_4_163")
+        h("MF_Poisson_pop[14] nc_syn_GoClPop_26_0_MFGoC_Syn_4_163 = new NetCon(m_MF_Poisson_MF_Poisson_pop[14], syn_GoClPop_26_0_MFGoC_Syn_4, 0.0, 0.0, 1.0)")  
+
+        # Connection 164: cell 14, seg 0 (0.5) [0.5 on MF_Poisson_pop[14]] -> cell 27, seg 0 (0.5) [0.5 on a_GoClPop[27].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_27_0_MFGoC_Syn_0")
+        h("a_GoClPop[27].Soma syn_GoClPop_27_0_MFGoC_Syn_0 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_27_0_MFGoC_Syn_0_164")
+        h("MF_Poisson_pop[14] nc_syn_GoClPop_27_0_MFGoC_Syn_0_164 = new NetCon(m_MF_Poisson_MF_Poisson_pop[14], syn_GoClPop_27_0_MFGoC_Syn_0, 0.0, 0.0, 1.0)")  
+
+        # Connection 165: cell 14, seg 0 (0.5) [0.5 on MF_Poisson_pop[14]] -> cell 32, seg 0 (0.5) [0.5 on a_GoClPop[32].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_32_0_MFGoC_Syn_4")
+        h("a_GoClPop[32].Soma syn_GoClPop_32_0_MFGoC_Syn_4 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_32_0_MFGoC_Syn_4_165")
+        h("MF_Poisson_pop[14] nc_syn_GoClPop_32_0_MFGoC_Syn_4_165 = new NetCon(m_MF_Poisson_MF_Poisson_pop[14], syn_GoClPop_32_0_MFGoC_Syn_4, 0.0, 0.0, 1.0)")  
+
+        # Connection 166: cell 14, seg 0 (0.5) [0.5 on MF_Poisson_pop[14]] -> cell 36, seg 0 (0.5) [0.5 on a_GoClPop[36].Soma], weight: 1.0, delay 0.0
+        h("objectvar syn_GoClPop_36_0_MFGoC_Syn_3")
+        h("a_GoClPop[36].Soma syn_GoClPop_36_0_MFGoC_Syn_3 = new MFGoC_Syn(0.5)")
+        h("objectvar nc_syn_GoClPop_36_0_MFGoC_Syn_3_166")
+        h("MF_Poisson_pop[14] nc_syn_GoClPop_36_0_MFGoC_Syn_3_166 = new NetCon(m_MF_Poisson_MF_Poisson_pop[14], syn_GoClPop_36_0_MFGoC_Syn_3, 0.0, 0.0, 1.0)")  
 
         # ######################   Electrical Projection: gocGJ
-        print("Adding electrical projection: gocGJ from GoClPop to GoClPop, with 31 connection(s)")
+        print("Adding electrical projection: gocGJ from GoClPop to GoClPop, with 200 connection(s)")
 
-        h("objectvar syn_gocGJ_GJ_0_A[31]")
-        h("objectvar syn_gocGJ_GJ_0_B[31]")
+        h("objectvar syn_gocGJ_GJ_0_A[200]")
+        h("objectvar syn_gocGJ_GJ_0_B[200]")
 
-        # Elect Connection 0: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1], weight: 2.0
+        # Elect Connection 0: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1], weight: 8.0
         h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[0] = new GJ_0(0.5) }")
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_B[0] = new GJ_0(0.5) }")
-        h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[0].weight = 2.0 }")
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_B[0].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[0].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_B[0] = new GJ_0(0.5) }")
+        h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[0].weight = 8.0 }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_B[0].weight = 8.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[0].vpeer, a_GoClPop[3].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GJ_0_B[0].vpeer, a_GoClPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 1: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1], weight: 1.0
+        # Elect Connection 1: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 13, seg 1 (0.5) [0.5 on a_GoClPop[13].Section_1], weight: 2.0
         h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[1] = new GJ_0(0.5) }")
-        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_B[1] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[1].vpeer, a_GoClPop[5].Section_1.v(0.5)")
+        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_B[1] = new GJ_0(0.5) }")
+        h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[1].weight = 2.0 }")
+        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_B[1].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[1].vpeer, a_GoClPop[13].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GJ_0_B[1].vpeer, a_GoClPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 2: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1], weight: 2.0
+        # Elect Connection 2: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 19, seg 1 (0.5) [0.5 on a_GoClPop[19].Section_1], weight: 2.0
         h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[2] = new GJ_0(0.5) }")
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_B[2] = new GJ_0(0.5) }")
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_B[2] = new GJ_0(0.5) }")
         h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[2].weight = 2.0 }")
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_B[2].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[2].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_B[2].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[2].vpeer, a_GoClPop[19].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GJ_0_B[2].vpeer, a_GoClPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 3: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 7, seg 1 (0.5) [0.5 on a_GoClPop[7].Section_1], weight: 1.0
+        # Elect Connection 3: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 25, seg 1 (0.5) [0.5 on a_GoClPop[25].Section_1], weight: 8.0
         h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[3] = new GJ_0(0.5) }")
-        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_B[3] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[3].vpeer, a_GoClPop[7].Section_1.v(0.5)")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_B[3] = new GJ_0(0.5) }")
+        h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[3].weight = 8.0 }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_B[3].weight = 8.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[3].vpeer, a_GoClPop[25].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GJ_0_B[3].vpeer, a_GoClPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 4: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1], weight: 1.0
+        # Elect Connection 4: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 26, seg 1 (0.5) [0.5 on a_GoClPop[26].Section_1], weight: 8.0
         h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[4] = new GJ_0(0.5) }")
-        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_B[4] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[4].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[4] = new GJ_0(0.5) }")
+        h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[4].weight = 8.0 }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[4].weight = 8.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[4].vpeer, a_GoClPop[26].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GJ_0_B[4].vpeer, a_GoClPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 5: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1], weight: 1.0
+        # Elect Connection 5: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 33, seg 1 (0.5) [0.5 on a_GoClPop[33].Section_1], weight: 4.0
         h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[5] = new GJ_0(0.5) }")
-        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_B[5] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[5].vpeer, a_GoClPop[9].Section_1.v(0.5)")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_B[5] = new GJ_0(0.5) }")
+        h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[5].weight = 4.0 }")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_B[5].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[5].vpeer, a_GoClPop[33].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GJ_0_B[5].vpeer, a_GoClPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 6: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 10, seg 1 (0.5) [0.5 on a_GoClPop[10].Section_1], weight: 2.0
+        # Elect Connection 6: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 34, seg 1 (0.5) [0.5 on a_GoClPop[34].Section_1], weight: 2.0
         h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[6] = new GJ_0(0.5) }")
-        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_B[6] = new GJ_0(0.5) }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[6] = new GJ_0(0.5) }")
         h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[6].weight = 2.0 }")
-        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_B[6].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[6].vpeer, a_GoClPop[10].Section_1.v(0.5)")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[6].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[6].vpeer, a_GoClPop[34].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GJ_0_B[6].vpeer, a_GoClPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 7: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 14, seg 1 (0.5) [0.5 on a_GoClPop[14].Section_1], weight: 2.0
+        # Elect Connection 7: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 35, seg 1 (0.5) [0.5 on a_GoClPop[35].Section_1], weight: 4.0
         h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[7] = new GJ_0(0.5) }")
-        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_B[7] = new GJ_0(0.5) }")
-        h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[7].weight = 2.0 }")
-        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_B[7].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[7].vpeer, a_GoClPop[14].Section_1.v(0.5)")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[7] = new GJ_0(0.5) }")
+        h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[7].weight = 4.0 }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[7].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[7].vpeer, a_GoClPop[35].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GJ_0_B[7].vpeer, a_GoClPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 8: cell 1, seg 1 (0.5) [0.5 on a_GoClPop[1].Section_1] -> cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1], weight: 2.0
-        h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[8] = new GJ_0(0.5) }")
-        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_B[8] = new GJ_0(0.5) }")
-        h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[8].weight = 2.0 }")
-        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_B[8].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[8].vpeer, a_GoClPop[5].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[8].vpeer, a_GoClPop[1].Section_1.v(0.5)")
+        # Elect Connection 8: cell 0, seg 1 (0.5) [0.5 on a_GoClPop[0].Section_1] -> cell 43, seg 1 (0.5) [0.5 on a_GoClPop[43].Section_1], weight: 0.0
+        h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[8] = new GJ_0(0.5) }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[8] = new GJ_0(0.5) }")
+        h("a_GoClPop[0].Section_1 { syn_gocGJ_GJ_0_A[8].weight = 0.0 }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[8].weight = 0.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[8].vpeer, a_GoClPop[43].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[8].vpeer, a_GoClPop[0].Section_1.v(0.5)")
 
-        # Elect Connection 9: cell 1, seg 1 (0.5) [0.5 on a_GoClPop[1].Section_1] -> cell 7, seg 1 (0.5) [0.5 on a_GoClPop[7].Section_1], weight: 3.0
+        # Elect Connection 9: cell 1, seg 1 (0.5) [0.5 on a_GoClPop[1].Section_1] -> cell 22, seg 1 (0.5) [0.5 on a_GoClPop[22].Section_1], weight: 2.0
         h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[9] = new GJ_0(0.5) }")
-        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_B[9] = new GJ_0(0.5) }")
-        h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[9].weight = 3.0 }")
-        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_B[9].weight = 3.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[9].vpeer, a_GoClPop[7].Section_1.v(0.5)")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_B[9] = new GJ_0(0.5) }")
+        h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[9].weight = 2.0 }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_B[9].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[9].vpeer, a_GoClPop[22].Section_1.v(0.5)")
         h("setpointer syn_gocGJ_GJ_0_B[9].vpeer, a_GoClPop[1].Section_1.v(0.5)")
 
-        # Elect Connection 10: cell 2, seg 1 (0.5) [0.5 on a_GoClPop[2].Section_1] -> cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1], weight: 0.0
-        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[10] = new GJ_0(0.5) }")
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_B[10] = new GJ_0(0.5) }")
-        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[10].weight = 0.0 }")
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_B[10].weight = 0.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[10].vpeer, a_GoClPop[4].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[10].vpeer, a_GoClPop[2].Section_1.v(0.5)")
+        # Elect Connection 10: cell 1, seg 1 (0.5) [0.5 on a_GoClPop[1].Section_1] -> cell 29, seg 1 (0.5) [0.5 on a_GoClPop[29].Section_1], weight: 4.0
+        h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[10] = new GJ_0(0.5) }")
+        h("a_GoClPop[29].Section_1 { syn_gocGJ_GJ_0_B[10] = new GJ_0(0.5) }")
+        h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[10].weight = 4.0 }")
+        h("a_GoClPop[29].Section_1 { syn_gocGJ_GJ_0_B[10].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[10].vpeer, a_GoClPop[29].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[10].vpeer, a_GoClPop[1].Section_1.v(0.5)")
 
-        # Elect Connection 11: cell 2, seg 1 (0.5) [0.5 on a_GoClPop[2].Section_1] -> cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1], weight: 1.0
-        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[11] = new GJ_0(0.5) }")
-        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_B[11] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[11].vpeer, a_GoClPop[8].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[11].vpeer, a_GoClPop[2].Section_1.v(0.5)")
+        # Elect Connection 11: cell 1, seg 1 (0.5) [0.5 on a_GoClPop[1].Section_1] -> cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1], weight: 0.0
+        h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[11] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[11] = new GJ_0(0.5) }")
+        h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[11].weight = 0.0 }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[11].weight = 0.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[11].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[11].vpeer, a_GoClPop[1].Section_1.v(0.5)")
 
-        # Elect Connection 12: cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1] -> cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1], weight: 1.0
-        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[12] = new GJ_0(0.5) }")
-        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_B[12] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[12].vpeer, a_GoClPop[9].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[12].vpeer, a_GoClPop[3].Section_1.v(0.5)")
+        # Elect Connection 12: cell 1, seg 1 (0.5) [0.5 on a_GoClPop[1].Section_1] -> cell 44, seg 1 (0.5) [0.5 on a_GoClPop[44].Section_1], weight: 4.0
+        h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[12] = new GJ_0(0.5) }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[12] = new GJ_0(0.5) }")
+        h("a_GoClPop[1].Section_1 { syn_gocGJ_GJ_0_A[12].weight = 4.0 }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[12].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[12].vpeer, a_GoClPop[44].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[12].vpeer, a_GoClPop[1].Section_1.v(0.5)")
 
-        # Elect Connection 13: cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1] -> cell 11, seg 1 (0.5) [0.5 on a_GoClPop[11].Section_1], weight: 1.0
-        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[13] = new GJ_0(0.5) }")
-        h("a_GoClPop[11].Section_1 { syn_gocGJ_GJ_0_B[13] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[13].vpeer, a_GoClPop[11].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[13].vpeer, a_GoClPop[3].Section_1.v(0.5)")
+        # Elect Connection 13: cell 2, seg 1 (0.5) [0.5 on a_GoClPop[2].Section_1] -> cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1], weight: 4.0
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[13] = new GJ_0(0.5) }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_B[13] = new GJ_0(0.5) }")
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[13].weight = 4.0 }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_B[13].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[13].vpeer, a_GoClPop[3].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[13].vpeer, a_GoClPop[2].Section_1.v(0.5)")
 
-        # Elect Connection 14: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1], weight: 1.0
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[14] = new GJ_0(0.5) }")
-        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_B[14] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[14].vpeer, a_GoClPop[5].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[14].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+        # Elect Connection 14: cell 2, seg 1 (0.5) [0.5 on a_GoClPop[2].Section_1] -> cell 13, seg 1 (0.5) [0.5 on a_GoClPop[13].Section_1], weight: 6.0
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[14] = new GJ_0(0.5) }")
+        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_B[14] = new GJ_0(0.5) }")
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[14].weight = 6.0 }")
+        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_B[14].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[14].vpeer, a_GoClPop[13].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[14].vpeer, a_GoClPop[2].Section_1.v(0.5)")
 
-        # Elect Connection 15: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1], weight: 2.0
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[15] = new GJ_0(0.5) }")
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_B[15] = new GJ_0(0.5) }")
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[15].weight = 2.0 }")
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_B[15].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[15].vpeer, a_GoClPop[6].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[15].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+        # Elect Connection 15: cell 2, seg 1 (0.5) [0.5 on a_GoClPop[2].Section_1] -> cell 25, seg 1 (0.5) [0.5 on a_GoClPop[25].Section_1], weight: 2.0
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[15] = new GJ_0(0.5) }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_B[15] = new GJ_0(0.5) }")
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[15].weight = 2.0 }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_B[15].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[15].vpeer, a_GoClPop[25].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[15].vpeer, a_GoClPop[2].Section_1.v(0.5)")
 
-        # Elect Connection 16: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 7, seg 1 (0.5) [0.5 on a_GoClPop[7].Section_1], weight: 1.0
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[16] = new GJ_0(0.5) }")
-        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_B[16] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[16].vpeer, a_GoClPop[7].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[16].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+        # Elect Connection 16: cell 2, seg 1 (0.5) [0.5 on a_GoClPop[2].Section_1] -> cell 26, seg 1 (0.5) [0.5 on a_GoClPop[26].Section_1], weight: 2.0
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[16] = new GJ_0(0.5) }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[16] = new GJ_0(0.5) }")
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[16].weight = 2.0 }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[16].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[16].vpeer, a_GoClPop[26].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[16].vpeer, a_GoClPop[2].Section_1.v(0.5)")
 
-        # Elect Connection 17: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1], weight: 2.0
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[17] = new GJ_0(0.5) }")
-        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_B[17] = new GJ_0(0.5) }")
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[17].weight = 2.0 }")
-        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_B[17].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[17].vpeer, a_GoClPop[8].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[17].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+        # Elect Connection 17: cell 2, seg 1 (0.5) [0.5 on a_GoClPop[2].Section_1] -> cell 33, seg 1 (0.5) [0.5 on a_GoClPop[33].Section_1], weight: 2.0
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[17] = new GJ_0(0.5) }")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_B[17] = new GJ_0(0.5) }")
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[17].weight = 2.0 }")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_B[17].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[17].vpeer, a_GoClPop[33].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[17].vpeer, a_GoClPop[2].Section_1.v(0.5)")
 
-        # Elect Connection 18: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 10, seg 1 (0.5) [0.5 on a_GoClPop[10].Section_1], weight: 2.0
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[18] = new GJ_0(0.5) }")
-        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_B[18] = new GJ_0(0.5) }")
-        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[18].weight = 2.0 }")
-        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_B[18].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[18].vpeer, a_GoClPop[10].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[18].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+        # Elect Connection 18: cell 2, seg 1 (0.5) [0.5 on a_GoClPop[2].Section_1] -> cell 34, seg 1 (0.5) [0.5 on a_GoClPop[34].Section_1], weight: 4.0
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[18] = new GJ_0(0.5) }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[18] = new GJ_0(0.5) }")
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[18].weight = 4.0 }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[18].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[18].vpeer, a_GoClPop[34].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[18].vpeer, a_GoClPop[2].Section_1.v(0.5)")
 
-        # Elect Connection 19: cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1] -> cell 7, seg 1 (0.5) [0.5 on a_GoClPop[7].Section_1], weight: 3.0
-        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[19] = new GJ_0(0.5) }")
-        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_B[19] = new GJ_0(0.5) }")
-        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[19].weight = 3.0 }")
-        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_B[19].weight = 3.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[19].vpeer, a_GoClPop[7].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[19].vpeer, a_GoClPop[5].Section_1.v(0.5)")
+        # Elect Connection 19: cell 2, seg 1 (0.5) [0.5 on a_GoClPop[2].Section_1] -> cell 42, seg 1 (0.5) [0.5 on a_GoClPop[42].Section_1], weight: 0.0
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[19] = new GJ_0(0.5) }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[19] = new GJ_0(0.5) }")
+        h("a_GoClPop[2].Section_1 { syn_gocGJ_GJ_0_A[19].weight = 0.0 }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[19].weight = 0.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[19].vpeer, a_GoClPop[42].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[19].vpeer, a_GoClPop[2].Section_1.v(0.5)")
 
-        # Elect Connection 20: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1], weight: 1.0
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[20] = new GJ_0(0.5) }")
-        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_B[20] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[20].vpeer, a_GoClPop[8].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[20].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+        # Elect Connection 20: cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1] -> cell 13, seg 1 (0.5) [0.5 on a_GoClPop[13].Section_1], weight: 2.0
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[20] = new GJ_0(0.5) }")
+        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_B[20] = new GJ_0(0.5) }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[20].weight = 2.0 }")
+        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_B[20].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[20].vpeer, a_GoClPop[13].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[20].vpeer, a_GoClPop[3].Section_1.v(0.5)")
 
-        # Elect Connection 21: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1], weight: 2.0
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[21] = new GJ_0(0.5) }")
-        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_B[21] = new GJ_0(0.5) }")
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[21].weight = 2.0 }")
-        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_B[21].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[21].vpeer, a_GoClPop[9].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[21].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+        # Elect Connection 21: cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1] -> cell 17, seg 1 (0.5) [0.5 on a_GoClPop[17].Section_1], weight: 2.0
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[21] = new GJ_0(0.5) }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_B[21] = new GJ_0(0.5) }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[21].weight = 2.0 }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_B[21].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[21].vpeer, a_GoClPop[17].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[21].vpeer, a_GoClPop[3].Section_1.v(0.5)")
 
-        # Elect Connection 22: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 10, seg 1 (0.5) [0.5 on a_GoClPop[10].Section_1], weight: 2.0
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[22] = new GJ_0(0.5) }")
-        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_B[22] = new GJ_0(0.5) }")
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[22].weight = 2.0 }")
-        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_B[22].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[22].vpeer, a_GoClPop[10].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[22].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+        # Elect Connection 22: cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1] -> cell 19, seg 1 (0.5) [0.5 on a_GoClPop[19].Section_1], weight: 2.0
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[22] = new GJ_0(0.5) }")
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_B[22] = new GJ_0(0.5) }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[22].weight = 2.0 }")
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_B[22].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[22].vpeer, a_GoClPop[19].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[22].vpeer, a_GoClPop[3].Section_1.v(0.5)")
 
-        # Elect Connection 23: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 11, seg 1 (0.5) [0.5 on a_GoClPop[11].Section_1], weight: 2.0
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[23] = new GJ_0(0.5) }")
-        h("a_GoClPop[11].Section_1 { syn_gocGJ_GJ_0_B[23] = new GJ_0(0.5) }")
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[23].weight = 2.0 }")
-        h("a_GoClPop[11].Section_1 { syn_gocGJ_GJ_0_B[23].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[23].vpeer, a_GoClPop[11].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[23].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+        # Elect Connection 23: cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1] -> cell 20, seg 1 (0.5) [0.5 on a_GoClPop[20].Section_1], weight: 2.0
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[23] = new GJ_0(0.5) }")
+        h("a_GoClPop[20].Section_1 { syn_gocGJ_GJ_0_B[23] = new GJ_0(0.5) }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[23].weight = 2.0 }")
+        h("a_GoClPop[20].Section_1 { syn_gocGJ_GJ_0_B[23].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[23].vpeer, a_GoClPop[20].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[23].vpeer, a_GoClPop[3].Section_1.v(0.5)")
 
-        # Elect Connection 24: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 14, seg 1 (0.5) [0.5 on a_GoClPop[14].Section_1], weight: 1.0
-        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[24] = new GJ_0(0.5) }")
-        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_B[24] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[24].vpeer, a_GoClPop[14].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[24].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+        # Elect Connection 24: cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1] -> cell 25, seg 1 (0.5) [0.5 on a_GoClPop[25].Section_1], weight: 6.0
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[24] = new GJ_0(0.5) }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_B[24] = new GJ_0(0.5) }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[24].weight = 6.0 }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_B[24].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[24].vpeer, a_GoClPop[25].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[24].vpeer, a_GoClPop[3].Section_1.v(0.5)")
 
-        # Elect Connection 25: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1], weight: 1.0
-        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[25] = new GJ_0(0.5) }")
-        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_B[25] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[25].vpeer, a_GoClPop[9].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[25].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+        # Elect Connection 25: cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1] -> cell 26, seg 1 (0.5) [0.5 on a_GoClPop[26].Section_1], weight: 6.0
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[25] = new GJ_0(0.5) }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[25] = new GJ_0(0.5) }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[25].weight = 6.0 }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[25].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[25].vpeer, a_GoClPop[26].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[25].vpeer, a_GoClPop[3].Section_1.v(0.5)")
 
-        # Elect Connection 26: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 10, seg 1 (0.5) [0.5 on a_GoClPop[10].Section_1], weight: 2.0
-        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[26] = new GJ_0(0.5) }")
-        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_B[26] = new GJ_0(0.5) }")
-        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[26].weight = 2.0 }")
-        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_B[26].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[26].vpeer, a_GoClPop[10].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[26].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+        # Elect Connection 26: cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1] -> cell 33, seg 1 (0.5) [0.5 on a_GoClPop[33].Section_1], weight: 2.0
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[26] = new GJ_0(0.5) }")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_B[26] = new GJ_0(0.5) }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[26].weight = 2.0 }")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_B[26].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[26].vpeer, a_GoClPop[33].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[26].vpeer, a_GoClPop[3].Section_1.v(0.5)")
 
-        # Elect Connection 27: cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1] -> cell 10, seg 1 (0.5) [0.5 on a_GoClPop[10].Section_1], weight: 2.0
-        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[27] = new GJ_0(0.5) }")
-        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_B[27] = new GJ_0(0.5) }")
-        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[27].weight = 2.0 }")
-        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_B[27].weight = 2.0 }")
-        h("setpointer syn_gocGJ_GJ_0_A[27].vpeer, a_GoClPop[10].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[27].vpeer, a_GoClPop[9].Section_1.v(0.5)")
+        # Elect Connection 27: cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1] -> cell 34, seg 1 (0.5) [0.5 on a_GoClPop[34].Section_1], weight: 2.0
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[27] = new GJ_0(0.5) }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[27] = new GJ_0(0.5) }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[27].weight = 2.0 }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[27].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[27].vpeer, a_GoClPop[34].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[27].vpeer, a_GoClPop[3].Section_1.v(0.5)")
 
-        # Elect Connection 28: cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1] -> cell 13, seg 1 (0.5) [0.5 on a_GoClPop[13].Section_1], weight: 1.0
-        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[28] = new GJ_0(0.5) }")
-        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_B[28] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[28].vpeer, a_GoClPop[13].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[28].vpeer, a_GoClPop[9].Section_1.v(0.5)")
+        # Elect Connection 28: cell 3, seg 1 (0.5) [0.5 on a_GoClPop[3].Section_1] -> cell 35, seg 1 (0.5) [0.5 on a_GoClPop[35].Section_1], weight: 4.0
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[28] = new GJ_0(0.5) }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[28] = new GJ_0(0.5) }")
+        h("a_GoClPop[3].Section_1 { syn_gocGJ_GJ_0_A[28].weight = 4.0 }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[28].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[28].vpeer, a_GoClPop[35].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[28].vpeer, a_GoClPop[3].Section_1.v(0.5)")
 
-        # Elect Connection 29: cell 10, seg 1 (0.5) [0.5 on a_GoClPop[10].Section_1] -> cell 14, seg 1 (0.5) [0.5 on a_GoClPop[14].Section_1], weight: 1.0
-        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_A[29] = new GJ_0(0.5) }")
-        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_B[29] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[29].vpeer, a_GoClPop[14].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[29].vpeer, a_GoClPop[10].Section_1.v(0.5)")
+        # Elect Connection 29: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1], weight: 2.0
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[29] = new GJ_0(0.5) }")
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_B[29] = new GJ_0(0.5) }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[29].weight = 2.0 }")
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_B[29].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[29].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[29].vpeer, a_GoClPop[4].Section_1.v(0.5)")
 
-        # Elect Connection 30: cell 11, seg 1 (0.5) [0.5 on a_GoClPop[11].Section_1] -> cell 13, seg 1 (0.5) [0.5 on a_GoClPop[13].Section_1], weight: 1.0
-        h("a_GoClPop[11].Section_1 { syn_gocGJ_GJ_0_A[30] = new GJ_0(0.5) }")
-        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_B[30] = new GJ_0(0.5) }")
-        h("setpointer syn_gocGJ_GJ_0_A[30].vpeer, a_GoClPop[13].Section_1.v(0.5)")
-        h("setpointer syn_gocGJ_GJ_0_B[30].vpeer, a_GoClPop[11].Section_1.v(0.5)")
+        # Elect Connection 30: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 11, seg 1 (0.5) [0.5 on a_GoClPop[11].Section_1], weight: 4.0
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[30] = new GJ_0(0.5) }")
+        h("a_GoClPop[11].Section_1 { syn_gocGJ_GJ_0_B[30] = new GJ_0(0.5) }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[30].weight = 4.0 }")
+        h("a_GoClPop[11].Section_1 { syn_gocGJ_GJ_0_B[30].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[30].vpeer, a_GoClPop[11].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[30].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+
+        # Elect Connection 31: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1], weight: 2.0
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[31] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_B[31] = new GJ_0(0.5) }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[31].weight = 2.0 }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_B[31].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[31].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[31].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+
+        # Elect Connection 32: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 21, seg 1 (0.5) [0.5 on a_GoClPop[21].Section_1], weight: 2.0
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[32] = new GJ_0(0.5) }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_B[32] = new GJ_0(0.5) }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[32].weight = 2.0 }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_B[32].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[32].vpeer, a_GoClPop[21].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[32].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+
+        # Elect Connection 33: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 23, seg 1 (0.5) [0.5 on a_GoClPop[23].Section_1], weight: 2.0
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[33] = new GJ_0(0.5) }")
+        h("a_GoClPop[23].Section_1 { syn_gocGJ_GJ_0_B[33] = new GJ_0(0.5) }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[33].weight = 2.0 }")
+        h("a_GoClPop[23].Section_1 { syn_gocGJ_GJ_0_B[33].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[33].vpeer, a_GoClPop[23].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[33].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+
+        # Elect Connection 34: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 24, seg 1 (0.5) [0.5 on a_GoClPop[24].Section_1], weight: 2.0
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[34] = new GJ_0(0.5) }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_B[34] = new GJ_0(0.5) }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[34].weight = 2.0 }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_B[34].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[34].vpeer, a_GoClPop[24].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[34].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+
+        # Elect Connection 35: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 27, seg 1 (0.5) [0.5 on a_GoClPop[27].Section_1], weight: 2.0
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[35] = new GJ_0(0.5) }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_B[35] = new GJ_0(0.5) }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[35].weight = 2.0 }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_B[35].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[35].vpeer, a_GoClPop[27].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[35].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+
+        # Elect Connection 36: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 28, seg 1 (0.5) [0.5 on a_GoClPop[28].Section_1], weight: 6.0
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[36] = new GJ_0(0.5) }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_B[36] = new GJ_0(0.5) }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[36].weight = 6.0 }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_B[36].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[36].vpeer, a_GoClPop[28].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[36].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+
+        # Elect Connection 37: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 32, seg 1 (0.5) [0.5 on a_GoClPop[32].Section_1], weight: 4.0
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[37] = new GJ_0(0.5) }")
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_B[37] = new GJ_0(0.5) }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[37].weight = 4.0 }")
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_B[37].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[37].vpeer, a_GoClPop[32].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[37].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+
+        # Elect Connection 38: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1], weight: 2.0
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[38] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[38] = new GJ_0(0.5) }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[38].weight = 2.0 }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[38].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[38].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[38].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+
+        # Elect Connection 39: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 37, seg 1 (0.5) [0.5 on a_GoClPop[37].Section_1], weight: 2.0
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[39] = new GJ_0(0.5) }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[39] = new GJ_0(0.5) }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[39].weight = 2.0 }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[39].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[39].vpeer, a_GoClPop[37].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[39].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+
+        # Elect Connection 40: cell 4, seg 1 (0.5) [0.5 on a_GoClPop[4].Section_1] -> cell 41, seg 1 (0.5) [0.5 on a_GoClPop[41].Section_1], weight: 4.0
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[40] = new GJ_0(0.5) }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[40] = new GJ_0(0.5) }")
+        h("a_GoClPop[4].Section_1 { syn_gocGJ_GJ_0_A[40].weight = 4.0 }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[40].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[40].vpeer, a_GoClPop[41].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[40].vpeer, a_GoClPop[4].Section_1.v(0.5)")
+
+        # Elect Connection 41: cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1] -> cell 7, seg 1 (0.5) [0.5 on a_GoClPop[7].Section_1], weight: 2.0
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[41] = new GJ_0(0.5) }")
+        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_B[41] = new GJ_0(0.5) }")
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[41].weight = 2.0 }")
+        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_B[41].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[41].vpeer, a_GoClPop[7].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[41].vpeer, a_GoClPop[5].Section_1.v(0.5)")
+
+        # Elect Connection 42: cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1] -> cell 15, seg 1 (0.5) [0.5 on a_GoClPop[15].Section_1], weight: 4.0
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[42] = new GJ_0(0.5) }")
+        h("a_GoClPop[15].Section_1 { syn_gocGJ_GJ_0_B[42] = new GJ_0(0.5) }")
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[42].weight = 4.0 }")
+        h("a_GoClPop[15].Section_1 { syn_gocGJ_GJ_0_B[42].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[42].vpeer, a_GoClPop[15].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[42].vpeer, a_GoClPop[5].Section_1.v(0.5)")
+
+        # Elect Connection 43: cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1] -> cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1], weight: 2.0
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[43] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_B[43] = new GJ_0(0.5) }")
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[43].weight = 2.0 }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_B[43].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[43].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[43].vpeer, a_GoClPop[5].Section_1.v(0.5)")
+
+        # Elect Connection 44: cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1] -> cell 17, seg 1 (0.5) [0.5 on a_GoClPop[17].Section_1], weight: 2.0
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[44] = new GJ_0(0.5) }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_B[44] = new GJ_0(0.5) }")
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[44].weight = 2.0 }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_B[44].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[44].vpeer, a_GoClPop[17].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[44].vpeer, a_GoClPop[5].Section_1.v(0.5)")
+
+        # Elect Connection 45: cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1] -> cell 19, seg 1 (0.5) [0.5 on a_GoClPop[19].Section_1], weight: 2.0
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[45] = new GJ_0(0.5) }")
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_B[45] = new GJ_0(0.5) }")
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[45].weight = 2.0 }")
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_B[45].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[45].vpeer, a_GoClPop[19].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[45].vpeer, a_GoClPop[5].Section_1.v(0.5)")
+
+        # Elect Connection 46: cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1] -> cell 21, seg 1 (0.5) [0.5 on a_GoClPop[21].Section_1], weight: 2.0
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[46] = new GJ_0(0.5) }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_B[46] = new GJ_0(0.5) }")
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[46].weight = 2.0 }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_B[46].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[46].vpeer, a_GoClPop[21].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[46].vpeer, a_GoClPop[5].Section_1.v(0.5)")
+
+        # Elect Connection 47: cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1] -> cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1], weight: 2.0
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[47] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[47] = new GJ_0(0.5) }")
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[47].weight = 2.0 }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[47].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[47].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[47].vpeer, a_GoClPop[5].Section_1.v(0.5)")
+
+        # Elect Connection 48: cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1] -> cell 31, seg 1 (0.5) [0.5 on a_GoClPop[31].Section_1], weight: 4.0
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[48] = new GJ_0(0.5) }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[48] = new GJ_0(0.5) }")
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[48].weight = 4.0 }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[48].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[48].vpeer, a_GoClPop[31].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[48].vpeer, a_GoClPop[5].Section_1.v(0.5)")
+
+        # Elect Connection 49: cell 5, seg 1 (0.5) [0.5 on a_GoClPop[5].Section_1] -> cell 38, seg 1 (0.5) [0.5 on a_GoClPop[38].Section_1], weight: 2.0
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[49] = new GJ_0(0.5) }")
+        h("a_GoClPop[38].Section_1 { syn_gocGJ_GJ_0_B[49] = new GJ_0(0.5) }")
+        h("a_GoClPop[5].Section_1 { syn_gocGJ_GJ_0_A[49].weight = 2.0 }")
+        h("a_GoClPop[38].Section_1 { syn_gocGJ_GJ_0_B[49].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[49].vpeer, a_GoClPop[38].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[49].vpeer, a_GoClPop[5].Section_1.v(0.5)")
+
+        # Elect Connection 50: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 7, seg 1 (0.5) [0.5 on a_GoClPop[7].Section_1], weight: 2.0
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[50] = new GJ_0(0.5) }")
+        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_B[50] = new GJ_0(0.5) }")
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[50].weight = 2.0 }")
+        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_B[50].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[50].vpeer, a_GoClPop[7].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[50].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+
+        # Elect Connection 51: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1], weight: 4.0
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[51] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_B[51] = new GJ_0(0.5) }")
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[51].weight = 4.0 }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_B[51].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[51].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[51].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+
+        # Elect Connection 52: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 18, seg 1 (0.5) [0.5 on a_GoClPop[18].Section_1], weight: 4.0
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[52] = new GJ_0(0.5) }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_B[52] = new GJ_0(0.5) }")
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[52].weight = 4.0 }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_B[52].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[52].vpeer, a_GoClPop[18].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[52].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+
+        # Elect Connection 53: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 21, seg 1 (0.5) [0.5 on a_GoClPop[21].Section_1], weight: 4.0
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[53] = new GJ_0(0.5) }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_B[53] = new GJ_0(0.5) }")
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[53].weight = 4.0 }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_B[53].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[53].vpeer, a_GoClPop[21].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[53].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+
+        # Elect Connection 54: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 27, seg 1 (0.5) [0.5 on a_GoClPop[27].Section_1], weight: 8.0
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[54] = new GJ_0(0.5) }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_B[54] = new GJ_0(0.5) }")
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[54].weight = 8.0 }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_B[54].weight = 8.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[54].vpeer, a_GoClPop[27].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[54].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+
+        # Elect Connection 55: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1], weight: 6.0
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[55] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[55] = new GJ_0(0.5) }")
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[55].weight = 6.0 }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[55].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[55].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[55].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+
+        # Elect Connection 56: cell 6, seg 1 (0.5) [0.5 on a_GoClPop[6].Section_1] -> cell 37, seg 1 (0.5) [0.5 on a_GoClPop[37].Section_1], weight: 4.0
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[56] = new GJ_0(0.5) }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[56] = new GJ_0(0.5) }")
+        h("a_GoClPop[6].Section_1 { syn_gocGJ_GJ_0_A[56].weight = 4.0 }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[56].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[56].vpeer, a_GoClPop[37].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[56].vpeer, a_GoClPop[6].Section_1.v(0.5)")
+
+        # Elect Connection 57: cell 7, seg 1 (0.5) [0.5 on a_GoClPop[7].Section_1] -> cell 10, seg 1 (0.5) [0.5 on a_GoClPop[10].Section_1], weight: 4.0
+        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_A[57] = new GJ_0(0.5) }")
+        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_B[57] = new GJ_0(0.5) }")
+        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_A[57].weight = 4.0 }")
+        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_B[57].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[57].vpeer, a_GoClPop[10].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[57].vpeer, a_GoClPop[7].Section_1.v(0.5)")
+
+        # Elect Connection 58: cell 7, seg 1 (0.5) [0.5 on a_GoClPop[7].Section_1] -> cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1], weight: 2.0
+        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_A[58] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[58] = new GJ_0(0.5) }")
+        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_A[58].weight = 2.0 }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[58].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[58].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[58].vpeer, a_GoClPop[7].Section_1.v(0.5)")
+
+        # Elect Connection 59: cell 7, seg 1 (0.5) [0.5 on a_GoClPop[7].Section_1] -> cell 37, seg 1 (0.5) [0.5 on a_GoClPop[37].Section_1], weight: 2.0
+        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_A[59] = new GJ_0(0.5) }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[59] = new GJ_0(0.5) }")
+        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_A[59].weight = 2.0 }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[59].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[59].vpeer, a_GoClPop[37].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[59].vpeer, a_GoClPop[7].Section_1.v(0.5)")
+
+        # Elect Connection 60: cell 7, seg 1 (0.5) [0.5 on a_GoClPop[7].Section_1] -> cell 38, seg 1 (0.5) [0.5 on a_GoClPop[38].Section_1], weight: 4.0
+        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_A[60] = new GJ_0(0.5) }")
+        h("a_GoClPop[38].Section_1 { syn_gocGJ_GJ_0_B[60] = new GJ_0(0.5) }")
+        h("a_GoClPop[7].Section_1 { syn_gocGJ_GJ_0_A[60].weight = 4.0 }")
+        h("a_GoClPop[38].Section_1 { syn_gocGJ_GJ_0_B[60].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[60].vpeer, a_GoClPop[38].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[60].vpeer, a_GoClPop[7].Section_1.v(0.5)")
+
+        # Elect Connection 61: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 14, seg 1 (0.5) [0.5 on a_GoClPop[14].Section_1], weight: 0.0
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[61] = new GJ_0(0.5) }")
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_B[61] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[61].weight = 0.0 }")
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_B[61].weight = 0.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[61].vpeer, a_GoClPop[14].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[61].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+
+        # Elect Connection 62: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1], weight: 2.0
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[62] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_B[62] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[62].weight = 2.0 }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_B[62].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[62].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[62].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+
+        # Elect Connection 63: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 18, seg 1 (0.5) [0.5 on a_GoClPop[18].Section_1], weight: 2.0
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[63] = new GJ_0(0.5) }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_B[63] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[63].weight = 2.0 }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_B[63].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[63].vpeer, a_GoClPop[18].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[63].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+
+        # Elect Connection 64: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 21, seg 1 (0.5) [0.5 on a_GoClPop[21].Section_1], weight: 2.0
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[64] = new GJ_0(0.5) }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_B[64] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[64].weight = 2.0 }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_B[64].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[64].vpeer, a_GoClPop[21].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[64].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+
+        # Elect Connection 65: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 22, seg 1 (0.5) [0.5 on a_GoClPop[22].Section_1], weight: 2.0
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[65] = new GJ_0(0.5) }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_B[65] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[65].weight = 2.0 }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_B[65].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[65].vpeer, a_GoClPop[22].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[65].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+
+        # Elect Connection 66: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 24, seg 1 (0.5) [0.5 on a_GoClPop[24].Section_1], weight: 6.0
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[66] = new GJ_0(0.5) }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_B[66] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[66].weight = 6.0 }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_B[66].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[66].vpeer, a_GoClPop[24].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[66].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+
+        # Elect Connection 67: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 29, seg 1 (0.5) [0.5 on a_GoClPop[29].Section_1], weight: 2.0
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[67] = new GJ_0(0.5) }")
+        h("a_GoClPop[29].Section_1 { syn_gocGJ_GJ_0_B[67] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[67].weight = 2.0 }")
+        h("a_GoClPop[29].Section_1 { syn_gocGJ_GJ_0_B[67].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[67].vpeer, a_GoClPop[29].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[67].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+
+        # Elect Connection 68: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1], weight: 4.0
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[68] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[68] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[68].weight = 4.0 }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[68].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[68].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[68].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+
+        # Elect Connection 69: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1], weight: 2.0
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[69] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[69] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[69].weight = 2.0 }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[69].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[69].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[69].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+
+        # Elect Connection 70: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 40, seg 1 (0.5) [0.5 on a_GoClPop[40].Section_1], weight: 2.0
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[70] = new GJ_0(0.5) }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[70] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[70].weight = 2.0 }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[70].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[70].vpeer, a_GoClPop[40].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[70].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+
+        # Elect Connection 71: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 41, seg 1 (0.5) [0.5 on a_GoClPop[41].Section_1], weight: 0.0
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[71] = new GJ_0(0.5) }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[71] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[71].weight = 0.0 }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[71].weight = 0.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[71].vpeer, a_GoClPop[41].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[71].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+
+        # Elect Connection 72: cell 8, seg 1 (0.5) [0.5 on a_GoClPop[8].Section_1] -> cell 44, seg 1 (0.5) [0.5 on a_GoClPop[44].Section_1], weight: 2.0
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[72] = new GJ_0(0.5) }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[72] = new GJ_0(0.5) }")
+        h("a_GoClPop[8].Section_1 { syn_gocGJ_GJ_0_A[72].weight = 2.0 }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[72].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[72].vpeer, a_GoClPop[44].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[72].vpeer, a_GoClPop[8].Section_1.v(0.5)")
+
+        # Elect Connection 73: cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1] -> cell 14, seg 1 (0.5) [0.5 on a_GoClPop[14].Section_1], weight: 2.0
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[73] = new GJ_0(0.5) }")
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_B[73] = new GJ_0(0.5) }")
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[73].weight = 2.0 }")
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_B[73].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[73].vpeer, a_GoClPop[14].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[73].vpeer, a_GoClPop[9].Section_1.v(0.5)")
+
+        # Elect Connection 74: cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1] -> cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1], weight: 0.0
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[74] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_B[74] = new GJ_0(0.5) }")
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[74].weight = 0.0 }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_B[74].weight = 0.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[74].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[74].vpeer, a_GoClPop[9].Section_1.v(0.5)")
+
+        # Elect Connection 75: cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1] -> cell 22, seg 1 (0.5) [0.5 on a_GoClPop[22].Section_1], weight: 4.0
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[75] = new GJ_0(0.5) }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_B[75] = new GJ_0(0.5) }")
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[75].weight = 4.0 }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_B[75].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[75].vpeer, a_GoClPop[22].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[75].vpeer, a_GoClPop[9].Section_1.v(0.5)")
+
+        # Elect Connection 76: cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1] -> cell 24, seg 1 (0.5) [0.5 on a_GoClPop[24].Section_1], weight: 4.0
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[76] = new GJ_0(0.5) }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_B[76] = new GJ_0(0.5) }")
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[76].weight = 4.0 }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_B[76].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[76].vpeer, a_GoClPop[24].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[76].vpeer, a_GoClPop[9].Section_1.v(0.5)")
+
+        # Elect Connection 77: cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1] -> cell 29, seg 1 (0.5) [0.5 on a_GoClPop[29].Section_1], weight: 2.0
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[77] = new GJ_0(0.5) }")
+        h("a_GoClPop[29].Section_1 { syn_gocGJ_GJ_0_B[77] = new GJ_0(0.5) }")
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[77].weight = 2.0 }")
+        h("a_GoClPop[29].Section_1 { syn_gocGJ_GJ_0_B[77].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[77].vpeer, a_GoClPop[29].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[77].vpeer, a_GoClPop[9].Section_1.v(0.5)")
+
+        # Elect Connection 78: cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1] -> cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1], weight: 4.0
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[78] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[78] = new GJ_0(0.5) }")
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[78].weight = 4.0 }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[78].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[78].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[78].vpeer, a_GoClPop[9].Section_1.v(0.5)")
+
+        # Elect Connection 79: cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1] -> cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1], weight: 4.0
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[79] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[79] = new GJ_0(0.5) }")
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[79].weight = 4.0 }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[79].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[79].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[79].vpeer, a_GoClPop[9].Section_1.v(0.5)")
+
+        # Elect Connection 80: cell 9, seg 1 (0.5) [0.5 on a_GoClPop[9].Section_1] -> cell 43, seg 1 (0.5) [0.5 on a_GoClPop[43].Section_1], weight: 0.0
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[80] = new GJ_0(0.5) }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[80] = new GJ_0(0.5) }")
+        h("a_GoClPop[9].Section_1 { syn_gocGJ_GJ_0_A[80].weight = 0.0 }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[80].weight = 0.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[80].vpeer, a_GoClPop[43].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[80].vpeer, a_GoClPop[9].Section_1.v(0.5)")
+
+        # Elect Connection 81: cell 10, seg 1 (0.5) [0.5 on a_GoClPop[10].Section_1] -> cell 15, seg 1 (0.5) [0.5 on a_GoClPop[15].Section_1], weight: 4.0
+        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_A[81] = new GJ_0(0.5) }")
+        h("a_GoClPop[15].Section_1 { syn_gocGJ_GJ_0_B[81] = new GJ_0(0.5) }")
+        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_A[81].weight = 4.0 }")
+        h("a_GoClPop[15].Section_1 { syn_gocGJ_GJ_0_B[81].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[81].vpeer, a_GoClPop[15].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[81].vpeer, a_GoClPop[10].Section_1.v(0.5)")
+
+        # Elect Connection 82: cell 10, seg 1 (0.5) [0.5 on a_GoClPop[10].Section_1] -> cell 17, seg 1 (0.5) [0.5 on a_GoClPop[17].Section_1], weight: 2.0
+        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_A[82] = new GJ_0(0.5) }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_B[82] = new GJ_0(0.5) }")
+        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_A[82].weight = 2.0 }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_B[82].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[82].vpeer, a_GoClPop[17].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[82].vpeer, a_GoClPop[10].Section_1.v(0.5)")
+
+        # Elect Connection 83: cell 10, seg 1 (0.5) [0.5 on a_GoClPop[10].Section_1] -> cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1], weight: 2.0
+        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_A[83] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[83] = new GJ_0(0.5) }")
+        h("a_GoClPop[10].Section_1 { syn_gocGJ_GJ_0_A[83].weight = 2.0 }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[83].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[83].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[83].vpeer, a_GoClPop[10].Section_1.v(0.5)")
+
+        # Elect Connection 84: cell 11, seg 1 (0.5) [0.5 on a_GoClPop[11].Section_1] -> cell 28, seg 1 (0.5) [0.5 on a_GoClPop[28].Section_1], weight: 2.0
+        h("a_GoClPop[11].Section_1 { syn_gocGJ_GJ_0_A[84] = new GJ_0(0.5) }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_B[84] = new GJ_0(0.5) }")
+        h("a_GoClPop[11].Section_1 { syn_gocGJ_GJ_0_A[84].weight = 2.0 }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_B[84].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[84].vpeer, a_GoClPop[28].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[84].vpeer, a_GoClPop[11].Section_1.v(0.5)")
+
+        # Elect Connection 85: cell 11, seg 1 (0.5) [0.5 on a_GoClPop[11].Section_1] -> cell 32, seg 1 (0.5) [0.5 on a_GoClPop[32].Section_1], weight: 8.0
+        h("a_GoClPop[11].Section_1 { syn_gocGJ_GJ_0_A[85] = new GJ_0(0.5) }")
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_B[85] = new GJ_0(0.5) }")
+        h("a_GoClPop[11].Section_1 { syn_gocGJ_GJ_0_A[85].weight = 8.0 }")
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_B[85].weight = 8.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[85].vpeer, a_GoClPop[32].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[85].vpeer, a_GoClPop[11].Section_1.v(0.5)")
+
+        # Elect Connection 86: cell 11, seg 1 (0.5) [0.5 on a_GoClPop[11].Section_1] -> cell 41, seg 1 (0.5) [0.5 on a_GoClPop[41].Section_1], weight: 4.0
+        h("a_GoClPop[11].Section_1 { syn_gocGJ_GJ_0_A[86] = new GJ_0(0.5) }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[86] = new GJ_0(0.5) }")
+        h("a_GoClPop[11].Section_1 { syn_gocGJ_GJ_0_A[86].weight = 4.0 }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[86].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[86].vpeer, a_GoClPop[41].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[86].vpeer, a_GoClPop[11].Section_1.v(0.5)")
+
+        # Elect Connection 87: cell 12, seg 1 (0.5) [0.5 on a_GoClPop[12].Section_1] -> cell 14, seg 1 (0.5) [0.5 on a_GoClPop[14].Section_1], weight: 2.0
+        h("a_GoClPop[12].Section_1 { syn_gocGJ_GJ_0_A[87] = new GJ_0(0.5) }")
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_B[87] = new GJ_0(0.5) }")
+        h("a_GoClPop[12].Section_1 { syn_gocGJ_GJ_0_A[87].weight = 2.0 }")
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_B[87].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[87].vpeer, a_GoClPop[14].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[87].vpeer, a_GoClPop[12].Section_1.v(0.5)")
+
+        # Elect Connection 88: cell 12, seg 1 (0.5) [0.5 on a_GoClPop[12].Section_1] -> cell 34, seg 1 (0.5) [0.5 on a_GoClPop[34].Section_1], weight: 4.0
+        h("a_GoClPop[12].Section_1 { syn_gocGJ_GJ_0_A[88] = new GJ_0(0.5) }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[88] = new GJ_0(0.5) }")
+        h("a_GoClPop[12].Section_1 { syn_gocGJ_GJ_0_A[88].weight = 4.0 }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[88].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[88].vpeer, a_GoClPop[34].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[88].vpeer, a_GoClPop[12].Section_1.v(0.5)")
+
+        # Elect Connection 89: cell 12, seg 1 (0.5) [0.5 on a_GoClPop[12].Section_1] -> cell 40, seg 1 (0.5) [0.5 on a_GoClPop[40].Section_1], weight: 2.0
+        h("a_GoClPop[12].Section_1 { syn_gocGJ_GJ_0_A[89] = new GJ_0(0.5) }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[89] = new GJ_0(0.5) }")
+        h("a_GoClPop[12].Section_1 { syn_gocGJ_GJ_0_A[89].weight = 2.0 }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[89].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[89].vpeer, a_GoClPop[40].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[89].vpeer, a_GoClPop[12].Section_1.v(0.5)")
+
+        # Elect Connection 90: cell 12, seg 1 (0.5) [0.5 on a_GoClPop[12].Section_1] -> cell 42, seg 1 (0.5) [0.5 on a_GoClPop[42].Section_1], weight: 4.0
+        h("a_GoClPop[12].Section_1 { syn_gocGJ_GJ_0_A[90] = new GJ_0(0.5) }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[90] = new GJ_0(0.5) }")
+        h("a_GoClPop[12].Section_1 { syn_gocGJ_GJ_0_A[90].weight = 4.0 }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[90].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[90].vpeer, a_GoClPop[42].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[90].vpeer, a_GoClPop[12].Section_1.v(0.5)")
+
+        # Elect Connection 91: cell 12, seg 1 (0.5) [0.5 on a_GoClPop[12].Section_1] -> cell 43, seg 1 (0.5) [0.5 on a_GoClPop[43].Section_1], weight: 2.0
+        h("a_GoClPop[12].Section_1 { syn_gocGJ_GJ_0_A[91] = new GJ_0(0.5) }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[91] = new GJ_0(0.5) }")
+        h("a_GoClPop[12].Section_1 { syn_gocGJ_GJ_0_A[91].weight = 2.0 }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[91].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[91].vpeer, a_GoClPop[43].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[91].vpeer, a_GoClPop[12].Section_1.v(0.5)")
+
+        # Elect Connection 92: cell 13, seg 1 (0.5) [0.5 on a_GoClPop[13].Section_1] -> cell 25, seg 1 (0.5) [0.5 on a_GoClPop[25].Section_1], weight: 2.0
+        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_A[92] = new GJ_0(0.5) }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_B[92] = new GJ_0(0.5) }")
+        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_A[92].weight = 2.0 }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_B[92].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[92].vpeer, a_GoClPop[25].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[92].vpeer, a_GoClPop[13].Section_1.v(0.5)")
+
+        # Elect Connection 93: cell 13, seg 1 (0.5) [0.5 on a_GoClPop[13].Section_1] -> cell 26, seg 1 (0.5) [0.5 on a_GoClPop[26].Section_1], weight: 2.0
+        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_A[93] = new GJ_0(0.5) }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[93] = new GJ_0(0.5) }")
+        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_A[93].weight = 2.0 }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[93].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[93].vpeer, a_GoClPop[26].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[93].vpeer, a_GoClPop[13].Section_1.v(0.5)")
+
+        # Elect Connection 94: cell 13, seg 1 (0.5) [0.5 on a_GoClPop[13].Section_1] -> cell 34, seg 1 (0.5) [0.5 on a_GoClPop[34].Section_1], weight: 4.0
+        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_A[94] = new GJ_0(0.5) }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[94] = new GJ_0(0.5) }")
+        h("a_GoClPop[13].Section_1 { syn_gocGJ_GJ_0_A[94].weight = 4.0 }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[94].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[94].vpeer, a_GoClPop[34].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[94].vpeer, a_GoClPop[13].Section_1.v(0.5)")
+
+        # Elect Connection 95: cell 14, seg 1 (0.5) [0.5 on a_GoClPop[14].Section_1] -> cell 20, seg 1 (0.5) [0.5 on a_GoClPop[20].Section_1], weight: 2.0
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_A[95] = new GJ_0(0.5) }")
+        h("a_GoClPop[20].Section_1 { syn_gocGJ_GJ_0_B[95] = new GJ_0(0.5) }")
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_A[95].weight = 2.0 }")
+        h("a_GoClPop[20].Section_1 { syn_gocGJ_GJ_0_B[95].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[95].vpeer, a_GoClPop[20].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[95].vpeer, a_GoClPop[14].Section_1.v(0.5)")
+
+        # Elect Connection 96: cell 14, seg 1 (0.5) [0.5 on a_GoClPop[14].Section_1] -> cell 22, seg 1 (0.5) [0.5 on a_GoClPop[22].Section_1], weight: 4.0
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_A[96] = new GJ_0(0.5) }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_B[96] = new GJ_0(0.5) }")
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_A[96].weight = 4.0 }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_B[96].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[96].vpeer, a_GoClPop[22].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[96].vpeer, a_GoClPop[14].Section_1.v(0.5)")
+
+        # Elect Connection 97: cell 14, seg 1 (0.5) [0.5 on a_GoClPop[14].Section_1] -> cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1], weight: 6.0
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_A[97] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[97] = new GJ_0(0.5) }")
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_A[97].weight = 6.0 }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[97].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[97].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[97].vpeer, a_GoClPop[14].Section_1.v(0.5)")
+
+        # Elect Connection 98: cell 14, seg 1 (0.5) [0.5 on a_GoClPop[14].Section_1] -> cell 42, seg 1 (0.5) [0.5 on a_GoClPop[42].Section_1], weight: 2.0
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_A[98] = new GJ_0(0.5) }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[98] = new GJ_0(0.5) }")
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_A[98].weight = 2.0 }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[98].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[98].vpeer, a_GoClPop[42].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[98].vpeer, a_GoClPop[14].Section_1.v(0.5)")
+
+        # Elect Connection 99: cell 14, seg 1 (0.5) [0.5 on a_GoClPop[14].Section_1] -> cell 43, seg 1 (0.5) [0.5 on a_GoClPop[43].Section_1], weight: 4.0
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_A[99] = new GJ_0(0.5) }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[99] = new GJ_0(0.5) }")
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_A[99].weight = 4.0 }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[99].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[99].vpeer, a_GoClPop[43].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[99].vpeer, a_GoClPop[14].Section_1.v(0.5)")
+
+        # Elect Connection 100: cell 14, seg 1 (0.5) [0.5 on a_GoClPop[14].Section_1] -> cell 44, seg 1 (0.5) [0.5 on a_GoClPop[44].Section_1], weight: 4.0
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_A[100] = new GJ_0(0.5) }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[100] = new GJ_0(0.5) }")
+        h("a_GoClPop[14].Section_1 { syn_gocGJ_GJ_0_A[100].weight = 4.0 }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[100].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[100].vpeer, a_GoClPop[44].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[100].vpeer, a_GoClPop[14].Section_1.v(0.5)")
+
+        # Elect Connection 101: cell 15, seg 1 (0.5) [0.5 on a_GoClPop[15].Section_1] -> cell 17, seg 1 (0.5) [0.5 on a_GoClPop[17].Section_1], weight: 4.0
+        h("a_GoClPop[15].Section_1 { syn_gocGJ_GJ_0_A[101] = new GJ_0(0.5) }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_B[101] = new GJ_0(0.5) }")
+        h("a_GoClPop[15].Section_1 { syn_gocGJ_GJ_0_A[101].weight = 4.0 }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_B[101].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[101].vpeer, a_GoClPop[17].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[101].vpeer, a_GoClPop[15].Section_1.v(0.5)")
+
+        # Elect Connection 102: cell 15, seg 1 (0.5) [0.5 on a_GoClPop[15].Section_1] -> cell 19, seg 1 (0.5) [0.5 on a_GoClPop[19].Section_1], weight: 4.0
+        h("a_GoClPop[15].Section_1 { syn_gocGJ_GJ_0_A[102] = new GJ_0(0.5) }")
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_B[102] = new GJ_0(0.5) }")
+        h("a_GoClPop[15].Section_1 { syn_gocGJ_GJ_0_A[102].weight = 4.0 }")
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_B[102].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[102].vpeer, a_GoClPop[19].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[102].vpeer, a_GoClPop[15].Section_1.v(0.5)")
+
+        # Elect Connection 103: cell 15, seg 1 (0.5) [0.5 on a_GoClPop[15].Section_1] -> cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1], weight: 2.0
+        h("a_GoClPop[15].Section_1 { syn_gocGJ_GJ_0_A[103] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[103] = new GJ_0(0.5) }")
+        h("a_GoClPop[15].Section_1 { syn_gocGJ_GJ_0_A[103].weight = 2.0 }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[103].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[103].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[103].vpeer, a_GoClPop[15].Section_1.v(0.5)")
+
+        # Elect Connection 104: cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1] -> cell 18, seg 1 (0.5) [0.5 on a_GoClPop[18].Section_1], weight: 6.0
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[104] = new GJ_0(0.5) }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_B[104] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[104].weight = 6.0 }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_B[104].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[104].vpeer, a_GoClPop[18].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[104].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+
+        # Elect Connection 105: cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1] -> cell 27, seg 1 (0.5) [0.5 on a_GoClPop[27].Section_1], weight: 4.0
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[105] = new GJ_0(0.5) }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_B[105] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[105].weight = 4.0 }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_B[105].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[105].vpeer, a_GoClPop[27].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[105].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+
+        # Elect Connection 106: cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1] -> cell 28, seg 1 (0.5) [0.5 on a_GoClPop[28].Section_1], weight: 2.0
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[106] = new GJ_0(0.5) }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_B[106] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[106].weight = 2.0 }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_B[106].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[106].vpeer, a_GoClPop[28].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[106].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+
+        # Elect Connection 107: cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1] -> cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1], weight: 6.0
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[107] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[107] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[107].weight = 6.0 }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[107].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[107].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[107].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+
+        # Elect Connection 108: cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1] -> cell 31, seg 1 (0.5) [0.5 on a_GoClPop[31].Section_1], weight: 2.0
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[108] = new GJ_0(0.5) }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[108] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[108].weight = 2.0 }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[108].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[108].vpeer, a_GoClPop[31].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[108].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+
+        # Elect Connection 109: cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1] -> cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1], weight: 4.0
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[109] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[109] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[109].weight = 4.0 }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[109].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[109].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[109].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+
+        # Elect Connection 110: cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1] -> cell 37, seg 1 (0.5) [0.5 on a_GoClPop[37].Section_1], weight: 2.0
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[110] = new GJ_0(0.5) }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[110] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[110].weight = 2.0 }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[110].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[110].vpeer, a_GoClPop[37].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[110].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+
+        # Elect Connection 111: cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1] -> cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1], weight: 2.0
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[111] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[111] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[111].weight = 2.0 }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[111].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[111].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[111].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+
+        # Elect Connection 112: cell 16, seg 1 (0.5) [0.5 on a_GoClPop[16].Section_1] -> cell 40, seg 1 (0.5) [0.5 on a_GoClPop[40].Section_1], weight: 0.0
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[112] = new GJ_0(0.5) }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[112] = new GJ_0(0.5) }")
+        h("a_GoClPop[16].Section_1 { syn_gocGJ_GJ_0_A[112].weight = 0.0 }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[112].weight = 0.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[112].vpeer, a_GoClPop[40].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[112].vpeer, a_GoClPop[16].Section_1.v(0.5)")
+
+        # Elect Connection 113: cell 17, seg 1 (0.5) [0.5 on a_GoClPop[17].Section_1] -> cell 19, seg 1 (0.5) [0.5 on a_GoClPop[19].Section_1], weight: 10.0
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_A[113] = new GJ_0(0.5) }")
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_B[113] = new GJ_0(0.5) }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_A[113].weight = 10.0 }")
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_B[113].weight = 10.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[113].vpeer, a_GoClPop[19].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[113].vpeer, a_GoClPop[17].Section_1.v(0.5)")
+
+        # Elect Connection 114: cell 17, seg 1 (0.5) [0.5 on a_GoClPop[17].Section_1] -> cell 25, seg 1 (0.5) [0.5 on a_GoClPop[25].Section_1], weight: 2.0
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_A[114] = new GJ_0(0.5) }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_B[114] = new GJ_0(0.5) }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_A[114].weight = 2.0 }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_B[114].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[114].vpeer, a_GoClPop[25].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[114].vpeer, a_GoClPop[17].Section_1.v(0.5)")
+
+        # Elect Connection 115: cell 17, seg 1 (0.5) [0.5 on a_GoClPop[17].Section_1] -> cell 26, seg 1 (0.5) [0.5 on a_GoClPop[26].Section_1], weight: 2.0
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_A[115] = new GJ_0(0.5) }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[115] = new GJ_0(0.5) }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_A[115].weight = 2.0 }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[115].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[115].vpeer, a_GoClPop[26].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[115].vpeer, a_GoClPop[17].Section_1.v(0.5)")
+
+        # Elect Connection 116: cell 17, seg 1 (0.5) [0.5 on a_GoClPop[17].Section_1] -> cell 31, seg 1 (0.5) [0.5 on a_GoClPop[31].Section_1], weight: 2.0
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_A[116] = new GJ_0(0.5) }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[116] = new GJ_0(0.5) }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_A[116].weight = 2.0 }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[116].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[116].vpeer, a_GoClPop[31].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[116].vpeer, a_GoClPop[17].Section_1.v(0.5)")
+
+        # Elect Connection 117: cell 17, seg 1 (0.5) [0.5 on a_GoClPop[17].Section_1] -> cell 35, seg 1 (0.5) [0.5 on a_GoClPop[35].Section_1], weight: 2.0
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_A[117] = new GJ_0(0.5) }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[117] = new GJ_0(0.5) }")
+        h("a_GoClPop[17].Section_1 { syn_gocGJ_GJ_0_A[117].weight = 2.0 }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[117].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[117].vpeer, a_GoClPop[35].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[117].vpeer, a_GoClPop[17].Section_1.v(0.5)")
+
+        # Elect Connection 118: cell 18, seg 1 (0.5) [0.5 on a_GoClPop[18].Section_1] -> cell 21, seg 1 (0.5) [0.5 on a_GoClPop[21].Section_1], weight: 4.0
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[118] = new GJ_0(0.5) }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_B[118] = new GJ_0(0.5) }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[118].weight = 4.0 }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_B[118].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[118].vpeer, a_GoClPop[21].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[118].vpeer, a_GoClPop[18].Section_1.v(0.5)")
+
+        # Elect Connection 119: cell 18, seg 1 (0.5) [0.5 on a_GoClPop[18].Section_1] -> cell 24, seg 1 (0.5) [0.5 on a_GoClPop[24].Section_1], weight: 2.0
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[119] = new GJ_0(0.5) }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_B[119] = new GJ_0(0.5) }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[119].weight = 2.0 }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_B[119].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[119].vpeer, a_GoClPop[24].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[119].vpeer, a_GoClPop[18].Section_1.v(0.5)")
+
+        # Elect Connection 120: cell 18, seg 1 (0.5) [0.5 on a_GoClPop[18].Section_1] -> cell 28, seg 1 (0.5) [0.5 on a_GoClPop[28].Section_1], weight: 4.0
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[120] = new GJ_0(0.5) }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_B[120] = new GJ_0(0.5) }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[120].weight = 4.0 }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_B[120].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[120].vpeer, a_GoClPop[28].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[120].vpeer, a_GoClPop[18].Section_1.v(0.5)")
+
+        # Elect Connection 121: cell 18, seg 1 (0.5) [0.5 on a_GoClPop[18].Section_1] -> cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1], weight: 4.0
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[121] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[121] = new GJ_0(0.5) }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[121].weight = 4.0 }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[121].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[121].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[121].vpeer, a_GoClPop[18].Section_1.v(0.5)")
+
+        # Elect Connection 122: cell 18, seg 1 (0.5) [0.5 on a_GoClPop[18].Section_1] -> cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1], weight: 4.0
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[122] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[122] = new GJ_0(0.5) }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[122].weight = 4.0 }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[122].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[122].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[122].vpeer, a_GoClPop[18].Section_1.v(0.5)")
+
+        # Elect Connection 123: cell 18, seg 1 (0.5) [0.5 on a_GoClPop[18].Section_1] -> cell 37, seg 1 (0.5) [0.5 on a_GoClPop[37].Section_1], weight: 2.0
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[123] = new GJ_0(0.5) }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[123] = new GJ_0(0.5) }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[123].weight = 2.0 }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[123].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[123].vpeer, a_GoClPop[37].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[123].vpeer, a_GoClPop[18].Section_1.v(0.5)")
+
+        # Elect Connection 124: cell 18, seg 1 (0.5) [0.5 on a_GoClPop[18].Section_1] -> cell 41, seg 1 (0.5) [0.5 on a_GoClPop[41].Section_1], weight: 4.0
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[124] = new GJ_0(0.5) }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[124] = new GJ_0(0.5) }")
+        h("a_GoClPop[18].Section_1 { syn_gocGJ_GJ_0_A[124].weight = 4.0 }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[124].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[124].vpeer, a_GoClPop[41].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[124].vpeer, a_GoClPop[18].Section_1.v(0.5)")
+
+        # Elect Connection 125: cell 19, seg 1 (0.5) [0.5 on a_GoClPop[19].Section_1] -> cell 26, seg 1 (0.5) [0.5 on a_GoClPop[26].Section_1], weight: 2.0
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_A[125] = new GJ_0(0.5) }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[125] = new GJ_0(0.5) }")
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_A[125].weight = 2.0 }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[125].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[125].vpeer, a_GoClPop[26].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[125].vpeer, a_GoClPop[19].Section_1.v(0.5)")
+
+        # Elect Connection 126: cell 19, seg 1 (0.5) [0.5 on a_GoClPop[19].Section_1] -> cell 35, seg 1 (0.5) [0.5 on a_GoClPop[35].Section_1], weight: 2.0
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_A[126] = new GJ_0(0.5) }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[126] = new GJ_0(0.5) }")
+        h("a_GoClPop[19].Section_1 { syn_gocGJ_GJ_0_A[126].weight = 2.0 }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[126].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[126].vpeer, a_GoClPop[35].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[126].vpeer, a_GoClPop[19].Section_1.v(0.5)")
+
+        # Elect Connection 127: cell 20, seg 1 (0.5) [0.5 on a_GoClPop[20].Section_1] -> cell 25, seg 1 (0.5) [0.5 on a_GoClPop[25].Section_1], weight: 2.0
+        h("a_GoClPop[20].Section_1 { syn_gocGJ_GJ_0_A[127] = new GJ_0(0.5) }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_B[127] = new GJ_0(0.5) }")
+        h("a_GoClPop[20].Section_1 { syn_gocGJ_GJ_0_A[127].weight = 2.0 }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_B[127].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[127].vpeer, a_GoClPop[25].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[127].vpeer, a_GoClPop[20].Section_1.v(0.5)")
+
+        # Elect Connection 128: cell 20, seg 1 (0.5) [0.5 on a_GoClPop[20].Section_1] -> cell 33, seg 1 (0.5) [0.5 on a_GoClPop[33].Section_1], weight: 6.0
+        h("a_GoClPop[20].Section_1 { syn_gocGJ_GJ_0_A[128] = new GJ_0(0.5) }")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_B[128] = new GJ_0(0.5) }")
+        h("a_GoClPop[20].Section_1 { syn_gocGJ_GJ_0_A[128].weight = 6.0 }")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_B[128].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[128].vpeer, a_GoClPop[33].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[128].vpeer, a_GoClPop[20].Section_1.v(0.5)")
+
+        # Elect Connection 129: cell 20, seg 1 (0.5) [0.5 on a_GoClPop[20].Section_1] -> cell 34, seg 1 (0.5) [0.5 on a_GoClPop[34].Section_1], weight: 4.0
+        h("a_GoClPop[20].Section_1 { syn_gocGJ_GJ_0_A[129] = new GJ_0(0.5) }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[129] = new GJ_0(0.5) }")
+        h("a_GoClPop[20].Section_1 { syn_gocGJ_GJ_0_A[129].weight = 4.0 }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[129].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[129].vpeer, a_GoClPop[34].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[129].vpeer, a_GoClPop[20].Section_1.v(0.5)")
+
+        # Elect Connection 130: cell 20, seg 1 (0.5) [0.5 on a_GoClPop[20].Section_1] -> cell 43, seg 1 (0.5) [0.5 on a_GoClPop[43].Section_1], weight: 4.0
+        h("a_GoClPop[20].Section_1 { syn_gocGJ_GJ_0_A[130] = new GJ_0(0.5) }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[130] = new GJ_0(0.5) }")
+        h("a_GoClPop[20].Section_1 { syn_gocGJ_GJ_0_A[130].weight = 4.0 }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[130].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[130].vpeer, a_GoClPop[43].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[130].vpeer, a_GoClPop[20].Section_1.v(0.5)")
+
+        # Elect Connection 131: cell 21, seg 1 (0.5) [0.5 on a_GoClPop[21].Section_1] -> cell 27, seg 1 (0.5) [0.5 on a_GoClPop[27].Section_1], weight: 4.0
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[131] = new GJ_0(0.5) }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_B[131] = new GJ_0(0.5) }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[131].weight = 4.0 }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_B[131].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[131].vpeer, a_GoClPop[27].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[131].vpeer, a_GoClPop[21].Section_1.v(0.5)")
+
+        # Elect Connection 132: cell 21, seg 1 (0.5) [0.5 on a_GoClPop[21].Section_1] -> cell 31, seg 1 (0.5) [0.5 on a_GoClPop[31].Section_1], weight: 4.0
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[132] = new GJ_0(0.5) }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[132] = new GJ_0(0.5) }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[132].weight = 4.0 }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[132].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[132].vpeer, a_GoClPop[31].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[132].vpeer, a_GoClPop[21].Section_1.v(0.5)")
+
+        # Elect Connection 133: cell 21, seg 1 (0.5) [0.5 on a_GoClPop[21].Section_1] -> cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1], weight: 4.0
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[133] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[133] = new GJ_0(0.5) }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[133].weight = 4.0 }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[133].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[133].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[133].vpeer, a_GoClPop[21].Section_1.v(0.5)")
+
+        # Elect Connection 134: cell 21, seg 1 (0.5) [0.5 on a_GoClPop[21].Section_1] -> cell 37, seg 1 (0.5) [0.5 on a_GoClPop[37].Section_1], weight: 2.0
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[134] = new GJ_0(0.5) }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[134] = new GJ_0(0.5) }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[134].weight = 2.0 }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[134].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[134].vpeer, a_GoClPop[37].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[134].vpeer, a_GoClPop[21].Section_1.v(0.5)")
+
+        # Elect Connection 135: cell 21, seg 1 (0.5) [0.5 on a_GoClPop[21].Section_1] -> cell 38, seg 1 (0.5) [0.5 on a_GoClPop[38].Section_1], weight: 0.0
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[135] = new GJ_0(0.5) }")
+        h("a_GoClPop[38].Section_1 { syn_gocGJ_GJ_0_B[135] = new GJ_0(0.5) }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[135].weight = 0.0 }")
+        h("a_GoClPop[38].Section_1 { syn_gocGJ_GJ_0_B[135].weight = 0.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[135].vpeer, a_GoClPop[38].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[135].vpeer, a_GoClPop[21].Section_1.v(0.5)")
+
+        # Elect Connection 136: cell 21, seg 1 (0.5) [0.5 on a_GoClPop[21].Section_1] -> cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1], weight: 2.0
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[136] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[136] = new GJ_0(0.5) }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[136].weight = 2.0 }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[136].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[136].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[136].vpeer, a_GoClPop[21].Section_1.v(0.5)")
+
+        # Elect Connection 137: cell 21, seg 1 (0.5) [0.5 on a_GoClPop[21].Section_1] -> cell 41, seg 1 (0.5) [0.5 on a_GoClPop[41].Section_1], weight: 2.0
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[137] = new GJ_0(0.5) }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[137] = new GJ_0(0.5) }")
+        h("a_GoClPop[21].Section_1 { syn_gocGJ_GJ_0_A[137].weight = 2.0 }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[137].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[137].vpeer, a_GoClPop[41].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[137].vpeer, a_GoClPop[21].Section_1.v(0.5)")
+
+        # Elect Connection 138: cell 22, seg 1 (0.5) [0.5 on a_GoClPop[22].Section_1] -> cell 24, seg 1 (0.5) [0.5 on a_GoClPop[24].Section_1], weight: 2.0
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_A[138] = new GJ_0(0.5) }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_B[138] = new GJ_0(0.5) }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_A[138].weight = 2.0 }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_B[138].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[138].vpeer, a_GoClPop[24].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[138].vpeer, a_GoClPop[22].Section_1.v(0.5)")
+
+        # Elect Connection 139: cell 22, seg 1 (0.5) [0.5 on a_GoClPop[22].Section_1] -> cell 29, seg 1 (0.5) [0.5 on a_GoClPop[29].Section_1], weight: 4.0
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_A[139] = new GJ_0(0.5) }")
+        h("a_GoClPop[29].Section_1 { syn_gocGJ_GJ_0_B[139] = new GJ_0(0.5) }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_A[139].weight = 4.0 }")
+        h("a_GoClPop[29].Section_1 { syn_gocGJ_GJ_0_B[139].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[139].vpeer, a_GoClPop[29].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[139].vpeer, a_GoClPop[22].Section_1.v(0.5)")
+
+        # Elect Connection 140: cell 22, seg 1 (0.5) [0.5 on a_GoClPop[22].Section_1] -> cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1], weight: 6.0
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_A[140] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[140] = new GJ_0(0.5) }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_A[140].weight = 6.0 }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[140].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[140].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[140].vpeer, a_GoClPop[22].Section_1.v(0.5)")
+
+        # Elect Connection 141: cell 22, seg 1 (0.5) [0.5 on a_GoClPop[22].Section_1] -> cell 40, seg 1 (0.5) [0.5 on a_GoClPop[40].Section_1], weight: 4.0
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_A[141] = new GJ_0(0.5) }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[141] = new GJ_0(0.5) }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_A[141].weight = 4.0 }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[141].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[141].vpeer, a_GoClPop[40].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[141].vpeer, a_GoClPop[22].Section_1.v(0.5)")
+
+        # Elect Connection 142: cell 22, seg 1 (0.5) [0.5 on a_GoClPop[22].Section_1] -> cell 43, seg 1 (0.5) [0.5 on a_GoClPop[43].Section_1], weight: 2.0
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_A[142] = new GJ_0(0.5) }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[142] = new GJ_0(0.5) }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_A[142].weight = 2.0 }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[142].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[142].vpeer, a_GoClPop[43].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[142].vpeer, a_GoClPop[22].Section_1.v(0.5)")
+
+        # Elect Connection 143: cell 22, seg 1 (0.5) [0.5 on a_GoClPop[22].Section_1] -> cell 44, seg 1 (0.5) [0.5 on a_GoClPop[44].Section_1], weight: 8.0
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_A[143] = new GJ_0(0.5) }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[143] = new GJ_0(0.5) }")
+        h("a_GoClPop[22].Section_1 { syn_gocGJ_GJ_0_A[143].weight = 8.0 }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[143].weight = 8.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[143].vpeer, a_GoClPop[44].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[143].vpeer, a_GoClPop[22].Section_1.v(0.5)")
+
+        # Elect Connection 144: cell 23, seg 1 (0.5) [0.5 on a_GoClPop[23].Section_1] -> cell 32, seg 1 (0.5) [0.5 on a_GoClPop[32].Section_1], weight: 4.0
+        h("a_GoClPop[23].Section_1 { syn_gocGJ_GJ_0_A[144] = new GJ_0(0.5) }")
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_B[144] = new GJ_0(0.5) }")
+        h("a_GoClPop[23].Section_1 { syn_gocGJ_GJ_0_A[144].weight = 4.0 }")
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_B[144].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[144].vpeer, a_GoClPop[32].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[144].vpeer, a_GoClPop[23].Section_1.v(0.5)")
+
+        # Elect Connection 145: cell 23, seg 1 (0.5) [0.5 on a_GoClPop[23].Section_1] -> cell 41, seg 1 (0.5) [0.5 on a_GoClPop[41].Section_1], weight: 2.0
+        h("a_GoClPop[23].Section_1 { syn_gocGJ_GJ_0_A[145] = new GJ_0(0.5) }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[145] = new GJ_0(0.5) }")
+        h("a_GoClPop[23].Section_1 { syn_gocGJ_GJ_0_A[145].weight = 2.0 }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[145].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[145].vpeer, a_GoClPop[41].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[145].vpeer, a_GoClPop[23].Section_1.v(0.5)")
+
+        # Elect Connection 146: cell 24, seg 1 (0.5) [0.5 on a_GoClPop[24].Section_1] -> cell 28, seg 1 (0.5) [0.5 on a_GoClPop[28].Section_1], weight: 2.0
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_A[146] = new GJ_0(0.5) }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_B[146] = new GJ_0(0.5) }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_A[146].weight = 2.0 }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_B[146].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[146].vpeer, a_GoClPop[28].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[146].vpeer, a_GoClPop[24].Section_1.v(0.5)")
+
+        # Elect Connection 147: cell 24, seg 1 (0.5) [0.5 on a_GoClPop[24].Section_1] -> cell 32, seg 1 (0.5) [0.5 on a_GoClPop[32].Section_1], weight: 2.0
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_A[147] = new GJ_0(0.5) }")
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_B[147] = new GJ_0(0.5) }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_A[147].weight = 2.0 }")
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_B[147].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[147].vpeer, a_GoClPop[32].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[147].vpeer, a_GoClPop[24].Section_1.v(0.5)")
+
+        # Elect Connection 148: cell 24, seg 1 (0.5) [0.5 on a_GoClPop[24].Section_1] -> cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1], weight: 6.0
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_A[148] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[148] = new GJ_0(0.5) }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_A[148].weight = 6.0 }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[148].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[148].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[148].vpeer, a_GoClPop[24].Section_1.v(0.5)")
+
+        # Elect Connection 149: cell 24, seg 1 (0.5) [0.5 on a_GoClPop[24].Section_1] -> cell 44, seg 1 (0.5) [0.5 on a_GoClPop[44].Section_1], weight: 2.0
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_A[149] = new GJ_0(0.5) }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[149] = new GJ_0(0.5) }")
+        h("a_GoClPop[24].Section_1 { syn_gocGJ_GJ_0_A[149].weight = 2.0 }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[149].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[149].vpeer, a_GoClPop[44].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[149].vpeer, a_GoClPop[24].Section_1.v(0.5)")
+
+        # Elect Connection 150: cell 25, seg 1 (0.5) [0.5 on a_GoClPop[25].Section_1] -> cell 26, seg 1 (0.5) [0.5 on a_GoClPop[26].Section_1], weight: 8.0
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_A[150] = new GJ_0(0.5) }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[150] = new GJ_0(0.5) }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_A[150].weight = 8.0 }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_B[150].weight = 8.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[150].vpeer, a_GoClPop[26].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[150].vpeer, a_GoClPop[25].Section_1.v(0.5)")
+
+        # Elect Connection 151: cell 25, seg 1 (0.5) [0.5 on a_GoClPop[25].Section_1] -> cell 31, seg 1 (0.5) [0.5 on a_GoClPop[31].Section_1], weight: 2.0
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_A[151] = new GJ_0(0.5) }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[151] = new GJ_0(0.5) }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_A[151].weight = 2.0 }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[151].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[151].vpeer, a_GoClPop[31].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[151].vpeer, a_GoClPop[25].Section_1.v(0.5)")
+
+        # Elect Connection 152: cell 25, seg 1 (0.5) [0.5 on a_GoClPop[25].Section_1] -> cell 34, seg 1 (0.5) [0.5 on a_GoClPop[34].Section_1], weight: 2.0
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_A[152] = new GJ_0(0.5) }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[152] = new GJ_0(0.5) }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_A[152].weight = 2.0 }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_B[152].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[152].vpeer, a_GoClPop[34].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[152].vpeer, a_GoClPop[25].Section_1.v(0.5)")
+
+        # Elect Connection 153: cell 25, seg 1 (0.5) [0.5 on a_GoClPop[25].Section_1] -> cell 35, seg 1 (0.5) [0.5 on a_GoClPop[35].Section_1], weight: 4.0
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_A[153] = new GJ_0(0.5) }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[153] = new GJ_0(0.5) }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_A[153].weight = 4.0 }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[153].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[153].vpeer, a_GoClPop[35].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[153].vpeer, a_GoClPop[25].Section_1.v(0.5)")
+
+        # Elect Connection 154: cell 25, seg 1 (0.5) [0.5 on a_GoClPop[25].Section_1] -> cell 43, seg 1 (0.5) [0.5 on a_GoClPop[43].Section_1], weight: 2.0
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_A[154] = new GJ_0(0.5) }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[154] = new GJ_0(0.5) }")
+        h("a_GoClPop[25].Section_1 { syn_gocGJ_GJ_0_A[154].weight = 2.0 }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[154].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[154].vpeer, a_GoClPop[43].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[154].vpeer, a_GoClPop[25].Section_1.v(0.5)")
+
+        # Elect Connection 155: cell 26, seg 1 (0.5) [0.5 on a_GoClPop[26].Section_1] -> cell 31, seg 1 (0.5) [0.5 on a_GoClPop[31].Section_1], weight: 2.0
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_A[155] = new GJ_0(0.5) }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[155] = new GJ_0(0.5) }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_A[155].weight = 2.0 }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[155].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[155].vpeer, a_GoClPop[31].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[155].vpeer, a_GoClPop[26].Section_1.v(0.5)")
+
+        # Elect Connection 156: cell 26, seg 1 (0.5) [0.5 on a_GoClPop[26].Section_1] -> cell 33, seg 1 (0.5) [0.5 on a_GoClPop[33].Section_1], weight: 4.0
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_A[156] = new GJ_0(0.5) }")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_B[156] = new GJ_0(0.5) }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_A[156].weight = 4.0 }")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_B[156].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[156].vpeer, a_GoClPop[33].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[156].vpeer, a_GoClPop[26].Section_1.v(0.5)")
+
+        # Elect Connection 157: cell 26, seg 1 (0.5) [0.5 on a_GoClPop[26].Section_1] -> cell 35, seg 1 (0.5) [0.5 on a_GoClPop[35].Section_1], weight: 6.0
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_A[157] = new GJ_0(0.5) }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[157] = new GJ_0(0.5) }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_A[157].weight = 6.0 }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[157].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[157].vpeer, a_GoClPop[35].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[157].vpeer, a_GoClPop[26].Section_1.v(0.5)")
+
+        # Elect Connection 158: cell 26, seg 1 (0.5) [0.5 on a_GoClPop[26].Section_1] -> cell 40, seg 1 (0.5) [0.5 on a_GoClPop[40].Section_1], weight: 0.0
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_A[158] = new GJ_0(0.5) }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[158] = new GJ_0(0.5) }")
+        h("a_GoClPop[26].Section_1 { syn_gocGJ_GJ_0_A[158].weight = 0.0 }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[158].weight = 0.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[158].vpeer, a_GoClPop[40].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[158].vpeer, a_GoClPop[26].Section_1.v(0.5)")
+
+        # Elect Connection 159: cell 27, seg 1 (0.5) [0.5 on a_GoClPop[27].Section_1] -> cell 28, seg 1 (0.5) [0.5 on a_GoClPop[28].Section_1], weight: 4.0
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_A[159] = new GJ_0(0.5) }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_B[159] = new GJ_0(0.5) }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_A[159].weight = 4.0 }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_B[159].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[159].vpeer, a_GoClPop[28].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[159].vpeer, a_GoClPop[27].Section_1.v(0.5)")
+
+        # Elect Connection 160: cell 27, seg 1 (0.5) [0.5 on a_GoClPop[27].Section_1] -> cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1], weight: 4.0
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_A[160] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[160] = new GJ_0(0.5) }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_A[160].weight = 4.0 }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[160].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[160].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[160].vpeer, a_GoClPop[27].Section_1.v(0.5)")
+
+        # Elect Connection 161: cell 27, seg 1 (0.5) [0.5 on a_GoClPop[27].Section_1] -> cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1], weight: 2.0
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_A[161] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[161] = new GJ_0(0.5) }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_A[161].weight = 2.0 }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[161].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[161].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[161].vpeer, a_GoClPop[27].Section_1.v(0.5)")
+
+        # Elect Connection 162: cell 27, seg 1 (0.5) [0.5 on a_GoClPop[27].Section_1] -> cell 37, seg 1 (0.5) [0.5 on a_GoClPop[37].Section_1], weight: 6.0
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_A[162] = new GJ_0(0.5) }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[162] = new GJ_0(0.5) }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_A[162].weight = 6.0 }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[162].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[162].vpeer, a_GoClPop[37].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[162].vpeer, a_GoClPop[27].Section_1.v(0.5)")
+
+        # Elect Connection 163: cell 27, seg 1 (0.5) [0.5 on a_GoClPop[27].Section_1] -> cell 38, seg 1 (0.5) [0.5 on a_GoClPop[38].Section_1], weight: 2.0
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_A[163] = new GJ_0(0.5) }")
+        h("a_GoClPop[38].Section_1 { syn_gocGJ_GJ_0_B[163] = new GJ_0(0.5) }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_A[163].weight = 2.0 }")
+        h("a_GoClPop[38].Section_1 { syn_gocGJ_GJ_0_B[163].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[163].vpeer, a_GoClPop[38].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[163].vpeer, a_GoClPop[27].Section_1.v(0.5)")
+
+        # Elect Connection 164: cell 27, seg 1 (0.5) [0.5 on a_GoClPop[27].Section_1] -> cell 41, seg 1 (0.5) [0.5 on a_GoClPop[41].Section_1], weight: 2.0
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_A[164] = new GJ_0(0.5) }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[164] = new GJ_0(0.5) }")
+        h("a_GoClPop[27].Section_1 { syn_gocGJ_GJ_0_A[164].weight = 2.0 }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[164].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[164].vpeer, a_GoClPop[41].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[164].vpeer, a_GoClPop[27].Section_1.v(0.5)")
+
+        # Elect Connection 165: cell 28, seg 1 (0.5) [0.5 on a_GoClPop[28].Section_1] -> cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1], weight: 2.0
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_A[165] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[165] = new GJ_0(0.5) }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_A[165].weight = 2.0 }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_B[165].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[165].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[165].vpeer, a_GoClPop[28].Section_1.v(0.5)")
+
+        # Elect Connection 166: cell 28, seg 1 (0.5) [0.5 on a_GoClPop[28].Section_1] -> cell 32, seg 1 (0.5) [0.5 on a_GoClPop[32].Section_1], weight: 2.0
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_A[166] = new GJ_0(0.5) }")
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_B[166] = new GJ_0(0.5) }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_A[166].weight = 2.0 }")
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_B[166].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[166].vpeer, a_GoClPop[32].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[166].vpeer, a_GoClPop[28].Section_1.v(0.5)")
+
+        # Elect Connection 167: cell 28, seg 1 (0.5) [0.5 on a_GoClPop[28].Section_1] -> cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1], weight: 4.0
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_A[167] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[167] = new GJ_0(0.5) }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_A[167].weight = 4.0 }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[167].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[167].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[167].vpeer, a_GoClPop[28].Section_1.v(0.5)")
+
+        # Elect Connection 168: cell 28, seg 1 (0.5) [0.5 on a_GoClPop[28].Section_1] -> cell 37, seg 1 (0.5) [0.5 on a_GoClPop[37].Section_1], weight: 2.0
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_A[168] = new GJ_0(0.5) }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[168] = new GJ_0(0.5) }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_A[168].weight = 2.0 }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[168].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[168].vpeer, a_GoClPop[37].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[168].vpeer, a_GoClPop[28].Section_1.v(0.5)")
+
+        # Elect Connection 169: cell 28, seg 1 (0.5) [0.5 on a_GoClPop[28].Section_1] -> cell 41, seg 1 (0.5) [0.5 on a_GoClPop[41].Section_1], weight: 2.0
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_A[169] = new GJ_0(0.5) }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[169] = new GJ_0(0.5) }")
+        h("a_GoClPop[28].Section_1 { syn_gocGJ_GJ_0_A[169].weight = 2.0 }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[169].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[169].vpeer, a_GoClPop[41].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[169].vpeer, a_GoClPop[28].Section_1.v(0.5)")
+
+        # Elect Connection 170: cell 29, seg 1 (0.5) [0.5 on a_GoClPop[29].Section_1] -> cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1], weight: 2.0
+        h("a_GoClPop[29].Section_1 { syn_gocGJ_GJ_0_A[170] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[170] = new GJ_0(0.5) }")
+        h("a_GoClPop[29].Section_1 { syn_gocGJ_GJ_0_A[170].weight = 2.0 }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[170].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[170].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[170].vpeer, a_GoClPop[29].Section_1.v(0.5)")
+
+        # Elect Connection 171: cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1] -> cell 31, seg 1 (0.5) [0.5 on a_GoClPop[31].Section_1], weight: 2.0
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_A[171] = new GJ_0(0.5) }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[171] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_A[171].weight = 2.0 }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_B[171].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[171].vpeer, a_GoClPop[31].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[171].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+
+        # Elect Connection 172: cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1] -> cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1], weight: 2.0
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_A[172] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[172] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_A[172].weight = 2.0 }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[172].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[172].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[172].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+
+        # Elect Connection 173: cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1] -> cell 37, seg 1 (0.5) [0.5 on a_GoClPop[37].Section_1], weight: 4.0
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_A[173] = new GJ_0(0.5) }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[173] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_A[173].weight = 4.0 }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[173].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[173].vpeer, a_GoClPop[37].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[173].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+
+        # Elect Connection 174: cell 30, seg 1 (0.5) [0.5 on a_GoClPop[30].Section_1] -> cell 38, seg 1 (0.5) [0.5 on a_GoClPop[38].Section_1], weight: 2.0
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_A[174] = new GJ_0(0.5) }")
+        h("a_GoClPop[38].Section_1 { syn_gocGJ_GJ_0_B[174] = new GJ_0(0.5) }")
+        h("a_GoClPop[30].Section_1 { syn_gocGJ_GJ_0_A[174].weight = 2.0 }")
+        h("a_GoClPop[38].Section_1 { syn_gocGJ_GJ_0_B[174].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[174].vpeer, a_GoClPop[38].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[174].vpeer, a_GoClPop[30].Section_1.v(0.5)")
+
+        # Elect Connection 175: cell 31, seg 1 (0.5) [0.5 on a_GoClPop[31].Section_1] -> cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1], weight: 2.0
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_A[175] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[175] = new GJ_0(0.5) }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_A[175].weight = 2.0 }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[175].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[175].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[175].vpeer, a_GoClPop[31].Section_1.v(0.5)")
+
+        # Elect Connection 176: cell 31, seg 1 (0.5) [0.5 on a_GoClPop[31].Section_1] -> cell 37, seg 1 (0.5) [0.5 on a_GoClPop[37].Section_1], weight: 2.0
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_A[176] = new GJ_0(0.5) }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[176] = new GJ_0(0.5) }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_A[176].weight = 2.0 }")
+        h("a_GoClPop[37].Section_1 { syn_gocGJ_GJ_0_B[176].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[176].vpeer, a_GoClPop[37].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[176].vpeer, a_GoClPop[31].Section_1.v(0.5)")
+
+        # Elect Connection 177: cell 31, seg 1 (0.5) [0.5 on a_GoClPop[31].Section_1] -> cell 40, seg 1 (0.5) [0.5 on a_GoClPop[40].Section_1], weight: 2.0
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_A[177] = new GJ_0(0.5) }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[177] = new GJ_0(0.5) }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_A[177].weight = 2.0 }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[177].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[177].vpeer, a_GoClPop[40].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[177].vpeer, a_GoClPop[31].Section_1.v(0.5)")
+
+        # Elect Connection 178: cell 31, seg 1 (0.5) [0.5 on a_GoClPop[31].Section_1] -> cell 43, seg 1 (0.5) [0.5 on a_GoClPop[43].Section_1], weight: 2.0
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_A[178] = new GJ_0(0.5) }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[178] = new GJ_0(0.5) }")
+        h("a_GoClPop[31].Section_1 { syn_gocGJ_GJ_0_A[178].weight = 2.0 }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[178].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[178].vpeer, a_GoClPop[43].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[178].vpeer, a_GoClPop[31].Section_1.v(0.5)")
+
+        # Elect Connection 179: cell 32, seg 1 (0.5) [0.5 on a_GoClPop[32].Section_1] -> cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1], weight: 2.0
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_A[179] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[179] = new GJ_0(0.5) }")
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_A[179].weight = 2.0 }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_B[179].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[179].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[179].vpeer, a_GoClPop[32].Section_1.v(0.5)")
+
+        # Elect Connection 180: cell 32, seg 1 (0.5) [0.5 on a_GoClPop[32].Section_1] -> cell 41, seg 1 (0.5) [0.5 on a_GoClPop[41].Section_1], weight: 4.0
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_A[180] = new GJ_0(0.5) }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[180] = new GJ_0(0.5) }")
+        h("a_GoClPop[32].Section_1 { syn_gocGJ_GJ_0_A[180].weight = 4.0 }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[180].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[180].vpeer, a_GoClPop[41].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[180].vpeer, a_GoClPop[32].Section_1.v(0.5)")
+
+        # Elect Connection 181: cell 33, seg 1 (0.5) [0.5 on a_GoClPop[33].Section_1] -> cell 35, seg 1 (0.5) [0.5 on a_GoClPop[35].Section_1], weight: 4.0
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_A[181] = new GJ_0(0.5) }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[181] = new GJ_0(0.5) }")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_A[181].weight = 4.0 }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[181].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[181].vpeer, a_GoClPop[35].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[181].vpeer, a_GoClPop[33].Section_1.v(0.5)")
+
+        # Elect Connection 182: cell 33, seg 1 (0.5) [0.5 on a_GoClPop[33].Section_1] -> cell 42, seg 1 (0.5) [0.5 on a_GoClPop[42].Section_1], weight: 4.0
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_A[182] = new GJ_0(0.5) }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[182] = new GJ_0(0.5) }")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_A[182].weight = 4.0 }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[182].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[182].vpeer, a_GoClPop[42].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[182].vpeer, a_GoClPop[33].Section_1.v(0.5)")
+
+        # Elect Connection 183: cell 33, seg 1 (0.5) [0.5 on a_GoClPop[33].Section_1] -> cell 43, seg 1 (0.5) [0.5 on a_GoClPop[43].Section_1], weight: 2.0
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_A[183] = new GJ_0(0.5) }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[183] = new GJ_0(0.5) }")
+        h("a_GoClPop[33].Section_1 { syn_gocGJ_GJ_0_A[183].weight = 2.0 }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[183].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[183].vpeer, a_GoClPop[43].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[183].vpeer, a_GoClPop[33].Section_1.v(0.5)")
+
+        # Elect Connection 184: cell 34, seg 1 (0.5) [0.5 on a_GoClPop[34].Section_1] -> cell 35, seg 1 (0.5) [0.5 on a_GoClPop[35].Section_1], weight: 2.0
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_A[184] = new GJ_0(0.5) }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[184] = new GJ_0(0.5) }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_A[184].weight = 2.0 }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_B[184].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[184].vpeer, a_GoClPop[35].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[184].vpeer, a_GoClPop[34].Section_1.v(0.5)")
+
+        # Elect Connection 185: cell 34, seg 1 (0.5) [0.5 on a_GoClPop[34].Section_1] -> cell 42, seg 1 (0.5) [0.5 on a_GoClPop[42].Section_1], weight: 2.0
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_A[185] = new GJ_0(0.5) }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[185] = new GJ_0(0.5) }")
+        h("a_GoClPop[34].Section_1 { syn_gocGJ_GJ_0_A[185].weight = 2.0 }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[185].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[185].vpeer, a_GoClPop[42].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[185].vpeer, a_GoClPop[34].Section_1.v(0.5)")
+
+        # Elect Connection 186: cell 35, seg 1 (0.5) [0.5 on a_GoClPop[35].Section_1] -> cell 42, seg 1 (0.5) [0.5 on a_GoClPop[42].Section_1], weight: 2.0
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_A[186] = new GJ_0(0.5) }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[186] = new GJ_0(0.5) }")
+        h("a_GoClPop[35].Section_1 { syn_gocGJ_GJ_0_A[186].weight = 2.0 }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[186].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[186].vpeer, a_GoClPop[42].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[186].vpeer, a_GoClPop[35].Section_1.v(0.5)")
+
+        # Elect Connection 187: cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1] -> cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1], weight: 2.0
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_A[187] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[187] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_A[187].weight = 2.0 }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_B[187].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[187].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[187].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+
+        # Elect Connection 188: cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1] -> cell 40, seg 1 (0.5) [0.5 on a_GoClPop[40].Section_1], weight: 2.0
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_A[188] = new GJ_0(0.5) }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[188] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_A[188].weight = 2.0 }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[188].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[188].vpeer, a_GoClPop[40].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[188].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+
+        # Elect Connection 189: cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1] -> cell 41, seg 1 (0.5) [0.5 on a_GoClPop[41].Section_1], weight: 2.0
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_A[189] = new GJ_0(0.5) }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[189] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_A[189].weight = 2.0 }")
+        h("a_GoClPop[41].Section_1 { syn_gocGJ_GJ_0_B[189].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[189].vpeer, a_GoClPop[41].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[189].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+
+        # Elect Connection 190: cell 36, seg 1 (0.5) [0.5 on a_GoClPop[36].Section_1] -> cell 44, seg 1 (0.5) [0.5 on a_GoClPop[44].Section_1], weight: 0.0
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_A[190] = new GJ_0(0.5) }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[190] = new GJ_0(0.5) }")
+        h("a_GoClPop[36].Section_1 { syn_gocGJ_GJ_0_A[190].weight = 0.0 }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[190].weight = 0.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[190].vpeer, a_GoClPop[44].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[190].vpeer, a_GoClPop[36].Section_1.v(0.5)")
+
+        # Elect Connection 191: cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1] -> cell 40, seg 1 (0.5) [0.5 on a_GoClPop[40].Section_1], weight: 6.0
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_A[191] = new GJ_0(0.5) }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[191] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_A[191].weight = 6.0 }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_B[191].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[191].vpeer, a_GoClPop[40].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[191].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+
+        # Elect Connection 192: cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1] -> cell 42, seg 1 (0.5) [0.5 on a_GoClPop[42].Section_1], weight: 2.0
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_A[192] = new GJ_0(0.5) }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[192] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_A[192].weight = 2.0 }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[192].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[192].vpeer, a_GoClPop[42].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[192].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+
+        # Elect Connection 193: cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1] -> cell 43, seg 1 (0.5) [0.5 on a_GoClPop[43].Section_1], weight: 4.0
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_A[193] = new GJ_0(0.5) }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[193] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_A[193].weight = 4.0 }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[193].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[193].vpeer, a_GoClPop[43].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[193].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+
+        # Elect Connection 194: cell 39, seg 1 (0.5) [0.5 on a_GoClPop[39].Section_1] -> cell 44, seg 1 (0.5) [0.5 on a_GoClPop[44].Section_1], weight: 4.0
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_A[194] = new GJ_0(0.5) }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[194] = new GJ_0(0.5) }")
+        h("a_GoClPop[39].Section_1 { syn_gocGJ_GJ_0_A[194].weight = 4.0 }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[194].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[194].vpeer, a_GoClPop[44].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[194].vpeer, a_GoClPop[39].Section_1.v(0.5)")
+
+        # Elect Connection 195: cell 40, seg 1 (0.5) [0.5 on a_GoClPop[40].Section_1] -> cell 42, seg 1 (0.5) [0.5 on a_GoClPop[42].Section_1], weight: 4.0
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_A[195] = new GJ_0(0.5) }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[195] = new GJ_0(0.5) }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_A[195].weight = 4.0 }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_B[195].weight = 4.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[195].vpeer, a_GoClPop[42].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[195].vpeer, a_GoClPop[40].Section_1.v(0.5)")
+
+        # Elect Connection 196: cell 40, seg 1 (0.5) [0.5 on a_GoClPop[40].Section_1] -> cell 44, seg 1 (0.5) [0.5 on a_GoClPop[44].Section_1], weight: 2.0
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_A[196] = new GJ_0(0.5) }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[196] = new GJ_0(0.5) }")
+        h("a_GoClPop[40].Section_1 { syn_gocGJ_GJ_0_A[196].weight = 2.0 }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[196].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[196].vpeer, a_GoClPop[44].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[196].vpeer, a_GoClPop[40].Section_1.v(0.5)")
+
+        # Elect Connection 197: cell 42, seg 1 (0.5) [0.5 on a_GoClPop[42].Section_1] -> cell 43, seg 1 (0.5) [0.5 on a_GoClPop[43].Section_1], weight: 6.0
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_A[197] = new GJ_0(0.5) }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[197] = new GJ_0(0.5) }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_A[197].weight = 6.0 }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_B[197].weight = 6.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[197].vpeer, a_GoClPop[43].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[197].vpeer, a_GoClPop[42].Section_1.v(0.5)")
+
+        # Elect Connection 198: cell 42, seg 1 (0.5) [0.5 on a_GoClPop[42].Section_1] -> cell 44, seg 1 (0.5) [0.5 on a_GoClPop[44].Section_1], weight: 0.0
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_A[198] = new GJ_0(0.5) }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[198] = new GJ_0(0.5) }")
+        h("a_GoClPop[42].Section_1 { syn_gocGJ_GJ_0_A[198].weight = 0.0 }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[198].weight = 0.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[198].vpeer, a_GoClPop[44].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[198].vpeer, a_GoClPop[42].Section_1.v(0.5)")
+
+        # Elect Connection 199: cell 43, seg 1 (0.5) [0.5 on a_GoClPop[43].Section_1] -> cell 44, seg 1 (0.5) [0.5 on a_GoClPop[44].Section_1], weight: 2.0
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_A[199] = new GJ_0(0.5) }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[199] = new GJ_0(0.5) }")
+        h("a_GoClPop[43].Section_1 { syn_gocGJ_GJ_0_A[199].weight = 2.0 }")
+        h("a_GoClPop[44].Section_1 { syn_gocGJ_GJ_0_B[199].weight = 2.0 }")
+        h("setpointer syn_gocGJ_GJ_0_A[199].vpeer, a_GoClPop[44].Section_1.v(0.5)")
+        h("setpointer syn_gocGJ_GJ_0_B[199].vpeer, a_GoClPop[43].Section_1.v(0.5)")
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop43_Soma")
+        h("a_GoClPop[43].Soma { explicitInput_MF_Bursta_GoClPop43_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop43_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop43",0, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop43_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop43_Soma")
+        h("a_GoClPop[43].Soma { explicitInput_MF_Bursta_GoClPop43_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop43_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop43",1, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop43_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop43_Soma")
+        h("a_GoClPop[43].Soma { explicitInput_MF_Bursta_GoClPop43_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop43_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop43",2, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop43_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop43_Soma")
+        h("a_GoClPop[43].Soma { explicitInput_MF_Bursta_GoClPop43_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop43_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop43",3, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop43_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop19_Soma")
+        h("a_GoClPop[19].Soma { explicitInput_MF_Bursta_GoClPop19_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop19_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop19",4, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop19_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop19_Soma")
+        h("a_GoClPop[19].Soma { explicitInput_MF_Bursta_GoClPop19_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop19_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop19",5, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop19_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop19_Soma")
+        h("a_GoClPop[19].Soma { explicitInput_MF_Bursta_GoClPop19_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop19_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop19",6, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop19_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop19_Soma")
+        h("a_GoClPop[19].Soma { explicitInput_MF_Bursta_GoClPop19_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop19_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop19",7, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop19_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop8_Soma")
+        h("a_GoClPop[8].Soma { explicitInput_MF_Bursta_GoClPop8_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop8_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop8",8, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop8_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop8_Soma")
+        h("a_GoClPop[8].Soma { explicitInput_MF_Bursta_GoClPop8_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop8_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop8",9, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop8_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop8_Soma")
+        h("a_GoClPop[8].Soma { explicitInput_MF_Bursta_GoClPop8_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop8_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop8",10, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop8_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop8_Soma")
+        h("a_GoClPop[8].Soma { explicitInput_MF_Bursta_GoClPop8_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop8_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop8",11, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop8_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop10_Soma")
+        h("a_GoClPop[10].Soma { explicitInput_MF_Bursta_GoClPop10_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop10_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop10",12, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop10_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop10_Soma")
+        h("a_GoClPop[10].Soma { explicitInput_MF_Bursta_GoClPop10_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop10_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop10",13, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop10_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop10_Soma")
+        h("a_GoClPop[10].Soma { explicitInput_MF_Bursta_GoClPop10_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop10_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop10",14, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop10_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
+
+        # Adding single input: Component(id=null type=explicitInput)
+        h("objref explicitInput_MF_Bursta_GoClPop10_Soma")
+        h("a_GoClPop[10].Soma { explicitInput_MF_Bursta_GoClPop10_Soma = new MF_Burst(0.5) } ")
+        rand = h.Random()
+        self.randoms.append(rand)
+        #print("Seeding random generator on explicitInput_MF_Bursta_GoClPop10_Soma with stim seed %s"%(self.seed))
+        self._init_stim_randomizer(rand,"explicitInput_MF_Bursta_GoClPop10",15, self.seed)
+        rand.negexp(1)
+        h.explicitInput_MF_Bursta_GoClPop10_Soma.noiseFromRandom(rand)
+        self.next_spiking_input_id+=1
 
         trec = h.Vector()
         trec.record(h._ref_t)
@@ -483,6 +3114,156 @@ class NeuronSimulation():
         h(' { v_14_Volts_file = new Vector() } ')
         h(' { v_14_Volts_file.record(&a_GoClPop[14].Soma.v(0.5)) } ')
         h.v_14_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/15/GoCl/v
+        h(' objectvar v_15_Volts_file ')
+        h(' { v_15_Volts_file = new Vector() } ')
+        h(' { v_15_Volts_file.record(&a_GoClPop[15].Soma.v(0.5)) } ')
+        h.v_15_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/16/GoCl/v
+        h(' objectvar v_16_Volts_file ')
+        h(' { v_16_Volts_file = new Vector() } ')
+        h(' { v_16_Volts_file.record(&a_GoClPop[16].Soma.v(0.5)) } ')
+        h.v_16_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/17/GoCl/v
+        h(' objectvar v_17_Volts_file ')
+        h(' { v_17_Volts_file = new Vector() } ')
+        h(' { v_17_Volts_file.record(&a_GoClPop[17].Soma.v(0.5)) } ')
+        h.v_17_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/18/GoCl/v
+        h(' objectvar v_18_Volts_file ')
+        h(' { v_18_Volts_file = new Vector() } ')
+        h(' { v_18_Volts_file.record(&a_GoClPop[18].Soma.v(0.5)) } ')
+        h.v_18_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/19/GoCl/v
+        h(' objectvar v_19_Volts_file ')
+        h(' { v_19_Volts_file = new Vector() } ')
+        h(' { v_19_Volts_file.record(&a_GoClPop[19].Soma.v(0.5)) } ')
+        h.v_19_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/20/GoCl/v
+        h(' objectvar v_20_Volts_file ')
+        h(' { v_20_Volts_file = new Vector() } ')
+        h(' { v_20_Volts_file.record(&a_GoClPop[20].Soma.v(0.5)) } ')
+        h.v_20_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/21/GoCl/v
+        h(' objectvar v_21_Volts_file ')
+        h(' { v_21_Volts_file = new Vector() } ')
+        h(' { v_21_Volts_file.record(&a_GoClPop[21].Soma.v(0.5)) } ')
+        h.v_21_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/22/GoCl/v
+        h(' objectvar v_22_Volts_file ')
+        h(' { v_22_Volts_file = new Vector() } ')
+        h(' { v_22_Volts_file.record(&a_GoClPop[22].Soma.v(0.5)) } ')
+        h.v_22_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/23/GoCl/v
+        h(' objectvar v_23_Volts_file ')
+        h(' { v_23_Volts_file = new Vector() } ')
+        h(' { v_23_Volts_file.record(&a_GoClPop[23].Soma.v(0.5)) } ')
+        h.v_23_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/24/GoCl/v
+        h(' objectvar v_24_Volts_file ')
+        h(' { v_24_Volts_file = new Vector() } ')
+        h(' { v_24_Volts_file.record(&a_GoClPop[24].Soma.v(0.5)) } ')
+        h.v_24_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/25/GoCl/v
+        h(' objectvar v_25_Volts_file ')
+        h(' { v_25_Volts_file = new Vector() } ')
+        h(' { v_25_Volts_file.record(&a_GoClPop[25].Soma.v(0.5)) } ')
+        h.v_25_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/26/GoCl/v
+        h(' objectvar v_26_Volts_file ')
+        h(' { v_26_Volts_file = new Vector() } ')
+        h(' { v_26_Volts_file.record(&a_GoClPop[26].Soma.v(0.5)) } ')
+        h.v_26_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/27/GoCl/v
+        h(' objectvar v_27_Volts_file ')
+        h(' { v_27_Volts_file = new Vector() } ')
+        h(' { v_27_Volts_file.record(&a_GoClPop[27].Soma.v(0.5)) } ')
+        h.v_27_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/28/GoCl/v
+        h(' objectvar v_28_Volts_file ')
+        h(' { v_28_Volts_file = new Vector() } ')
+        h(' { v_28_Volts_file.record(&a_GoClPop[28].Soma.v(0.5)) } ')
+        h.v_28_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/29/GoCl/v
+        h(' objectvar v_29_Volts_file ')
+        h(' { v_29_Volts_file = new Vector() } ')
+        h(' { v_29_Volts_file.record(&a_GoClPop[29].Soma.v(0.5)) } ')
+        h.v_29_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/30/GoCl/v
+        h(' objectvar v_30_Volts_file ')
+        h(' { v_30_Volts_file = new Vector() } ')
+        h(' { v_30_Volts_file.record(&a_GoClPop[30].Soma.v(0.5)) } ')
+        h.v_30_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/31/GoCl/v
+        h(' objectvar v_31_Volts_file ')
+        h(' { v_31_Volts_file = new Vector() } ')
+        h(' { v_31_Volts_file.record(&a_GoClPop[31].Soma.v(0.5)) } ')
+        h.v_31_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/32/GoCl/v
+        h(' objectvar v_32_Volts_file ')
+        h(' { v_32_Volts_file = new Vector() } ')
+        h(' { v_32_Volts_file.record(&a_GoClPop[32].Soma.v(0.5)) } ')
+        h.v_32_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/33/GoCl/v
+        h(' objectvar v_33_Volts_file ')
+        h(' { v_33_Volts_file = new Vector() } ')
+        h(' { v_33_Volts_file.record(&a_GoClPop[33].Soma.v(0.5)) } ')
+        h.v_33_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/34/GoCl/v
+        h(' objectvar v_34_Volts_file ')
+        h(' { v_34_Volts_file = new Vector() } ')
+        h(' { v_34_Volts_file.record(&a_GoClPop[34].Soma.v(0.5)) } ')
+        h.v_34_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/35/GoCl/v
+        h(' objectvar v_35_Volts_file ')
+        h(' { v_35_Volts_file = new Vector() } ')
+        h(' { v_35_Volts_file.record(&a_GoClPop[35].Soma.v(0.5)) } ')
+        h.v_35_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/36/GoCl/v
+        h(' objectvar v_36_Volts_file ')
+        h(' { v_36_Volts_file = new Vector() } ')
+        h(' { v_36_Volts_file.record(&a_GoClPop[36].Soma.v(0.5)) } ')
+        h.v_36_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/37/GoCl/v
+        h(' objectvar v_37_Volts_file ')
+        h(' { v_37_Volts_file = new Vector() } ')
+        h(' { v_37_Volts_file.record(&a_GoClPop[37].Soma.v(0.5)) } ')
+        h.v_37_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/38/GoCl/v
+        h(' objectvar v_38_Volts_file ')
+        h(' { v_38_Volts_file = new Vector() } ')
+        h(' { v_38_Volts_file.record(&a_GoClPop[38].Soma.v(0.5)) } ')
+        h.v_38_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/39/GoCl/v
+        h(' objectvar v_39_Volts_file ')
+        h(' { v_39_Volts_file = new Vector() } ')
+        h(' { v_39_Volts_file.record(&a_GoClPop[39].Soma.v(0.5)) } ')
+        h.v_39_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/40/GoCl/v
+        h(' objectvar v_40_Volts_file ')
+        h(' { v_40_Volts_file = new Vector() } ')
+        h(' { v_40_Volts_file.record(&a_GoClPop[40].Soma.v(0.5)) } ')
+        h.v_40_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/41/GoCl/v
+        h(' objectvar v_41_Volts_file ')
+        h(' { v_41_Volts_file = new Vector() } ')
+        h(' { v_41_Volts_file.record(&a_GoClPop[41].Soma.v(0.5)) } ')
+        h.v_41_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/42/GoCl/v
+        h(' objectvar v_42_Volts_file ')
+        h(' { v_42_Volts_file = new Vector() } ')
+        h(' { v_42_Volts_file.record(&a_GoClPop[42].Soma.v(0.5)) } ')
+        h.v_42_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/43/GoCl/v
+        h(' objectvar v_43_Volts_file ')
+        h(' { v_43_Volts_file = new Vector() } ')
+        h(' { v_43_Volts_file.record(&a_GoClPop[43].Soma.v(0.5)) } ')
+        h.v_43_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
+        # Column: GoClPop/44/GoCl/v
+        h(' objectvar v_44_Volts_file ')
+        h(' { v_44_Volts_file = new Vector() } ')
+        h(' { v_44_Volts_file.record(&a_GoClPop[44].Soma.v(0.5)) } ')
+        h.v_44_Volts_file.resize((h.tstop * h.steps_per_ms) + 1)
 
         # ######################   File to save: sim_gocnetGoCl.v.spikes (Events_file)
         h(' objectvar spiketimes_Events_file, t_spiketimes_Events_file ')
@@ -534,6 +3315,96 @@ class NeuronSimulation():
         # Column: GoClPop/14/GoCl (14) a_GoClPop[14].Soma
         h(' a_GoClPop[14].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
         h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 14) } ')
+        # Column: GoClPop/15/GoCl (15) a_GoClPop[15].Soma
+        h(' a_GoClPop[15].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 15) } ')
+        # Column: GoClPop/16/GoCl (16) a_GoClPop[16].Soma
+        h(' a_GoClPop[16].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 16) } ')
+        # Column: GoClPop/17/GoCl (17) a_GoClPop[17].Soma
+        h(' a_GoClPop[17].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 17) } ')
+        # Column: GoClPop/18/GoCl (18) a_GoClPop[18].Soma
+        h(' a_GoClPop[18].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 18) } ')
+        # Column: GoClPop/19/GoCl (19) a_GoClPop[19].Soma
+        h(' a_GoClPop[19].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 19) } ')
+        # Column: GoClPop/20/GoCl (20) a_GoClPop[20].Soma
+        h(' a_GoClPop[20].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 20) } ')
+        # Column: GoClPop/21/GoCl (21) a_GoClPop[21].Soma
+        h(' a_GoClPop[21].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 21) } ')
+        # Column: GoClPop/22/GoCl (22) a_GoClPop[22].Soma
+        h(' a_GoClPop[22].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 22) } ')
+        # Column: GoClPop/23/GoCl (23) a_GoClPop[23].Soma
+        h(' a_GoClPop[23].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 23) } ')
+        # Column: GoClPop/24/GoCl (24) a_GoClPop[24].Soma
+        h(' a_GoClPop[24].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 24) } ')
+        # Column: GoClPop/25/GoCl (25) a_GoClPop[25].Soma
+        h(' a_GoClPop[25].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 25) } ')
+        # Column: GoClPop/26/GoCl (26) a_GoClPop[26].Soma
+        h(' a_GoClPop[26].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 26) } ')
+        # Column: GoClPop/27/GoCl (27) a_GoClPop[27].Soma
+        h(' a_GoClPop[27].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 27) } ')
+        # Column: GoClPop/28/GoCl (28) a_GoClPop[28].Soma
+        h(' a_GoClPop[28].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 28) } ')
+        # Column: GoClPop/29/GoCl (29) a_GoClPop[29].Soma
+        h(' a_GoClPop[29].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 29) } ')
+        # Column: GoClPop/30/GoCl (30) a_GoClPop[30].Soma
+        h(' a_GoClPop[30].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 30) } ')
+        # Column: GoClPop/31/GoCl (31) a_GoClPop[31].Soma
+        h(' a_GoClPop[31].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 31) } ')
+        # Column: GoClPop/32/GoCl (32) a_GoClPop[32].Soma
+        h(' a_GoClPop[32].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 32) } ')
+        # Column: GoClPop/33/GoCl (33) a_GoClPop[33].Soma
+        h(' a_GoClPop[33].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 33) } ')
+        # Column: GoClPop/34/GoCl (34) a_GoClPop[34].Soma
+        h(' a_GoClPop[34].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 34) } ')
+        # Column: GoClPop/35/GoCl (35) a_GoClPop[35].Soma
+        h(' a_GoClPop[35].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 35) } ')
+        # Column: GoClPop/36/GoCl (36) a_GoClPop[36].Soma
+        h(' a_GoClPop[36].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 36) } ')
+        # Column: GoClPop/37/GoCl (37) a_GoClPop[37].Soma
+        h(' a_GoClPop[37].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 37) } ')
+        # Column: GoClPop/38/GoCl (38) a_GoClPop[38].Soma
+        h(' a_GoClPop[38].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 38) } ')
+        # Column: GoClPop/39/GoCl (39) a_GoClPop[39].Soma
+        h(' a_GoClPop[39].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 39) } ')
+        # Column: GoClPop/40/GoCl (40) a_GoClPop[40].Soma
+        h(' a_GoClPop[40].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 40) } ')
+        # Column: GoClPop/41/GoCl (41) a_GoClPop[41].Soma
+        h(' a_GoClPop[41].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 41) } ')
+        # Column: GoClPop/42/GoCl (42) a_GoClPop[42].Soma
+        h(' a_GoClPop[42].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 42) } ')
+        # Column: GoClPop/43/GoCl (43) a_GoClPop[43].Soma
+        h(' a_GoClPop[43].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 43) } ')
+        # Column: GoClPop/44/GoCl (44) a_GoClPop[44].Soma
+        h(' a_GoClPop[44].Soma { netConnSpike_Events_file = new NetCon(&v(0.5), nil, 0.0, 0, 1) } ')
+        h(' { netConnSpike_Events_file.record(t_spiketimes_Events_file, spiketimes_Events_file, 44) } ')
 
         # ######################   File to save: time.dat (time)
         # Column: time
@@ -575,7 +3446,7 @@ class NeuronSimulation():
     # This is copied from NetPyNE: https://github.com/Neurosim-lab/netpyne/blob/master/netpyne/simFuncs.py
     ###############################################################################
     def _id32 (self,obj): 
-        return int(hashlib.md5(obj).hexdigest()[0:8],16)  # convert 8 first chars of md5 hash in base 16 to int
+        return int(hashlib.md5(obj.encode('utf-8')).hexdigest()[0:8],16)  # convert 8 first chars of md5 hash in base 16 to int
 
 
     ###############################################################################
@@ -621,12 +3492,42 @@ class NeuronSimulation():
         py_v_12_Volts_file = [ float(x  / 1000.0) for x in h.v_12_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
         py_v_13_Volts_file = [ float(x  / 1000.0) for x in h.v_13_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
         py_v_14_Volts_file = [ float(x  / 1000.0) for x in h.v_14_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_15_Volts_file = [ float(x  / 1000.0) for x in h.v_15_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_16_Volts_file = [ float(x  / 1000.0) for x in h.v_16_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_17_Volts_file = [ float(x  / 1000.0) for x in h.v_17_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_18_Volts_file = [ float(x  / 1000.0) for x in h.v_18_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_19_Volts_file = [ float(x  / 1000.0) for x in h.v_19_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_20_Volts_file = [ float(x  / 1000.0) for x in h.v_20_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_21_Volts_file = [ float(x  / 1000.0) for x in h.v_21_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_22_Volts_file = [ float(x  / 1000.0) for x in h.v_22_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_23_Volts_file = [ float(x  / 1000.0) for x in h.v_23_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_24_Volts_file = [ float(x  / 1000.0) for x in h.v_24_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_25_Volts_file = [ float(x  / 1000.0) for x in h.v_25_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_26_Volts_file = [ float(x  / 1000.0) for x in h.v_26_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_27_Volts_file = [ float(x  / 1000.0) for x in h.v_27_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_28_Volts_file = [ float(x  / 1000.0) for x in h.v_28_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_29_Volts_file = [ float(x  / 1000.0) for x in h.v_29_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_30_Volts_file = [ float(x  / 1000.0) for x in h.v_30_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_31_Volts_file = [ float(x  / 1000.0) for x in h.v_31_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_32_Volts_file = [ float(x  / 1000.0) for x in h.v_32_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_33_Volts_file = [ float(x  / 1000.0) for x in h.v_33_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_34_Volts_file = [ float(x  / 1000.0) for x in h.v_34_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_35_Volts_file = [ float(x  / 1000.0) for x in h.v_35_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_36_Volts_file = [ float(x  / 1000.0) for x in h.v_36_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_37_Volts_file = [ float(x  / 1000.0) for x in h.v_37_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_38_Volts_file = [ float(x  / 1000.0) for x in h.v_38_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_39_Volts_file = [ float(x  / 1000.0) for x in h.v_39_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_40_Volts_file = [ float(x  / 1000.0) for x in h.v_40_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_41_Volts_file = [ float(x  / 1000.0) for x in h.v_41_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_42_Volts_file = [ float(x  / 1000.0) for x in h.v_42_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_43_Volts_file = [ float(x  / 1000.0) for x in h.v_43_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
+        py_v_44_Volts_file = [ float(x  / 1000.0) for x in h.v_44_Volts_file.to_python() ]  # Convert to Python list for speed, variable has dim: voltage
 
         f_Volts_file_f2 = open('sim_gocnetGoCl.v.dat', 'w')
         num_points = len(py_v_time)  # Simulation may have been stopped before tstop...
 
         for i in range(num_points):
-            f_Volts_file_f2.write('%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t\n' % (py_v_time[i], py_v_0_Volts_file[i], py_v_1_Volts_file[i], py_v_2_Volts_file[i], py_v_3_Volts_file[i], py_v_4_Volts_file[i], py_v_5_Volts_file[i], py_v_6_Volts_file[i], py_v_7_Volts_file[i], py_v_8_Volts_file[i], py_v_9_Volts_file[i], py_v_10_Volts_file[i], py_v_11_Volts_file[i], py_v_12_Volts_file[i], py_v_13_Volts_file[i], py_v_14_Volts_file[i], ))
+            f_Volts_file_f2.write('%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t\n' % (py_v_time[i], py_v_0_Volts_file[i], py_v_1_Volts_file[i], py_v_2_Volts_file[i], py_v_3_Volts_file[i], py_v_4_Volts_file[i], py_v_5_Volts_file[i], py_v_6_Volts_file[i], py_v_7_Volts_file[i], py_v_8_Volts_file[i], py_v_9_Volts_file[i], py_v_10_Volts_file[i], py_v_11_Volts_file[i], py_v_12_Volts_file[i], py_v_13_Volts_file[i], py_v_14_Volts_file[i], py_v_15_Volts_file[i], py_v_16_Volts_file[i], py_v_17_Volts_file[i], py_v_18_Volts_file[i], py_v_19_Volts_file[i], py_v_20_Volts_file[i], py_v_21_Volts_file[i], py_v_22_Volts_file[i], py_v_23_Volts_file[i], py_v_24_Volts_file[i], py_v_25_Volts_file[i], py_v_26_Volts_file[i], py_v_27_Volts_file[i], py_v_28_Volts_file[i], py_v_29_Volts_file[i], py_v_30_Volts_file[i], py_v_31_Volts_file[i], py_v_32_Volts_file[i], py_v_33_Volts_file[i], py_v_34_Volts_file[i], py_v_35_Volts_file[i], py_v_36_Volts_file[i], py_v_37_Volts_file[i], py_v_38_Volts_file[i], py_v_39_Volts_file[i], py_v_40_Volts_file[i], py_v_41_Volts_file[i], py_v_42_Volts_file[i], py_v_43_Volts_file[i], py_v_44_Volts_file[i], ))
         f_Volts_file_f2.close()
         print("Saved data to: sim_gocnetGoCl.v.dat")
 
@@ -653,7 +3554,7 @@ class NeuronSimulation():
 
 if __name__ == '__main__':
 
-    ns = NeuronSimulation(tstop=5000, dt=0.025, seed=12345)
+    ns = NeuronSimulation(tstop=5000, dt=0.025, seed=123)
 
     ns.run()
 
