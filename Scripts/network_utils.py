@@ -7,8 +7,19 @@ import math
 	- Distributing GoC in space
 	- Setting up GJ coupling probability and conductance
 '''
-
-def GoC_locate( N=1, x=350,y=350,z=80):
+def locate_GoC( nGoC, volume, GoC_locate_type, density ):
+    x,y,z = volume
+    if nGoC==0:
+	    if GoC_loc_type=='Density':
+		    
+		    GoC_pos = GoC_density_locate(density, x, y, z)
+			nGoC = GoC_pos.shape[0]
+    else:
+	    if GoC_locate_type=='Density':
+		    GoC_pos = GoC_throw( nGoC, x, y, z)
+    return nGoC, GoC_pos
+	
+def GoC_throw( N=1, x=350,y=350,z=80):
 	# Randomly distribute 'N' Golgi Cells in [0,x) X [0, y) X [0,z)
 	GoC_pos = np.random.random( [N,3] ) * [x,y,z]  #in um
 	#id = np.argsort( GoC_pos[:,1]+GoC_pos[:,2] )
@@ -63,6 +74,19 @@ def set_GJ_strength_Szo2016_oneGJ( radDist ):
 	GJw = 2*np.around(CC/5)
 	return GJw
 	
+	
+params["MF_GoC_pairs"], params["MF_GoC_wt"] = nu.MF_conn( nMFInput, MFInput_loc_type, params["GoC_pos"], MFInput_conntype, MFInput_connprob, MFInput_connGoC)
+
+def MF_conn( nMF, MF_loc_type, volume, density, GoC_pos, MF_conntype, MF_connprob, MF_connGoC):	
+	nMF, MF_pos = locate_GoC( nMF, volume, MF_locate_type, density)
+	nGoC = GoC_pos.shape[0]
+	if MF_conntype == 'random_prob':
+		MF_pairs = randdist_MF_syn( nMF, nGoC, pConn=0.1, nConn=0 )
+	elif MF_conntype == 'random_sample':
+
+
+	return nMF, MF_pos, MF_GoC_pairs, MF_GoC_wt
+
 def randdist_MF_syn( nMF, nGoC, pConn=0.1, nConn=0 ):
 	''' 
 	Randomly connect a population of nMF mossy fibres to nGoC Golgi cells, wither with probability of connection pConn with iid draws (default if pConn>0). Otherwise by choosing (without replacement) nConn fibres for each GoC i.e. same number of synapses for each GoC.

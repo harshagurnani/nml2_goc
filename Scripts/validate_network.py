@@ -18,3 +18,5 @@ def gapJuncAnalysis( GJ_pairs, GJ_wt, nGoC=0 ):
 		net_GJ[ goc ] = GJ_wt[ GJ_pairs[:,0] == goc ].sum() + GJ_wt[ GJ_pairs[:,1] == goc ].sum()
 		
 	return nGJ_per_cell, net_GJ
+	
+def FR
