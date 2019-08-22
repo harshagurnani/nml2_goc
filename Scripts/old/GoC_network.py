@@ -52,6 +52,8 @@ def create_GoC_network( duration, dt, seed, N_goc=0, run=False, prob_type='Boltz
 	net = nml.Network( id="gocNetwork", type="networkWithTemperature" , temperature="23 degC" )
 	net_doc = nml.NeuroMLDocument( id=net.id )
 	net_doc.networks.append( net )
+	net_doc.includes.append( goc_type )
+	
 	net.populations.append( goc_pop )
 	
 	#Add locations for GoC instances in the population:
@@ -81,10 +83,14 @@ def create_GoC_network( duration, dt, seed, N_goc=0, run=False, prob_type='Boltz
 	#net.populations.append( MF_pop )
 
 	mf_type2 = 'spikeGeneratorPoisson'
-	mf_poisson = lems.Component( "MF_Poisson", mf_type2)
-	mf_poisson.set_parameter("averageRate", "5 Hz")
-	lems_inst_doc.add( mf_poisson )
+	#mf_poisson = lems.Component( "MF_Poisson", mf_type2)
+	#mf_poisson.set_parameter("averageRate", "5 Hz")
+	#lems_inst_doc.add( mf_poisson )
+	# adding in neuroml document instead of mf_poisson
+	mf_poisson = nml.SpikeGeneratorPoisson( id = "MF_Poisson", average_rate="5 Hz" )
+	net_doc.spike_generator_poissons.append( mf_poisson )
 	
+	net_doc.includes.append( goc_type )
 	MF_Poisson_pop = nml.Population(id=mf_poisson.id+"_pop", component=mf_poisson.id, type="populationList", size=N_mf)
 	net.populations.append( MF_Poisson_pop )
 	MF_pos = nu.GoC_locate( N_mf )
