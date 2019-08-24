@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.spatial import distance
 import math
+import validate_network as vn
 
 '''
  Helpers:
@@ -137,3 +138,10 @@ def get_perturbed_GoC( nGoC, Burst_conntype, Burst_connprob, Burst_connGoC, seed
 	
 	return Burst_goc
 	
+def find_max_conn(  GoC_pos, GJ_pairs, GJ_wt, method='max_conn' ):
+	nGJ, net_wt, nNbr = vn.gapJuncAnalysis( GJ_pairs, GJ_wt, nGoC=GoC_pos.shape[0] )	
+	if method=='max_conn':
+		max_conn = [np.argmax(nNbr)]
+	elif method=='min_conn':
+		max_conn = [np.argmin(nNbr)]
+	return max_conn

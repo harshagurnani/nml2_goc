@@ -13,11 +13,12 @@ def gapJuncAnalysis( GJ_pairs, GJ_wt, nGoC=0 ):
 	
 	nGJ_per_cell = np.zeros(nGoC)
 	net_GJ = np.zeros( nGoC )
+	nNeighours = np.zeros(nGoC)
 	for goc in range( nGoC ):
+		nNeighours[goc] = np.unique(np.append(GJ_pairs[GJ_pairs[:,0]==goc, 1],  GJ_pairs[GJ_pairs[:,1]==goc, 0])).shape[0]
 		nGJ_per_cell[ goc ]= (GJ_pairs == goc).sum()
 		net_GJ[ goc ] = GJ_wt[ GJ_pairs[:,0] == goc ].sum() + GJ_wt[ GJ_pairs[:,1] == goc ].sum()
-		
-	return nGJ_per_cell, net_GJ
+	return nGJ_per_cell, net_GJ, nNeighours
 	
 	
 def get_spike_freq( spikes, nCells ):
@@ -59,7 +60,7 @@ def get_plots_for_sim( simid, traces=True, spikes=True ):
 		spike_raster( '{}.v.spikes'.format(simid), simid )
 		
 		
-def get_FI_curve( runid, simid ):
+def get_FI_curve( runid, simid, plot=False ):
 	file = open('params_file.pkl','rb')
 	params_list = pkl.load(file)
 	p = params_list[runid]
@@ -78,5 +79,14 @@ def get_FI_curve( runid, simid ):
 			t1 = (p["iDuration"]*cn+p["iRest"]*(cn+1))*1e-3
 			t2 = t1+p["iDuration"]*1e-3
 			fi[cn,goc] = sum([1 for x in resp if (x>=t1 and x<=t2)])/p["iDuration"]*1000 # Hz
-	return fi
+	
+	if plot==True:
+		pp=pyplot.figure(1,figsize=(8,6)) # Default figsize is (8,6)
+		for goc in range(nTest):
+			pyplot.scatter( inj_i, fi[:,goc], figure=pp )
+		pyplot.xlabel('Injected current (pA)', figure=pp)
+		pyplot.ylabel('Firing rate (Hz)', figure=pp)	
+		pp.savefig( 'FICurve_{}_run_{}.png'.format(simid, runid))
+		
+	return fi, inj_i
 	

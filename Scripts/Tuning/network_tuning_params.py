@@ -18,7 +18,7 @@ def get_simulation_params(simid,
 						  GJ_dist_type='Boltzmann',
 						  GJ_wt_type='Szo16_oneGJ',
 						  protocol='iSteps',
-						  testGoC=[0],
+						  testGoC='max_conn',
 						  minI=0,
 						  maxI=200,
 						  iStep=10,
@@ -31,7 +31,8 @@ def get_simulation_params(simid,
 	
 	params["GJ_pairs"], params["GJ_wt"], params["GJ_loc"] = nu.GJ_conn( params["GoC_pos"], GJ_dist_type, GJ_wt_type, nDend=3, seed=simid )
 
-	params["Test_GoC"]=testGoC
+	
+	params["Test_GoC"]= nu.find_max_conn(  params["GoC_pos"], params["GJ_pairs"], params["GJ_wt"] )
 	params["iAmp"] = np.arange(minI, maxI+iStep/2, iStep)
 	params["nSteps"]= params["iAmp"].shape[0]
 	params["iDuration"]=iDur

@@ -1,0 +1,423 @@
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2"  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2 https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2beta5.xsd" id="gocNetwork">
+    <include href="GoC.cell.nml"/>
+    <gapJunction id="GJ_0" conductance="426pS"/>
+    <pulseGenerator id="stim_0" delay="500 ms" duration="400 ms" amplitude="0.0 pA"/>
+    <pulseGenerator id="stim_1" delay="1400 ms" duration="400 ms" amplitude="10.0 pA"/>
+    <pulseGenerator id="stim_2" delay="2300 ms" duration="400 ms" amplitude="20.0 pA"/>
+    <pulseGenerator id="stim_3" delay="3200 ms" duration="400 ms" amplitude="30.0 pA"/>
+    <pulseGenerator id="stim_4" delay="4100 ms" duration="400 ms" amplitude="40.0 pA"/>
+    <pulseGenerator id="stim_5" delay="5000 ms" duration="400 ms" amplitude="50.0 pA"/>
+    <pulseGenerator id="stim_6" delay="5900 ms" duration="400 ms" amplitude="60.0 pA"/>
+    <pulseGenerator id="stim_7" delay="6800 ms" duration="400 ms" amplitude="70.0 pA"/>
+    <pulseGenerator id="stim_8" delay="7700 ms" duration="400 ms" amplitude="80.0 pA"/>
+    <pulseGenerator id="stim_9" delay="8600 ms" duration="400 ms" amplitude="90.0 pA"/>
+    <pulseGenerator id="stim_10" delay="9500 ms" duration="400 ms" amplitude="100.0 pA"/>
+    <pulseGenerator id="stim_11" delay="10400 ms" duration="400 ms" amplitude="110.0 pA"/>
+    <pulseGenerator id="stim_12" delay="11300 ms" duration="400 ms" amplitude="120.0 pA"/>
+    <pulseGenerator id="stim_13" delay="12200 ms" duration="400 ms" amplitude="130.0 pA"/>
+    <pulseGenerator id="stim_14" delay="13100 ms" duration="400 ms" amplitude="140.0 pA"/>
+    <pulseGenerator id="stim_15" delay="14000 ms" duration="400 ms" amplitude="150.0 pA"/>
+    <pulseGenerator id="stim_16" delay="14900 ms" duration="400 ms" amplitude="160.0 pA"/>
+    <pulseGenerator id="stim_17" delay="15800 ms" duration="400 ms" amplitude="170.0 pA"/>
+    <pulseGenerator id="stim_18" delay="16700 ms" duration="400 ms" amplitude="180.0 pA"/>
+    <pulseGenerator id="stim_19" delay="17600 ms" duration="400 ms" amplitude="190.0 pA"/>
+    <pulseGenerator id="stim_20" delay="18500 ms" duration="400 ms" amplitude="200.0 pA"/>
+    <network id="gocNetwork" type="networkWithTemperature" temperature="23 degC">
+        <population id="GoClPop" component="GoCl" size="45" type="populationList">
+            <instance id="0">
+                <location x="107.181262842081907" y="92.77224796262702" z="15.684805052092115"/>
+            </instance>
+            <instance id="1">
+                <location x="150.682516798466679" y="8.089743197219329" z="15.662553206718908"/>
+            </instance>
+            <instance id="2">
+                <location x="123.481850964053962" y="78.13470677100851" z="49.08174845572367"/>
+            </instance>
+            <instance id="3">
+                <location x="203.159989056098965" y="298.748687490592829" z="3.290442923054853"/>
+            </instance>
+            <instance id="4">
+                <location x="170.861053121883373" y="322.289154702622795" z="8.728150665508538"/>
+            </instance>
+            <instance id="5">
+                <location x="143.869817806524679" y="164.544387866094269" z="10.183723895616694"/>
+            </instance>
+            <instance id="6">
+                <location x="343.824250101841017" y="7.11058817188071" z="56.43888384095721"/>
+            </instance>
+            <instance id="7">
+                <location x="337.928199820693919" y="123.460887071754314" z="48.471580634304019"/>
+            </instance>
+            <instance id="8">
+                <location x="76.083117618017496" y="347.189341200672857" z="53.534365075095167"/>
+            </instance>
+            <instance id="9">
+                <location x="242.563909648191014" y="61.414824385734242" z="66.435904422997098"/>
+            </instance>
+            <instance id="10">
+                <location x="86.165718250269435" y="211.468492649256461" z="65.480964522880555"/>
+            </instance>
+            <instance id="11">
+                <location x="146.211258096588892" y="21.514165626206509" z="72.580324230326866"/>
+            </instance>
+            <instance id="12">
+                <location x="256.852894116227844" y="133.128091994779226" z="31.53532567940043"/>
+            </instance>
+            <instance id="13">
+                <location x="307.511181977692388" y="39.140313742691745" z="34.742942308976417"/>
+            </instance>
+            <instance id="14">
+                <location x="198.996590391891772" y="6.867302148918291" z="29.211735217526034"/>
+            </instance>
+            <instance id="15">
+                <location x="164.3386177773464" y="85.843284507623082" z="43.97198161389354"/>
+            </instance>
+            <instance id="16">
+                <location x="152.64731701046432" y="326.112870702484145" z="23.591368633855776"/>
+            </instance>
+            <instance id="17">
+                <location x="147.431896925807479" y="87.435338218594666" z="35.362765308449575"/>
+            </instance>
+            <instance id="18">
+                <location x="204.185056231704721" y="266.07290324311839" z="58.674253331558212"/>
+            </instance>
+            <instance id="19">
+                <location x="252.735405011577228" y="258.476751343325702" z="40.939364686068927"/>
+            </instance>
+            <instance id="20">
+                <location x="91.049551966641545" y="269.738596942334937" z="40.514124095812917"/>
+            </instance>
+            <instance id="21">
+                <location x="127.896283489032768" y="67.235299794760195" z="13.150112322247125"/>
+            </instance>
+            <instance id="22">
+                <location x="38.405177482701937" y="255.522804201323225" z="45.006177381396178"/>
+            </instance>
+            <instance id="23">
+                <location x="312.205480708170739" y="68.276224573336876" z="71.581582783170589"/>
+            </instance>
+            <instance id="24">
+                <location x="14.898308258311699" y="155.165427239108197" z="71.467401744112053"/>
+            </instance>
+            <instance id="25">
+                <location x="234.12116997896436" y="287.393667866679607" z="52.930989046395169"/>
+            </instance>
+            <instance id="26">
+                <location x="58.820510624032096" y="244.473886179849018" z="49.950227847386174"/>
+            </instance>
+            <instance id="27">
+                <location x="231.000455977723249" y="330.009011655600432" z="63.476518807288798"/>
+            </instance>
+            <instance id="28">
+                <location x="343.485229936502492" y="340.261836856422576" z="12.666594993910554"/>
+            </instance>
+            <instance id="29">
+                <location x="255.333146333472257" y="262.526125571141847" z="66.739231502282252"/>
+            </instance>
+            <instance id="30">
+                <location x="330.66592914181399" y="262.12660504001019" z="14.210187621779191"/>
+            </instance>
+            <instance id="31">
+                <location x="321.036354462707664" y="255.888746155542293" z="16.090157051250358"/>
+            </instance>
+            <instance id="32">
+                <location x="270.262362868071534" y="175.765932239330937" z="61.053715350897058"/>
+            </instance>
+            <instance id="33">
+                <location x="324.464025337150304" y="52.569580926901068" z="71.239822531939552"/>
+            </instance>
+            <instance id="34">
+                <location x="215.383959987862085" y="298.725096680970751" z="8.229921484873026"/>
+            </instance>
+            <instance id="35">
+                <location x="25.519014220508268" y="120.441268036947548" z="25.477293199235795"/>
+            </instance>
+            <instance id="36">
+                <location x="135.780299704420713" y="274.106727245978561" z="67.436482435004507"/>
+            </instance>
+            <instance id="37">
+                <location x="129.755563391298807" y="103.88242101398383" z="79.671768259761564"/>
+            </instance>
+            <instance id="38">
+                <location x="308.847259252738695" y="286.815255336081179" z="77.945403018023455"/>
+            </instance>
+            <instance id="39">
+                <location x="196.386753836310589" y="115.774885340603674" z="24.745887624779471"/>
+            </instance>
+            <instance id="40">
+                <location x="39.228859446601582" y="230.171749198757112" z="21.924921245695312"/>
+            </instance>
+            <instance id="41">
+                <location x="123.705962819189509" y="292.813186507276384" z="52.198113122517348"/>
+            </instance>
+            <instance id="42">
+                <location x="160.971225455274435" y="279.283645210074781" z="23.371782392415632"/>
+            </instance>
+            <instance id="43">
+                <location x="176.169251564484654" y="46.91379075964948" z="13.183373215176086"/>
+            </instance>
+            <instance id="44">
+                <location x="98.569022730147481" y="227.462177497808199" z="72.400392168613564"/>
+            </instance>
+        </population>
+        <electricalProjection id="gocGJ" presynapticPopulation="GoClPop" postsynapticPopulation="GoClPop">
+            <electricalConnectionInstanceW id="0" preCell="../GoClPop/0/GoCl" preSegment="5" postCell="../GoClPop/1/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="1" preCell="../GoClPop/0/GoCl" preSegment="2" postCell="../GoClPop/2/GoCl" postSegment="2" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="2" preCell="../GoClPop/0/GoCl" preSegment="2" postCell="../GoClPop/10/GoCl" postSegment="5" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="3" preCell="../GoClPop/0/GoCl" preSegment="5" postCell="../GoClPop/14/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="4" preCell="../GoClPop/0/GoCl" preSegment="2" postCell="../GoClPop/15/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="5" preCell="../GoClPop/0/GoCl" preSegment="5" postCell="../GoClPop/17/GoCl" postSegment="1" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="6" preCell="../GoClPop/0/GoCl" preSegment="2" postCell="../GoClPop/37/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="7" preCell="../GoClPop/0/GoCl" preSegment="2" postCell="../GoClPop/39/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="8" preCell="../GoClPop/0/GoCl" preSegment="2" postCell="../GoClPop/43/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="9" preCell="../GoClPop/1/GoCl" preSegment="5" postCell="../GoClPop/2/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="10" preCell="../GoClPop/1/GoCl" preSegment="2" postCell="../GoClPop/14/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="11" preCell="../GoClPop/1/GoCl" preSegment="2" postCell="../GoClPop/15/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="12" preCell="../GoClPop/1/GoCl" preSegment="2" postCell="../GoClPop/21/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="13" preCell="../GoClPop/1/GoCl" preSegment="2" postCell="../GoClPop/39/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="14" preCell="../GoClPop/1/GoCl" preSegment="1" postCell="../GoClPop/43/GoCl" postSegment="5" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="15" preCell="../GoClPop/2/GoCl" preSegment="5" postCell="../GoClPop/5/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="16" preCell="../GoClPop/2/GoCl" preSegment="2" postCell="../GoClPop/9/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="17" preCell="../GoClPop/2/GoCl" preSegment="1" postCell="../GoClPop/11/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="18" preCell="../GoClPop/2/GoCl" preSegment="1" postCell="../GoClPop/15/GoCl" postSegment="1" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="19" preCell="../GoClPop/2/GoCl" preSegment="5" postCell="../GoClPop/17/GoCl" postSegment="2" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="20" preCell="../GoClPop/2/GoCl" preSegment="2" postCell="../GoClPop/21/GoCl" postSegment="2" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="21" preCell="../GoClPop/2/GoCl" preSegment="2" postCell="../GoClPop/35/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="22" preCell="../GoClPop/2/GoCl" preSegment="5" postCell="../GoClPop/43/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="23" preCell="../GoClPop/3/GoCl" preSegment="2" postCell="../GoClPop/8/GoCl" postSegment="1" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="24" preCell="../GoClPop/3/GoCl" preSegment="1" postCell="../GoClPop/18/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="25" preCell="../GoClPop/3/GoCl" preSegment="2" postCell="../GoClPop/19/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="26" preCell="../GoClPop/3/GoCl" preSegment="5" postCell="../GoClPop/27/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="27" preCell="../GoClPop/3/GoCl" preSegment="1" postCell="../GoClPop/28/GoCl" postSegment="1" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="28" preCell="../GoClPop/3/GoCl" preSegment="5" postCell="../GoClPop/29/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="29" preCell="../GoClPop/3/GoCl" preSegment="1" postCell="../GoClPop/31/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="30" preCell="../GoClPop/3/GoCl" preSegment="2" postCell="../GoClPop/36/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="31" preCell="../GoClPop/3/GoCl" preSegment="5" postCell="../GoClPop/42/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="32" preCell="../GoClPop/4/GoCl" preSegment="1" postCell="../GoClPop/8/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="33" preCell="../GoClPop/4/GoCl" preSegment="2" postCell="../GoClPop/16/GoCl" postSegment="5" synapse="GJ_0" weight="8."/>
+            <electricalConnectionInstanceW id="34" preCell="../GoClPop/4/GoCl" preSegment="2" postCell="../GoClPop/18/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="35" preCell="../GoClPop/4/GoCl" preSegment="5" postCell="../GoClPop/20/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="36" preCell="../GoClPop/4/GoCl" preSegment="2" postCell="../GoClPop/27/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="37" preCell="../GoClPop/4/GoCl" preSegment="5" postCell="../GoClPop/29/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="38" preCell="../GoClPop/4/GoCl" preSegment="5" postCell="../GoClPop/34/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="39" preCell="../GoClPop/4/GoCl" preSegment="2" postCell="../GoClPop/36/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="40" preCell="../GoClPop/4/GoCl" preSegment="5" postCell="../GoClPop/41/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="41" preCell="../GoClPop/4/GoCl" preSegment="2" postCell="../GoClPop/42/GoCl" postSegment="1" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="42" preCell="../GoClPop/4/GoCl" preSegment="1" postCell="../GoClPop/44/GoCl" postSegment="2" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="43" preCell="../GoClPop/5/GoCl" preSegment="2" postCell="../GoClPop/10/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="44" preCell="../GoClPop/5/GoCl" preSegment="1" postCell="../GoClPop/15/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="45" preCell="../GoClPop/5/GoCl" preSegment="2" postCell="../GoClPop/17/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="46" preCell="../GoClPop/5/GoCl" preSegment="2" postCell="../GoClPop/20/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="47" preCell="../GoClPop/5/GoCl" preSegment="2" postCell="../GoClPop/22/GoCl" postSegment="1" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="48" preCell="../GoClPop/5/GoCl" preSegment="5" postCell="../GoClPop/26/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="49" preCell="../GoClPop/5/GoCl" preSegment="1" postCell="../GoClPop/36/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="50" preCell="../GoClPop/5/GoCl" preSegment="5" postCell="../GoClPop/43/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="51" preCell="../GoClPop/5/GoCl" preSegment="1" postCell="../GoClPop/44/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="52" preCell="../GoClPop/6/GoCl" preSegment="5" postCell="../GoClPop/7/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="53" preCell="../GoClPop/6/GoCl" preSegment="1" postCell="../GoClPop/9/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="54" preCell="../GoClPop/6/GoCl" preSegment="1" postCell="../GoClPop/13/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="55" preCell="../GoClPop/6/GoCl" preSegment="1" postCell="../GoClPop/33/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="56" preCell="../GoClPop/7/GoCl" preSegment="2" postCell="../GoClPop/9/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="57" preCell="../GoClPop/7/GoCl" preSegment="2" postCell="../GoClPop/12/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="58" preCell="../GoClPop/7/GoCl" preSegment="2" postCell="../GoClPop/23/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="59" preCell="../GoClPop/7/GoCl" preSegment="5" postCell="../GoClPop/33/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="60" preCell="../GoClPop/8/GoCl" preSegment="2" postCell="../GoClPop/20/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="61" preCell="../GoClPop/8/GoCl" preSegment="5" postCell="../GoClPop/36/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="62" preCell="../GoClPop/8/GoCl" preSegment="1" postCell="../GoClPop/41/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="63" preCell="../GoClPop/8/GoCl" preSegment="5" postCell="../GoClPop/44/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="64" preCell="../GoClPop/9/GoCl" preSegment="2" postCell="../GoClPop/12/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="65" preCell="../GoClPop/9/GoCl" preSegment="2" postCell="../GoClPop/14/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="66" preCell="../GoClPop/9/GoCl" preSegment="2" postCell="../GoClPop/15/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="67" preCell="../GoClPop/9/GoCl" preSegment="5" postCell="../GoClPop/17/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="68" preCell="../GoClPop/9/GoCl" preSegment="1" postCell="../GoClPop/21/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="69" preCell="../GoClPop/9/GoCl" preSegment="1" postCell="../GoClPop/23/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="70" preCell="../GoClPop/9/GoCl" preSegment="5" postCell="../GoClPop/32/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="71" preCell="../GoClPop/9/GoCl" preSegment="5" postCell="../GoClPop/33/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="72" preCell="../GoClPop/10/GoCl" preSegment="2" postCell="../GoClPop/18/GoCl" postSegment="2" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="73" preCell="../GoClPop/10/GoCl" preSegment="1" postCell="../GoClPop/20/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="74" preCell="../GoClPop/10/GoCl" preSegment="2" postCell="../GoClPop/22/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="75" preCell="../GoClPop/10/GoCl" preSegment="5" postCell="../GoClPop/24/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="76" preCell="../GoClPop/10/GoCl" preSegment="5" postCell="../GoClPop/26/GoCl" postSegment="5" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="77" preCell="../GoClPop/10/GoCl" preSegment="2" postCell="../GoClPop/36/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="78" preCell="../GoClPop/10/GoCl" preSegment="2" postCell="../GoClPop/37/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="79" preCell="../GoClPop/10/GoCl" preSegment="5" postCell="../GoClPop/41/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="80" preCell="../GoClPop/10/GoCl" preSegment="2" postCell="../GoClPop/44/GoCl" postSegment="1" synapse="GJ_0" weight="8."/>
+            <electricalConnectionInstanceW id="81" preCell="../GoClPop/11/GoCl" preSegment="1" postCell="../GoClPop/15/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="82" preCell="../GoClPop/11/GoCl" preSegment="5" postCell="../GoClPop/21/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="83" preCell="../GoClPop/11/GoCl" preSegment="5" postCell="../GoClPop/39/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="84" preCell="../GoClPop/12/GoCl" preSegment="1" postCell="../GoClPop/15/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="85" preCell="../GoClPop/12/GoCl" preSegment="2" postCell="../GoClPop/19/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="86" preCell="../GoClPop/12/GoCl" preSegment="1" postCell="../GoClPop/23/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="87" preCell="../GoClPop/12/GoCl" preSegment="1" postCell="../GoClPop/32/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="88" preCell="../GoClPop/12/GoCl" preSegment="2" postCell="../GoClPop/33/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="89" preCell="../GoClPop/12/GoCl" preSegment="2" postCell="../GoClPop/37/GoCl" postSegment="5" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="90" preCell="../GoClPop/12/GoCl" preSegment="1" postCell="../GoClPop/39/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="91" preCell="../GoClPop/13/GoCl" preSegment="1" postCell="../GoClPop/14/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="92" preCell="../GoClPop/13/GoCl" preSegment="5" postCell="../GoClPop/23/GoCl" postSegment="5" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="93" preCell="../GoClPop/13/GoCl" preSegment="2" postCell="../GoClPop/33/GoCl" postSegment="1" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="94" preCell="../GoClPop/14/GoCl" preSegment="1" postCell="../GoClPop/15/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="95" preCell="../GoClPop/14/GoCl" preSegment="2" postCell="../GoClPop/21/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="96" preCell="../GoClPop/14/GoCl" preSegment="5" postCell="../GoClPop/37/GoCl" postSegment="5" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="97" preCell="../GoClPop/14/GoCl" preSegment="1" postCell="../GoClPop/39/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="98" preCell="../GoClPop/14/GoCl" preSegment="2" postCell="../GoClPop/43/GoCl" postSegment="5" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="99" preCell="../GoClPop/15/GoCl" preSegment="5" postCell="../GoClPop/17/GoCl" postSegment="1" synapse="GJ_0" weight="8."/>
+            <electricalConnectionInstanceW id="100" preCell="../GoClPop/15/GoCl" preSegment="1" postCell="../GoClPop/21/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="101" preCell="../GoClPop/15/GoCl" preSegment="2" postCell="../GoClPop/37/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="102" preCell="../GoClPop/15/GoCl" preSegment="5" postCell="../GoClPop/39/GoCl" postSegment="2" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="103" preCell="../GoClPop/15/GoCl" preSegment="2" postCell="../GoClPop/43/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="104" preCell="../GoClPop/16/GoCl" preSegment="5" postCell="../GoClPop/18/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="105" preCell="../GoClPop/16/GoCl" preSegment="2" postCell="../GoClPop/19/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="106" preCell="../GoClPop/16/GoCl" preSegment="2" postCell="../GoClPop/25/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="107" preCell="../GoClPop/16/GoCl" preSegment="5" postCell="../GoClPop/27/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="108" preCell="../GoClPop/16/GoCl" preSegment="1" postCell="../GoClPop/34/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="109" preCell="../GoClPop/16/GoCl" preSegment="2" postCell="../GoClPop/36/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="110" preCell="../GoClPop/16/GoCl" preSegment="2" postCell="../GoClPop/42/GoCl" postSegment="5" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="111" preCell="../GoClPop/16/GoCl" preSegment="5" postCell="../GoClPop/44/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="112" preCell="../GoClPop/17/GoCl" preSegment="1" postCell="../GoClPop/21/GoCl" postSegment="2" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="113" preCell="../GoClPop/17/GoCl" preSegment="1" postCell="../GoClPop/37/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="114" preCell="../GoClPop/17/GoCl" preSegment="1" postCell="../GoClPop/39/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="115" preCell="../GoClPop/17/GoCl" preSegment="1" postCell="../GoClPop/43/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="116" preCell="../GoClPop/18/GoCl" preSegment="2" postCell="../GoClPop/19/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="117" preCell="../GoClPop/18/GoCl" preSegment="1" postCell="../GoClPop/20/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="118" preCell="../GoClPop/18/GoCl" preSegment="2" postCell="../GoClPop/26/GoCl" postSegment="2" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="119" preCell="../GoClPop/18/GoCl" preSegment="1" postCell="../GoClPop/27/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="120" preCell="../GoClPop/18/GoCl" preSegment="2" postCell="../GoClPop/29/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="121" preCell="../GoClPop/18/GoCl" preSegment="2" postCell="../GoClPop/30/GoCl" postSegment="1" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="122" preCell="../GoClPop/18/GoCl" preSegment="2" postCell="../GoClPop/36/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="123" preCell="../GoClPop/18/GoCl" preSegment="2" postCell="../GoClPop/38/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="124" preCell="../GoClPop/18/GoCl" preSegment="5" postCell="../GoClPop/41/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="125" preCell="../GoClPop/19/GoCl" preSegment="5" postCell="../GoClPop/25/GoCl" postSegment="2" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="126" preCell="../GoClPop/19/GoCl" preSegment="5" postCell="../GoClPop/29/GoCl" postSegment="1" synapse="GJ_0" weight="8."/>
+            <electricalConnectionInstanceW id="127" preCell="../GoClPop/19/GoCl" preSegment="2" postCell="../GoClPop/30/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="128" preCell="../GoClPop/19/GoCl" preSegment="1" postCell="../GoClPop/31/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="129" preCell="../GoClPop/19/GoCl" preSegment="2" postCell="../GoClPop/32/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="130" preCell="../GoClPop/19/GoCl" preSegment="2" postCell="../GoClPop/34/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="131" preCell="../GoClPop/19/GoCl" preSegment="2" postCell="../GoClPop/38/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="132" preCell="../GoClPop/19/GoCl" preSegment="5" postCell="../GoClPop/42/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="133" preCell="../GoClPop/20/GoCl" preSegment="5" postCell="../GoClPop/22/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="134" preCell="../GoClPop/20/GoCl" preSegment="1" postCell="../GoClPop/26/GoCl" postSegment="1" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="135" preCell="../GoClPop/20/GoCl" preSegment="2" postCell="../GoClPop/36/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="136" preCell="../GoClPop/20/GoCl" preSegment="2" postCell="../GoClPop/40/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="137" preCell="../GoClPop/20/GoCl" preSegment="1" postCell="../GoClPop/41/GoCl" postSegment="2" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="138" preCell="../GoClPop/20/GoCl" preSegment="2" postCell="../GoClPop/42/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="139" preCell="../GoClPop/21/GoCl" preSegment="5" postCell="../GoClPop/37/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="140" preCell="../GoClPop/21/GoCl" preSegment="5" postCell="../GoClPop/43/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="141" preCell="../GoClPop/22/GoCl" preSegment="2" postCell="../GoClPop/26/GoCl" postSegment="1" synapse="GJ_0" weight="8."/>
+            <electricalConnectionInstanceW id="142" preCell="../GoClPop/22/GoCl" preSegment="2" postCell="../GoClPop/40/GoCl" postSegment="5" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="143" preCell="../GoClPop/22/GoCl" preSegment="2" postCell="../GoClPop/41/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="144" preCell="../GoClPop/22/GoCl" preSegment="5" postCell="../GoClPop/42/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="145" preCell="../GoClPop/22/GoCl" preSegment="1" postCell="../GoClPop/44/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="146" preCell="../GoClPop/23/GoCl" preSegment="1" postCell="../GoClPop/33/GoCl" postSegment="5" synapse="GJ_0" weight="8."/>
+            <electricalConnectionInstanceW id="147" preCell="../GoClPop/24/GoCl" preSegment="2" postCell="../GoClPop/26/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="148" preCell="../GoClPop/24/GoCl" preSegment="2" postCell="../GoClPop/35/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="149" preCell="../GoClPop/24/GoCl" preSegment="2" postCell="../GoClPop/37/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="150" preCell="../GoClPop/24/GoCl" preSegment="5" postCell="../GoClPop/40/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="151" preCell="../GoClPop/25/GoCl" preSegment="1" postCell="../GoClPop/27/GoCl" postSegment="2" synapse="GJ_0" weight="6."/>
+            <electricalConnectionInstanceW id="152" preCell="../GoClPop/25/GoCl" preSegment="2" postCell="../GoClPop/30/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="153" preCell="../GoClPop/25/GoCl" preSegment="5" postCell="../GoClPop/34/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="154" preCell="../GoClPop/25/GoCl" preSegment="5" postCell="../GoClPop/36/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="155" preCell="../GoClPop/25/GoCl" preSegment="5" postCell="../GoClPop/38/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="156" preCell="../GoClPop/25/GoCl" preSegment="5" postCell="../GoClPop/41/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="157" preCell="../GoClPop/25/GoCl" preSegment="1" postCell="../GoClPop/42/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="158" preCell="../GoClPop/26/GoCl" preSegment="5" postCell="../GoClPop/35/GoCl" postSegment="1" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="159" preCell="../GoClPop/26/GoCl" preSegment="2" postCell="../GoClPop/36/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="160" preCell="../GoClPop/26/GoCl" preSegment="5" postCell="../GoClPop/41/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="161" preCell="../GoClPop/27/GoCl" preSegment="2" postCell="../GoClPop/28/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="162" preCell="../GoClPop/27/GoCl" preSegment="2" postCell="../GoClPop/29/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="163" preCell="../GoClPop/27/GoCl" preSegment="5" postCell="../GoClPop/30/GoCl" postSegment="5" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="164" preCell="../GoClPop/27/GoCl" preSegment="2" postCell="../GoClPop/31/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="165" preCell="../GoClPop/27/GoCl" preSegment="2" postCell="../GoClPop/36/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="166" preCell="../GoClPop/27/GoCl" preSegment="1" postCell="../GoClPop/38/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="167" preCell="../GoClPop/28/GoCl" preSegment="2" postCell="../GoClPop/29/GoCl" postSegment="5" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="168" preCell="../GoClPop/28/GoCl" preSegment="5" postCell="../GoClPop/30/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="169" preCell="../GoClPop/28/GoCl" preSegment="1" postCell="../GoClPop/31/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="170" preCell="../GoClPop/28/GoCl" preSegment="1" postCell="../GoClPop/38/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="171" preCell="../GoClPop/29/GoCl" preSegment="1" postCell="../GoClPop/30/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="172" preCell="../GoClPop/29/GoCl" preSegment="1" postCell="../GoClPop/31/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="173" preCell="../GoClPop/30/GoCl" preSegment="1" postCell="../GoClPop/31/GoCl" postSegment="5" synapse="GJ_0" weight="10."/>
+            <electricalConnectionInstanceW id="174" preCell="../GoClPop/30/GoCl" preSegment="1" postCell="../GoClPop/34/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="175" preCell="../GoClPop/30/GoCl" preSegment="2" postCell="../GoClPop/38/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="176" preCell="../GoClPop/31/GoCl" preSegment="1" postCell="../GoClPop/32/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="177" preCell="../GoClPop/31/GoCl" preSegment="1" postCell="../GoClPop/38/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="178" preCell="../GoClPop/32/GoCl" preSegment="5" postCell="../GoClPop/33/GoCl" postSegment="2" synapse="GJ_0" weight="0."/>
+            <electricalConnectionInstanceW id="179" preCell="../GoClPop/34/GoCl" preSegment="1" postCell="../GoClPop/36/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="180" preCell="../GoClPop/34/GoCl" preSegment="1" postCell="../GoClPop/38/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="181" preCell="../GoClPop/34/GoCl" preSegment="1" postCell="../GoClPop/41/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="182" preCell="../GoClPop/34/GoCl" preSegment="1" postCell="../GoClPop/42/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="183" preCell="../GoClPop/35/GoCl" preSegment="2" postCell="../GoClPop/37/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="184" preCell="../GoClPop/35/GoCl" preSegment="5" postCell="../GoClPop/40/GoCl" postSegment="5" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="185" preCell="../GoClPop/36/GoCl" preSegment="1" postCell="../GoClPop/40/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="186" preCell="../GoClPop/36/GoCl" preSegment="2" postCell="../GoClPop/41/GoCl" postSegment="2" synapse="GJ_0" weight="8."/>
+            <electricalConnectionInstanceW id="187" preCell="../GoClPop/36/GoCl" preSegment="2" postCell="../GoClPop/42/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="188" preCell="../GoClPop/36/GoCl" preSegment="5" postCell="../GoClPop/44/GoCl" postSegment="2" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="189" preCell="../GoClPop/37/GoCl" preSegment="1" postCell="../GoClPop/39/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="190" preCell="../GoClPop/37/GoCl" preSegment="5" postCell="../GoClPop/43/GoCl" postSegment="2" synapse="GJ_0" weight="2."/>
+            <electricalConnectionInstanceW id="191" preCell="../GoClPop/39/GoCl" preSegment="1" postCell="../GoClPop/43/GoCl" postSegment="5" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="192" preCell="../GoClPop/41/GoCl" preSegment="5" postCell="../GoClPop/44/GoCl" postSegment="1" synapse="GJ_0" weight="4."/>
+            <electricalConnectionInstanceW id="193" preCell="../GoClPop/42/GoCl" preSegment="1" postCell="../GoClPop/44/GoCl" postSegment="1" synapse="GJ_0" weight="2."/>
+        </electricalProjection>
+        <inputList id="ilist_0" population="GoClPop" component="stim_0">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_1" population="GoClPop" component="stim_1">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_2" population="GoClPop" component="stim_2">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_3" population="GoClPop" component="stim_3">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_4" population="GoClPop" component="stim_4">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_5" population="GoClPop" component="stim_5">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_6" population="GoClPop" component="stim_6">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_7" population="GoClPop" component="stim_7">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_8" population="GoClPop" component="stim_8">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_9" population="GoClPop" component="stim_9">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_10" population="GoClPop" component="stim_10">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_11" population="GoClPop" component="stim_11">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_12" population="GoClPop" component="stim_12">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_13" population="GoClPop" component="stim_13">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_14" population="GoClPop" component="stim_14">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_15" population="GoClPop" component="stim_15">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_16" population="GoClPop" component="stim_16">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_17" population="GoClPop" component="stim_17">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_18" population="GoClPop" component="stim_18">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_19" population="GoClPop" component="stim_19">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+        <inputList id="ilist_20" population="GoClPop" component="stim_20">
+            <input id="0" target="../GoClPop[36]" destination="synapses"/>
+        </inputList>
+    </network>
+</neuroml>

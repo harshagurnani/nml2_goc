@@ -123,5 +123,5 @@ if __name__ =='__main__':
 	if len(sys.argv)>1:
 		runid=int(sys.argv[1])
 	print('Generating network using parameters for runid=', runid)
-	res = create_GoC_network( duration = 5000, dt=0.025, seed = 123, runid=runid)
+	res = create_GoC_network( duration = 20000, dt=0.025, seed = 123, runid=runid)
 	print(res)
