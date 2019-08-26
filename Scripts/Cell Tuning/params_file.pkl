@@ -1,0 +1,508 @@
+(lp0
+(dp1
+S'cahva_cond'
+p2
+S'0.479797421706 mS_per_cm2'
+p3
+sS'leak_cond'
+p4
+S'0.0214316061795 mS_per_cm2'
+p5
+sS'nar_cond'
+p6
+S'1.85764533857 mS_per_cm2'
+p7
+sS'hcn2s_cond'
+p8
+S'0.0781350643012 mS_per_cm2'
+p9
+sS'calva_cond'
+p10
+S'0.264586251904 mS_per_cm2'
+p11
+sS'na_cond'
+p12
+S'48.4308785568 mS_per_cm2'
+p13
+sS'kv_cond'
+p14
+S'31.5113907158 mS_per_cm2'
+p15
+sS'hcn2f_cond'
+p16
+S'0.080462318716 mS_per_cm2'
+p17
+sS'nap_cond'
+p18
+S'0.187628314028 mS_per_cm2'
+p19
+sS'sk2_cond'
+p20
+S'38.5171386643 mS_per_cm2'
+p21
+sS'km_cond'
+p22
+S'1.02917882261 mS_per_cm2'
+p23
+sS'bk_cond'
+p24
+S'3.23506380047 mS_per_cm2'
+p25
+sS'ka_cond'
+p26
+S'7.33940687952 mS_per_cm2'
+p27
+sS'hcn1s_cond'
+p28
+S'0.0542559663829 mS_per_cm2'
+p29
+sS'ra'
+p30
+S'0.100976270079 kohm_cm'
+p31
+sS'hcn1f_cond'
+p32
+S'0.045710360582 mS_per_cm2'
+p33
+sa(dp34
+g2
+S'0.480269853397 mS_per_cm2'
+p35
+sg4
+S'0.0189004803742 mS_per_cm2'
+p36
+sg6
+S'1.66490094124 mS_per_cm2'
+p37
+sg8
+S'0.0806210677441 mS_per_cm2'
+p38
+sg10
+S'0.24595972572 mS_per_cm2'
+p39
+sg12
+S'46.1023926973 mS_per_cm2'
+p40
+sg14
+S'29.7392377012 mS_per_cm2'
+p41
+sg16
+S'0.0829635120063 mS_per_cm2'
+p42
+sg18
+S'0.178077888032 mS_per_cm2'
+p43
+sg20
+S'35.753837098 mS_per_cm2'
+p44
+sg22
+S'0.918467718954 mS_per_cm2'
+p45
+sg24
+S'2.90733643623 mS_per_cm2'
+p46
+sg26
+S'8.27274801629 mS_per_cm2'
+p47
+sg28
+S'0.0537811743639 mS_per_cm2'
+p48
+sg30
+S'0.0983404400941 kohm_cm'
+p49
+sg32
+S'0.045273875932 mS_per_cm2'
+p50
+sa(dp51
+g2
+S'0.416385213328 mS_per_cm2'
+p52
+sg4
+S'0.0212085824071 mS_per_cm2'
+p53
+sg6
+S'1.63188258905 mS_per_cm2'
+p54
+sg8
+S'0.0762692364016 mS_per_cm2'
+p55
+sg10
+S'0.256056691638 mS_per_cm2'
+p56
+sg12
+S'47.3790949691 mS_per_cm2'
+p57
+sg14
+S'31.4903539334 mS_per_cm2'
+p58
+sg16
+S'0.0804662735084 mS_per_cm2'
+p59
+sg18
+S'0.178776648093 mS_per_cm2'
+p60
+sg20
+S'35.2228075846 mS_per_cm2'
+p61
+sg22
+S'0.966066964201 mS_per_cm2'
+p62
+sg24
+S'3.07156257981 mS_per_cm2'
+p63
+sg26
+S'8.45653623651 mS_per_cm2'
+p64
+sg28
+S'0.0501357812127 mS_per_cm2'
+p65
+sg30
+S'0.0987198980428 kohm_cm'
+p66
+sg32
+S'0.0468443986565 mS_per_cm2'
+p67
+sa(dp68
+g2
+S'0.479149599681 mS_per_cm2'
+p69
+sg4
+S'0.0201217999034 mS_per_cm2'
+p70
+sg6
+S'1.54749884912 mS_per_cm2'
+p71
+sg8
+S'0.0790529574984 mS_per_cm2'
+p72
+sg10
+S'0.226493810544 mS_per_cm2'
+p73
+sg12
+S'48.1039450099 mS_per_cm2'
+p74
+sg14
+S'34.5148605078 mS_per_cm2'
+p75
+sg16
+S'0.0793093315903 mS_per_cm2'
+p76
+sg18
+S'0.175772241798 mS_per_cm2'
+p77
+sg20
+S'39.1334947619 mS_per_cm2'
+p78
+sg22
+S'1.07925861779 mS_per_cm2'
+p79
+sg24
+S'2.82434572688 mS_per_cm2'
+p80
+sg26
+S'8.14538050787 mS_per_cm2'
+p81
+sg28
+S'0.0477848728265 mS_per_cm2'
+p82
+sg30
+S'0.101015958051 kohm_cm'
+p83
+sg32
+S'0.0517625490198 mS_per_cm2'
+p84
+sa(dp85
+g2
+S'0.464345366924 mS_per_cm2'
+p86
+sg4
+S'0.0229852743119 mS_per_cm2'
+p87
+sg6
+S'1.61601400321 mS_per_cm2'
+p88
+sg8
+S'0.0789566645185 mS_per_cm2'
+p89
+sg10
+S'0.26396914609 mS_per_cm2'
+p90
+sg12
+S'50.0622335393 mS_per_cm2'
+p91
+sg14
+S'33.2654644774 mS_per_cm2'
+p92
+sg16
+S'0.0751629611936 mS_per_cm2'
+p93
+sg18
+S'0.208098429281 mS_per_cm2'
+p94
+sg20
+S'40.7587485906 mS_per_cm2'
+p95
+sg22
+S'0.943217899116 mS_per_cm2'
+p96
+sg24
+S'2.70373815312 mS_per_cm2'
+p97
+sg26
+S'8.15573431029 mS_per_cm2'
+p98
+sg28
+S'0.0548340067718 mS_per_cm2'
+p99
+sg30
+S'0.10934059678 kohm_cm'
+p100
+sg32
+S'0.046638422414 mS_per_cm2'
+p101
+sa(dp102
+g2
+S'0.494107372168 mS_per_cm2'
+p103
+sg4
+S'0.0197682204524 mS_per_cm2'
+p104
+sg6
+S'1.63091217054 mS_per_cm2'
+p105
+sg8
+S'0.0750035396586 mS_per_cm2'
+p106
+sg10
+S'0.229037063438 mS_per_cm2'
+p107
+sg12
+S'52.0186647162 mS_per_cm2'
+p108
+sg14
+S'31.9258316083 mS_per_cm2'
+p109
+sg16
+S'0.0838150447392 mS_per_cm2'
+p110
+sg18
+S'0.200104498546 mS_per_cm2'
+p111
+sg20
+S'37.553950094 mS_per_cm2'
+p112
+sg22
+S'1.02234877258 mS_per_cm2'
+p113
+sg24
+S'3.01105079272 mS_per_cm2'
+p114
+sg26
+S'7.63853833919 mS_per_cm2'
+p115
+sg28
+S'0.0465830986771 mS_per_cm2'
+p116
+sg30
+S'0.0944398634218 kohm_cm'
+p117
+sg32
+S'0.053799370312 mS_per_cm2'
+p118
+sa(dp119
+g2
+S'0.444542142088 mS_per_cm2'
+p120
+sg4
+S'0.0223491623168 mS_per_cm2'
+p121
+sg6
+S'1.64403866875 mS_per_cm2'
+p122
+sg8
+S'0.0819603109151 mS_per_cm2'
+p123
+sg10
+S'0.246907071305 mS_per_cm2'
+p124
+sg12
+S'43.600287607 mS_per_cm2'
+p125
+sg14
+S'29.4890027516 mS_per_cm2'
+p126
+sg16
+S'0.0837741137016 mS_per_cm2'
+p127
+sg18
+S'0.191133059763 mS_per_cm2'
+p128
+sg20
+S'38.1370767312 mS_per_cm2'
+p129
+sg22
+S'1.01901041284 mS_per_cm2'
+p130
+sg24
+S'2.95128445713 mS_per_cm2'
+p131
+sg26
+S'8.7843588342 mS_per_cm2'
+p132
+sg28
+S'0.0507885860023 mS_per_cm2'
+p133
+sg30
+S'0.107857203029 kohm_cm'
+p134
+sg32
+S'0.051453550959 mS_per_cm2'
+p135
+sa(dp136
+g2
+S'0.485752528886 mS_per_cm2'
+p137
+sg4
+S'0.0207413187721 mS_per_cm2'
+p138
+sg6
+S'1.62126925323 mS_per_cm2'
+p139
+sg8
+S'0.0799981200132 mS_per_cm2'
+p140
+sg10
+S'0.258961499806 mS_per_cm2'
+p141
+sg12
+S'50.1452657072 mS_per_cm2'
+p142
+sg14
+S'35.0591328768 mS_per_cm2'
+p143
+sg16
+S'0.0848598245777 mS_per_cm2'
+p144
+sg18
+S'0.190042577619 mS_per_cm2'
+p145
+sg20
+S'37.0951526119 mS_per_cm2'
+p146
+sg22
+S'1.00769917408 mS_per_cm2'
+p147
+sg24
+S'2.74323068002 mS_per_cm2'
+p148
+sg26
+S'8.65534964435 mS_per_cm2'
+p149
+sg28
+S'0.0456593634691 mS_per_cm2'
+p150
+sg30
+S'0.0915261657875 kohm_cm'
+p151
+sg32
+S'0.0478814559931 mS_per_cm2'
+p152
+sa(dp153
+g2
+S'0.50310574098 mS_per_cm2'
+p154
+sg4
+S'0.0225506170689 mS_per_cm2'
+p155
+sg6
+S'1.70770938826 mS_per_cm2'
+p156
+sg8
+S'0.0796542687328 mS_per_cm2'
+p157
+sg10
+S'0.252767823691 mS_per_cm2'
+p158
+sg12
+S'48.2962146389 mS_per_cm2'
+p159
+sg14
+S'30.2894612991 mS_per_cm2'
+p160
+sg16
+S'0.0806941762807 mS_per_cm2'
+p161
+sg18
+S'0.187357815095 mS_per_cm2'
+p162
+sg20
+S'39.9828063746 mS_per_cm2'
+p163
+sg22
+S'0.902279760855 mS_per_cm2'
+p164
+sg24
+S'2.94141081602 mS_per_cm2'
+p165
+sg26
+S'7.88174683276 mS_per_cm2'
+p166
+sg28
+S'0.0521237457408 mS_per_cm2'
+p167
+sg30
+S'0.107468588056 kohm_cm'
+p168
+sg32
+S'0.051196820961 mS_per_cm2'
+p169
+sa(dp170
+g2
+S'0.460172462478 mS_per_cm2'
+p171
+sg4
+S'0.0209822478312 mS_per_cm2'
+p172
+sg6
+S'1.5585802814 mS_per_cm2'
+p173
+sg8
+S'0.0775279782408 mS_per_cm2'
+p174
+sg10
+S'0.233338817327 mS_per_cm2'
+p175
+sg12
+S'44.484763478 mS_per_cm2'
+p176
+sg14
+S'29.7095109469 mS_per_cm2'
+p177
+sg16
+S'0.0860569453685 mS_per_cm2'
+p178
+sg18
+S'0.186903310859 mS_per_cm2'
+p179
+sg20
+S'41.4273266404 mS_per_cm2'
+p180
+sg22
+S'0.943711735125 mS_per_cm2'
+p181
+sg24
+S'2.84886070105 mS_per_cm2'
+p182
+sg26
+S'8.11641570491 mS_per_cm2'
+p183
+sg28
+S'0.0453874837583 mS_per_cm2'
+p184
+sg30
+S'0.0902074830777 kohm_cm'
+p185
+sg32
+S'0.051991073914 mS_per_cm2'
+p186
+sa.
