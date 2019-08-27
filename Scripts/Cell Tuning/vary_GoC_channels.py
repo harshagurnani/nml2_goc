@@ -31,7 +31,7 @@ def create_GoC( runid ):
 
 
 	# Creating document for cell
-	gocID = 'GoC_{}'.format(runid)
+	gocID = 'GoC_'+format(runid, '05d')
 	goc = nml.Cell( id=gocID )		#--------simid	
 	cell_doc = nml.NeuroMLDocument( id=gocID )
 	cell_doc.cells.append( goc )
@@ -77,15 +77,15 @@ def create_GoC( runid ):
 	hcn2s_fname	= 'Golgi_HCN2s.channel.nml'
 	cell_doc.includes.append( nml.IncludeType( href=hcn2s_fname) )
 	
-	#leak_fname	= 'Golgi_lkg.channel.nml'
+	leak_fname	= 'Golgi_lkg.channel.nml'
 	#leak_ref 	= nml.IncludeType( href=leak_fname)
-	#cell_doc.includes.append( nml.IncludeType( href=leak_fname) )
+	cell_doc.includes.append( nml.IncludeType( href=leak_fname) )
 	calc_fname	= 'Golgi_CALC.nml'
 	cell_doc.includes.append( nml.IncludeType( href=calc_fname) )
 	calc 		= pynml.read_neuroml2_file( calc_fname).decaying_pool_concentration_models[0]
 	
 	### ------Biophysical Properties
-	biophys = nml.BiophysicalProperties()
+	biophys = nml.BiophysicalProperties( id='biophys_'+gocID)
 	goc.biophysical_properties = biophys
 	
 	# Intracellular properties
@@ -100,15 +100,15 @@ def create_GoC( runid ):
 	memb = nml.MembraneProperties()
 	biophys.membrane_properties = memb 
 	
-	'''
-	chan_leak = nml.ChannelDensity( ion_channel=pynml.read_neuroml2_file(leak_fname).ion_channel[0].id,
+	#pynml.read_neuroml2_file(leak_fname).ion_channel[0].id -> can't read ion channel passive
+	chan_leak = nml.ChannelDensity( ion_channel="LeakConductance",
 									cond_density=p["leak_cond"],
 									erev="-55 mV",
 									ion="non_specific",
 									id="Leak"
 								  )
 	memb.channel_densities.append( chan_leak)	
-	'''
+	
 	chan_na   = nml.ChannelDensity( ion_channel=pynml.read_neuroml2_file(na_fname).ion_channel[0].id,
 									cond_density=p["na_cond"],
 									erev="87.39 mV",

@@ -9,21 +9,21 @@ import pickle as pkl
 import sys
 from pathlib import Path
 
-def create_GoC_network( duration = 2000, dt=0.025, seed = 123, runid=0 ):
+def create_GoC_network( duration = 2000, dt=0.025, seed = 123, runid=0, run=False ):
 
 	### ---------- Component types
-    gocID = 'GoC_{}'.format(runid)
+	gocID = 'GoC_'+format(runid, '05d')
 	goc_filename = '{}.cell.nml'.format(gocID)	
 	goc_type = pynml.read_neuroml2_file( goc_filename ).cells[0]
 	
 	### --------- Populations
 
 	# Build network to specify cells and connectivity
-	net = nml.Network( id='GoCNet_{}'.format(runid), type="networkWithTemperature" , temperature="23 degC" )
+	net = nml.Network( id='GoCNet_'+format(runid,'05d'), type="networkWithTemperature" , temperature="23 degC" )
 		
 	# Create GoC population
 	goc_pop = nml.Population( id=goc_type.id+"Pop", component = goc_type.id, type="populationList", size=1 )
-	inst = nml.Instance( id=goc )
+	inst = nml.Instance( id=0 )
 	goc_pop.instances.append( inst )
 	inst.location = nml.Location( x=0, y=0, z=0 )
 	net.populations.append( goc_pop )
@@ -36,7 +36,7 @@ def create_GoC_network( duration = 2000, dt=0.025, seed = 123, runid=0 ):
 		
 	### --------------  Write files
 		
-	net_filename = 'GoCNet_{}.nml'.format(runid)
+	net_filename = 'GoCNet_'+format(runid,'05d')+'.nml'
 	pynml.write_neuroml2_file( net_doc, net_filename )
 
 	simid = 'sim_gocnet_'+goc_type.id

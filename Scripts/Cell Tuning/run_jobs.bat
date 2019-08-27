@@ -1,10 +1,11 @@
 set root=C:\Users\Harsha\Anaconda3
-call %root%\Scripts\activate.bat %root%
-call conda activate nml2
+call %root%\Scripts\activate.bat base
 
-FOR /L %%A IN (1,1,2) DO(
-  python run_varied_GoC_single.py %%A
+for /l %%x in (0, 1, 400) do (
+    python vary_GoC_channels.py %%x
+	python run_varied_GoC_single.py %%x
 )
+
 for %%f in (LEMS_sim_gocnet_GoC*.py) do (
     echo %%~nf
 	python "%%~nf.py"
