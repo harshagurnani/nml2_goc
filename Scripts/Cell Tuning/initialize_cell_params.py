@@ -54,7 +54,7 @@ if __name__ =='__main__':
 			   }
 			   
 
-	nSim = 500
+	nSim = 1000
 	params_list = [ get_channel_params(simid, ra, defaults) for simid in range(nSim) ]
 	
 	file = open('cellparams_file.pkl','wb')
