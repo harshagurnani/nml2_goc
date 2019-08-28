@@ -28,7 +28,7 @@ def get_channel_params(	  simid,
 	np.random.seed(simid)
 	params["ra"] = '{} kohm_cm'.format( ra*(1+0.2*(np.random.random(1)[0]-0.5)) )
 	for cond, value in defaults.items():
-		params[cond] = '{} mS_per_cm2'.format( value*(1+0.2*(np.random.random(1)[0]-0.5)) )
+		params[cond] = '{} mS_per_cm2'.format( value*(1+0.4*(np.random.random(1)[0]-0.5)) )
 	return params
 	
 	
@@ -54,7 +54,7 @@ if __name__ =='__main__':
 			   }
 			   
 
-	nSim = 10
+	nSim = 500
 	params_list = [ get_channel_params(simid, ra, defaults) for simid in range(nSim) ]
 	
 	file = open('cellparams_file.pkl','wb')

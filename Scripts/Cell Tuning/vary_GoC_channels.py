@@ -2,7 +2,6 @@ import neuroml as nml
 from pyneuroml import pynml
 from pyneuroml.lems import LEMSSimulation
 import lems.api as lems
-import hashlib
 
 import numpy as np
 from scipy.spatial import distance
@@ -84,16 +83,24 @@ def create_GoC( runid ):
 	cell_doc.includes.append( nml.IncludeType( href=calc_fname) )
 	calc 		= pynml.read_neuroml2_file( calc_fname).decaying_pool_concentration_models[0]
 	
+	calc2_fname = 'Golgi_CALC2.nml'
+	cell_doc.includes.append( nml.IncludeType( href=calc2_fname) )
+	
+	goc_2pools_fname = 'GoC_2Pools.cell.nml'
 	### ------Biophysical Properties
 	biophys = nml.BiophysicalProperties( id='biophys_'+gocID)
 	goc.biophysical_properties = biophys
 	
-	# Intracellular properties
+	# Inproperties
+	'''
 	res = nml.Resistivity( p["ra"] )		# --------- "0.1 kohm_cm" 
 	ca_species = nml.Species( id="ca", ion="ca", concentration_model=calc.id, initial_concentration ="5e-5 mM", initial_ext_concentration="2 mM" )
+	ca2_species = nml.Species( id="ca2", ion="ca2", concentration_model="Golgi_CALC2", initial_concentration ="5e-5 mM", initial_ext_concentration="2 mM" )
 	intracellular = nml.IntracellularProperties(  )
 	intracellular.resistivities.append( res )
 	intracellular.species.append( ca_species )
+	'''
+	intracellular = pynml.read_neuroml2_file( goc_2pools_fname).cells[0].biophysical_properties.intracellular_properties
 	biophys.intracellular_properties = intracellular 
 	
 	# Membrane properties ------- cond
@@ -214,7 +221,7 @@ def create_GoC( runid ):
 	memb.channel_density_nernsts.append( chan_hva)
 	chan_lva  = nml.ChannelDensityNernst( 	ion_channel=pynml.read_neuroml2_file(calva_fname).ion_channel[0].id,
 											cond_density=p["calva_cond"],
-											ion="ca",
+											ion="ca2",
 											id="Golgi_Ca_LVA_soma_group",
 											segment_groups="soma_group"
 										)
