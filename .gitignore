@@ -1,6 +1,11 @@
 
-*.o
+*.c
+*.dll
 *.tmp
 *.dat
 *.o
 *.spikes
+LEMS*.py
+LEMS*.xml
+GoC_00*
+GoCNet_00*
